@@ -1,0 +1,11 @@
+body.dark-theme{
+    /* HSL color mode */
+    --first-color-second: hsl(215, 30%, 8%);
+    --title-color: hsl(215, 8%, 95%);
+    --text-color: hsl(215, 8%, 75%);
+    --input-color: hsl(215, 29%, 16%);
+    --body-color: hsl(215, 28%, 12%);
+    --container-color: hsl(215, 28%, 16%);
+    --scroll-bar-color: hsl(244, 12%, 48%);
+    --scroll-thumb-color: hsl(244, 12%, 36%);
+}

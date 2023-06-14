@@ -1,0 +1,76 @@
+:root {
+    /*========== Colors ==========*/
+    /*base colors for icons image backgrounds etc...*/
+    --first-color: hsl(244, 69%, 61%);
+    --first-color-second: hsl(244, 69%, 61%);
+    --first-color-alt: hsl(244, 57%, 53%);
+    --first-color-lighter: hsl(244, 92%, 85%);
+    --red: #DB504A;
+    --orange: #FD7238;
+    --green: #35FF69;
+
+    /*base colors for text and inputs*/
+    --title-color: hsl(244, 8%, 15%);
+    --text-color: hsl(244, 8%, 45%);
+    --text-color-light: hsl(244, 8%, 65%);
+    --input-color: hsl(244, 70%, 96%);
+
+    /*body and containers i.e. div(s) and span(s)*/
+    --body-color: hsl(244, 60%, 99%);
+    --body-color-darker: hsl(244, 4%, 89%);
+    --container-color: #fff;
+    --scroll-bar-color: hsl(244, 12%, 90%);
+    --scroll-thumb-color: hsl(244, 12%, 80%);
+
+
+    /*========== Font and typography ==========*/
+    --body-font: 'Poppins', sans-serif;
+    --poppins: 'Poppins', sans-serif;
+    --lato: 'Lato', sans-serif;
+    --header-height: 3rem;
+
+    /* .5rem = 8px, 1rem = 16px, 1.5rem = 24px ... */
+    --big-font-size: 2rem;
+    --h1-font-size: 1.5rem;
+    --h2-font-size: 1.25rem;
+    --h3-font-size: 1.125rem;
+    --normal-font-size: .938rem;
+    --small-font-size: .813rem;
+    --smaller-font-size: .75rem;
+
+    /*========== Font weight ==========*/
+    --font-medium: 500;
+    --font-semi-bold: 600;
+
+    /*========== Margins Bottom ==========*/
+    /* .25rem = 4px, .5rem = 8px, .75rem = 12px ... */
+    --mb-0-25: .25rem;
+    --mb-0-5: .5rem;
+    --mb-0-75: .75rem;
+    --mb-1: 1rem;
+    --mb-1-5: 1.5rem;
+    --mb-2: 2rem;
+    --mb-2-5: 2.5rem;
+    --mb-3: 3rem;
+
+    /*========== z index ==========*/
+    --z-tooltip: 10;
+    --z-fixed: 100;
+    --z-modal: 1000;
+
+    /*!* Change favorite color *!*/
+    /*--hue-color: 244; !*Blue 215 - Brown 348 - Grey - 244*!*/
+}
+
+/* Font size for large devices */
+@media screen and (min-width: 968px) {
+    :root {
+        --big-font-size: 3rem;
+        --h1-font-size: 2.25rem;
+        --h2-font-size: 1.5rem;
+        --h3-font-size: 1.25rem;
+        --normal-font-size: 1rem;
+        --small-font-size: .875rem;
+        --smaller-font-size: .813rem;
+    }
+}

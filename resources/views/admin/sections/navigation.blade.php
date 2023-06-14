@@ -14,26 +14,26 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'sent-messages')"
-               style="cursor: pointer" title="Sent Messages">
+            <a class="tablinks" onclick="switchcommon(event, 'employers')"
+               style="cursor: pointer" title="List of Employers">
                 <i class="uil uil-envelope-download"></i>
-                <span class="text">Sent Messages</span>
+                <span class="text">List of Employers</span>
             </a>
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'verifications')"
-               style="cursor: pointer" title="Verifications">
+            <a class="tablinks" onclick="switchcommon(event, 'employees')"
+               style="cursor: pointer" title="List of Employees">
                 <i class="uil uil-check-circle"></i>
-                <span class="text">Verifications</span>
+                <span class="text">List of Employees</span>
             </a>
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'chat-zone')"
-               style="cursor: pointer" title="Chat Zone">
+            <a class="tablinks" onclick="switchcommon(event, 'registration')"
+               style="cursor: pointer" title="Registration Requests">
                 <i class="uil uil-comments-alt"></i>
-                <span class="text">Chat Zone</span>
+                <span class="text">Registration Requests</span>
             </a>
         </li>
 
