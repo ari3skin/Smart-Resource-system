@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Routing;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [Routing::class, 'showIndex'])->name('/');
+
+Route::prefix('admin/')->group(function () {
+
+    //admin access to their default page
+    Route::get('/', [Routing::class, 'admin']);
 });
