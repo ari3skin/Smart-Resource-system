@@ -19,6 +19,16 @@ class DesignationsSeeder extends Seeder
         DB::table('designations')
             ->insert([
                 [
+                    'role_name' => 'Super Administrator',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
+                    'role_name' => 'Administrator',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
+                [
                     'role_name' => 'Manager',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),

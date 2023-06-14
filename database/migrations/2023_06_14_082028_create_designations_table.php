@@ -20,7 +20,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        DB::update("ALTER TABLE designations AUTO_INCREMENT=201; ");
+        DB::update("ALTER TABLE designations AUTO_INCREMENT=101;");
     }
 
     /**

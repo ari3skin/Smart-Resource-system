@@ -2,10 +2,10 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -15,8 +15,22 @@ return new class extends Migration
     {
         Schema::create('employers', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('department_id')->nullable()->unsigned();
+            $table->bigInteger('designation_id')->nullable()->unsigned();
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('email');
+            $table->string('phone_number');
+            $table->date('employed_date');
+            $table->date('DOB');
             $table->timestamps();
+
+            //relationships
+            $table->foreign("designation_id")->references("id")->on("designations");
+            $table->foreign("department_id")->references("id")->on("departments");
         });
+
+        DB::update("ALTER TABLE employers AUTO_INCREMENT=101; ");
     }
 
     /**
