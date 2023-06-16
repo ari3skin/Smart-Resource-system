@@ -9,6 +9,8 @@
 @import "index-css/contact.css";
 @import "index-css/footer.css";
 @import "index-css/darktheme.css";
+@import "auth-css/authentication.css";
+/*@import "auth-css/material-design-iconic-font.min.css";*/
 /*========== Variables Dark theme ==========*/
 
 
@@ -120,6 +122,8 @@ img {
 .logo__container {
     display: flex;
     justify-content: space-evenly;
+    flex-direction: row;
+    align-items: center;
 }
 
 .logo__container img {
@@ -273,19 +277,16 @@ img {
 }
 
 /* Show scroll */
-.show-scroll {
-    bottom: 5rem;
+::-webkit-scrollbar {
+    width: 0.5em;
 }
 
-/*========== SCROLL BAR ==========*/
-::-webkit-scrollbar {
-    background-color: var(--scroll-bar-color);
-    border-radius: .5rem;
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: var(--scroll-thumb-color);
-    border-radius: .5rem;
+    background-color: #888;
 }
 
 /*==================== MEDIA QUERIES ====================*/

@@ -22,27 +22,27 @@ public function run()
                 [
                     [
                         'department_name' => 'IT',
-                        'created_at' => Carbon::now(),
+                        'created_at' => Carbon::create(1990, 1, 1, 12, 00, 00),
                         'updated_at' => Carbon::now(),
                     ],
                     [
                         'department_name' => 'Audit',
-                        'created_at' => Carbon::now(),
+                        'created_at' => Carbon::create(1990, 1, 1, 12, 00, 00),
                         'updated_at' => Carbon::now(),
                     ],
                     [
                         'department_name' => 'Wealth Management',
-                        'created_at' => Carbon::now(),
+                        'created_at' => Carbon::create(1990, 1, 1, 12, 00, 00),
                         'updated_at' => Carbon::now(),
                     ],
                     [
                         'department_name' => 'Retail',
-                        'created_at' => Carbon::now(),
+                        'created_at' => Carbon::create(1990, 1, 1, 12, 00, 00),
                         'updated_at' => Carbon::now(),
                     ],
                     [
                         'department_name' => 'Marketing and Communications',
-                        'created_at' => Carbon::now(),
+                        'created_at' => Carbon::create(1990, 1, 1, 12, 00, 00),
                         'updated_at' => Carbon::now(),
                     ],
                 ]);

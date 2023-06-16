@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('employer_id')->nullable()->unsigned();
             $table->bigInteger('employee_id')->nullable()->unsigned();
+            $table->string('work_email');
             $table->date('request_date');
             $table->enum('status', ['pending', 'approved', 'rejected']);
             $table->timestamps();

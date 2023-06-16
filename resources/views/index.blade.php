@@ -9,6 +9,8 @@
 
 <main class="main">
 
+
+
 </main>
 
 <script src="{{asset('js/index.js')}}"></script>

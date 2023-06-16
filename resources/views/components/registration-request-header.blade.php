@@ -17,6 +17,12 @@
                     </a>
                 </li>
 
+                <li class="nav__item">
+                    <a href="/" class="nav__link">
+                        <i class="uil uil-user nav__icon"></i> Home
+                    </a>
+                </li>
+
                 @if(session()->has('email'))
                     @if(session('role')=='employee')
                         <a href="#" style="margin-left: 1rem; margin-right: 1rem;"
@@ -32,13 +38,7 @@
                 @else
                     <li class="nav__item">
                         <a href="/auth/login" class="nav__link">
-                            <i class="uil uil-user nav__icon"></i> Login
-                        </a>
-                    </li>
-
-                    <li class="nav__item">
-                        <a href="/auth/registration" class="nav__link">
-                            <i class="uil uil-user nav__icon"></i> Registration Request
+                            <i class="uil uil-user nav__icon"></i> Login Instead
                         </a>
                     </li>
                 @endif

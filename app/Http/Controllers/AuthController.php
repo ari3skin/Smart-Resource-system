@@ -25,6 +25,18 @@ class AuthController extends Controller
         }
     }
 
+    //2-1. Login
+    public function login()
+    {
+
+    }
+
+    //2-2. Registration Request
+    public function registration(Request $request)
+    {
+        $data = $request->all();
+    }
+
 
     //3. logout procedures
     public function logout(Request $request)

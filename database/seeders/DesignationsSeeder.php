@@ -20,32 +20,32 @@ class DesignationsSeeder extends Seeder
             ->insert([
                 [
                     'role_name' => 'Super Administrator',
-                    'created_at' => Carbon::now(),
+                    'created_at' => Carbon::create(1990, 1, 1, 12, 00, 00),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'role_name' => 'Administrator',
-                    'created_at' => Carbon::now(),
+                    'created_at' => Carbon::create(1990, 1, 2, 12, 00, 00),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'role_name' => 'Manager',
-                    'created_at' => Carbon::now(),
+                    'created_at' => Carbon::create(1990, 1, 2, 12, 00, 00),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'role_name' => 'Assistant_manager',
-                    'created_at' => Carbon::now(),
+                    'created_at' => Carbon::create(1990, 1, 2, 12, 00, 00),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'role_name' => 'IT Specialist',
-                    'created_at' => Carbon::now(),
+                    'created_at' => Carbon::create(1990, 1, 2, 12, 00, 00),
                     'updated_at' => Carbon::now(),
                 ],
                 [
                     'role_name' => 'Risk Analyst',
-                    'created_at' => Carbon::now(),
+                    'created_at' => Carbon::create(1990, 1, 2, 12, 00, 00),
                     'updated_at' => Carbon::now(),
                 ],
             ]);
