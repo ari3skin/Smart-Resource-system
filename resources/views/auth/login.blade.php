@@ -22,11 +22,11 @@
                     @csrf
                     <div class="form-group">
                         <label for="username"><i class="uil uil-user"></i></label>
-                        <input type="text" name="username" id="username" placeholder="Your Username"/>
+                        <input type="text" name="username" id="username" placeholder="Your Username" required/>
                     </div>
                     <div class="form-group">
                         <label for="password"><i class="uil uil-padlock"></i></label>
-                        <input type="password" name="password" id="password" placeholder="Password"/>
+                        <input type="password" name="password" id="password" placeholder="Password" required/>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember-me" id="remember-me" class="agree-term"

@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use App\Models\Employer;
+use App\Models\Employee;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class EmployersSeeder extends Seeder
+class EmployeeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -16,25 +16,26 @@ class EmployersSeeder extends Seeder
      */
     public function run()
     {
-        //date format YYYY-MM-DD
-        DB::table('employers')
+        //
+        DB::table('employees')
             ->insert([
                 [
-                    'department_id' => 101,
-                    'designation_id' => 101,
-                    'first_name' => 'Ryan',
-                    'last_name' => 'Kathurima',
-                    'email' => 'ryankinotikathurima@gmail.com',
+                    'department_id' => 104,
+                    'designation_id' => 102,
+                    'first_name' => 'Reece',
+                    'last_name' => 'Elroy',
+                    'email' => 'reeceoctavianmarcuselroy@gmail.com',
                     'phone_number' => '0797236922',
                     'employed_date' => '2005-03-30',
                     'DOB' => '1976-05-23',
+                    'current_salary_amount' => 'Ksh 100000',
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
             ]);
 
         for ($i = 0; $i < 14; $i++) {
-            Employer::factory()->create();
+            Employee::factory()->create();
         }
     }
 }

@@ -22,11 +22,11 @@
                     @csrf
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
-                        <input type="text" name="email" id="email" placeholder="Your Work Email"/>
+                        <input type="text" name="email" id="email" placeholder="Your Work Email" required/>
                     </div>
                     <div class="form-group">
                         <label for="datetime"><i class="uil uil-calendar-alt"></i></label>
-                        <input type="datetime-local" name="datetime" id="datetime" placeholder="Current Date"/>
+                        <input type="datetime-local" name="datetime" id="datetime" placeholder="Current Date" required/>
                     </div>
 
                     <div class="">

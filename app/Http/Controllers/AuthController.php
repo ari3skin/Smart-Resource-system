@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\UserRegistrationRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
@@ -35,6 +37,45 @@ class AuthController extends Controller
     public function registration(Request $request)
     {
         $data = $request->all();
+        $this->createRequest($data);
+
+        return redirect("/")->withErrors(['msg' => "Request sent successfully. A verification email will be sent for you to login."]);
+    }
+
+    public function createRequest(array $data)
+    {
+        $email = $data['email'];
+
+        $employer = DB::table('employers')
+            ->select('id')
+            ->where('email', $email)
+            ->first();
+
+        if ($employer) {
+            // Email exists in the employer table
+            $employer_id = $employer->id;
+            $employee_id = null;
+
+        } else {
+            $employee = DB::table('employees')
+                ->select('id')
+                ->where('email', $email)
+                ->first();
+
+            if ($employee) {
+                $employee_id = $employee->id;
+                $employer_id = null;
+            }
+        }
+
+        // Create the registration request
+        return UserRegistrationRequest::create([
+            'employer_id' => $employer_id,
+            'employee_id' => $employee_id,
+            'work_email' => $email,
+            'request_date' => $data['datetime'],
+            'status' => 'pending',
+        ]);
     }
 
 
