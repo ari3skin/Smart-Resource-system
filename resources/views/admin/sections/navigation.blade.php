@@ -1,7 +1,7 @@
 <section id="sidebar">
     <a href="/" class="brand">
         <i class="uil uil-star"></i>
-        <span class="text">First Name</span>
+        <span class="text">Super Admin</span>
     </a>
 
     <ul class="side-menu top">
@@ -16,7 +16,7 @@
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'employers')"
                style="cursor: pointer" title="List of Employers">
-                <i class="uil uil-envelope-download"></i>
+                <i class="uil uil-user-square"></i>
                 <span class="text">List of Employers</span>
             </a>
         </li>
@@ -24,7 +24,7 @@
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'employees')"
                style="cursor: pointer" title="List of Employees">
-                <i class="uil uil-check-circle"></i>
+                <i class="uil uil-constructor"></i>
                 <span class="text">List of Employees</span>
             </a>
         </li>
@@ -32,26 +32,11 @@
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'registration')"
                style="cursor: pointer" title="Registration Requests">
-                <i class="uil uil-comments-alt"></i>
+                <i class="uil uil-clipboard-alt"></i>
                 <span class="text">Registration Requests</span>
             </a>
         </li>
 
-        <li>
-            <a class="tablinks" onclick="switchcommon(event, 'emailing')"
-               style="cursor: pointer" title="Email">
-                <i class="uil uil-envelope-edit"></i>
-                <span class="text">Emailing</span>
-            </a>
-        </li>
-
-        <li>
-            <a class="tablinks" onclick="switchcommon(event, 'to-do')"
-               style="cursor: pointer" title="To Do">
-                <i class="uil uil-clipboard"></i>
-                <span class="text">Todo List</span>
-            </a>
-        </li>
 
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'settings')"

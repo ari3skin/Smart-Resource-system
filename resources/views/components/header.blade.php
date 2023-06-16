@@ -3,7 +3,7 @@
     <nav class="nav container">
 
         <div class="logo__container">
-            <img src="{{asset('icons/stanbic-logo.png')}}">
+            <img src="{{asset('icons/icon-1-1.png')}}">
             <a href="/" class="nav__logo">Smart Resource</a>
         </div>
 
@@ -18,32 +18,8 @@
                 </li>
 
                 <li class="nav__item">
-                    <a href="#about" class="nav__link">
-                        <i class="uil uil-user nav__icon"></i> About
-                    </a>
-                </li>
-
-                <li class="nav__item">
-                    <a href="#skills" class="nav__link">
-                        <i class="uil uil-file-alt nav__icon"></i> Skills
-                    </a>
-                </li>
-
-                <li class="nav__item">
-                    <a href="#experiences" class="nav__link">
-                        <i class="uil uil-constructor nav__icon"></i> Experiences
-                    </a>
-                </li>
-
-                <li class="nav__item">
-                    <a href="#services" class="nav__link">
-                        <i class="uil uil-briefcase-alt nav__icon"></i> Services
-                    </a>
-                </li>
-
-                <li class="nav__item">
-                    <a href="#contact" class="nav__link">
-                        <i class="uil uil-message nav__icon"></i> Contact Me
+                    <a href="#main_portal" class="nav__link">
+                        <i class="uil uil-user nav__icon"></i> Main Portal
                     </a>
                 </li>
 
@@ -75,14 +51,20 @@
                 </div>
                 <div class="services__modal">
                     <div class="services__modal-content">
-                        <h4 class="services__modal-title">For Further Access:</h4>
+                        <h4 class="services__modal-title">User Access:</h4>
                         <i class="uil uil-times services__modal-close"></i>
 
                         <ul class="services__modal-services grid">
                             <li class="services__modal-service">
                                 <i class="uil uil-signin services__modal-icon" style="font-size: 2rem;"></i>
-                                <a href="/customer/account"
-                                   style="margin-top: 10px; margin-left: 10px ; color: var(--text-color);">Login/Register</a>
+                                <a href="#"
+                                   style="margin-top: 10px; margin-left: 10px ; color: var(--text-color);">Login</a>
+                            </li>
+
+                            <li class="services__modal-service">
+                                <i class="uil uil-signin services__modal-icon" style="font-size: 2rem;"></i>
+                                <a href="#"
+                                   style="margin-top: 10px; margin-left: 10px ; color: var(--text-color);">Register Request</a>
                             </li>
                         </ul>
                     </div>

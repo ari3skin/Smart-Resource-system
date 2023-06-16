@@ -1,10 +1,10 @@
 :root {
     /*========== Colors ==========*/
     /*base colors for icons image backgrounds etc...*/
-    --first-color: hsl(244, 69%, 61%);
-    --first-color-second: hsl(244, 69%, 61%);
-    --first-color-alt: hsl(244, 57%, 53%);
-    --first-color-lighter: hsl(244, 92%, 85%);
+    --first-color: hsl(210, 100%, 50%);
+    --first-color-second: hsl(210, 100%, 50%);
+    --first-color-alt: hsl(210, 57%, 53%);
+    --first-color-lighter: hsl(210, 92%, 85%);
     --red: #DB504A;
     --orange: #FD7238;
     --green: #35FF69;
