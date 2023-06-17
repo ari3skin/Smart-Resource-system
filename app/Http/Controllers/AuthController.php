@@ -22,37 +22,38 @@ class AuthController extends Controller
             return view('auth.registration');
 
         } else {
-            // Handle the case when neither the login nor the registration route is matched
             abort(404);
         }
     }
 
-    //2-1. Login
-    public function login()
+    //2-1. Login -- work in progress
+    public function login(Request $request)
     {
-
+        $credentials = $request->only('username', 'password');
+        $rememberMe = $request['remember-me'];
+        if (Auth::attempt($credentials)) {
+            return "able to login";
+        } else {
+            return "not able to login";
+        }
     }
 
     //2-2. Registration Request
-    public function registration(Request $request)
+    public function registration(Request $request): void
     {
         $data = $request->all();
         $this->createRequest($data);
-
-        return redirect("/")->withErrors(['msg' => "Request sent successfully. A verification email will be sent for you to login."]);
     }
 
     public function createRequest(array $data)
     {
         $email = $data['email'];
-
         $employer = DB::table('employers')
             ->select('id')
             ->where('email', $email)
             ->first();
 
         if ($employer) {
-            // Email exists in the employer table
             $employer_id = $employer->id;
             $employee_id = null;
 
@@ -67,8 +68,6 @@ class AuthController extends Controller
                 $employer_id = null;
             }
         }
-
-        // Create the registration request
         return UserRegistrationRequest::create([
             'employer_id' => $employer_id,
             'employee_id' => $employee_id,
@@ -79,7 +78,7 @@ class AuthController extends Controller
     }
 
 
-    //3. logout procedures
+    //3. logout
     public function logout(Request $request)
     {
         Auth::logout();

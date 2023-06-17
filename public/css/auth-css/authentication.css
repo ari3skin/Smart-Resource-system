@@ -11,6 +11,51 @@ list-type-ulli, .socials {
     padding: 0;
 }
 
+/*Modal CSS*/
+/* The Modal (background) */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal Content/Box */
+.modal-content {
+    background-color: var(--body-color);
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid var(--body-color-darker);
+    border-radius: 10px;
+    width: 60%;
+}
+
+.modal__text {
+    color: var(--title-color);
+}
+
+/* The Close Button */
+.close {
+    color: var(--title-color);
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/*-----------------------------------------------------------------------------------------------------*/
 a:focus, a:active {
     text-decoration: none;
     outline: none;
@@ -74,7 +119,7 @@ figure {
 }
 
 p {
-    margin-bottom: 0px;
+    margin-bottom: 0;
     font-size: 15px;
     color: #777;
 }
@@ -85,7 +130,7 @@ h2 {
     padding: 0;
     font-weight: bold;
     color: #222;
-    font-family: Poppins;
+    font-family: Poppins, serif;
     font-size: 36px;
 }
 
@@ -558,5 +603,3 @@ figure {
         margin-bottom: 10px;
     }
 }
-
-/*# sourceMappingURL=authentication.css.map */

@@ -14,6 +14,12 @@ class Routing extends Controller
 
     public function admin()
     {
-        return view('admin.dashboard');
+        $user = auth()->user();
+        if ($user == null || $user->role != "admin") {
+            return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
+        } else {
+            return view('admin.dashboard');
+        }
+
     }
 }

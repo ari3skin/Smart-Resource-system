@@ -24,7 +24,7 @@ class EmployeeSeeder extends Seeder
                     'designation_id' => 102,
                     'first_name' => 'Reece',
                     'last_name' => 'Elroy',
-                    'email' => 'reeceoctavianmarcuselroy@gmail.com',
+                    'email' => 'reece.elroy@gmail.com',
                     'phone_number' => '0797236922',
                     'employed_date' => '2005-03-30',
                     'DOB' => '1976-05-23',
