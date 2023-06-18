@@ -16,23 +16,7 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'employers')"
-               style="cursor: pointer" title="List of Employers">
-                <i class="uil uil-user-square"></i>
-                <span class="text">List of Employers</span>
-            </a>
-        </li>
-
-        <li>
-            <a class="tablinks" onclick="switchcommon(event, 'employees')"
-               style="cursor: pointer" title="List of Employees">
-                <i class="uil uil-constructor"></i>
-                <span class="text">List of Employees</span>
-            </a>
-        </li>
-
-        <li>
-            <a class="tablinks" onclick="switchcommon(event, 'registration')"
+            <a class="tablinks" onclick="switchcommon(event, 'registration-request')"
                style="cursor: pointer" title="Registration Requests">
                 <i class="uil uil-clipboard-alt"></i>
                 <span class="text">Registration Requests</span>

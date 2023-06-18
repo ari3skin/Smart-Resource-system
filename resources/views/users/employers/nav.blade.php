@@ -1,6 +1,6 @@
-@extends('layouts.navigation')
+@extends('layouts/navigation')
 
-@section('nav_content')
+@section('content')
     <li class="active">
         <a class="tablinks" id="defaultOpen" onclick="switchcommon(event, 'dashboard')"
            style="cursor: pointer" title="Dashboard">

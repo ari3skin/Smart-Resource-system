@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\UserRegistrationRequest;
 use Illuminate\Support\Facades\Auth;
 
 class Routing extends Controller
@@ -19,7 +19,13 @@ class Routing extends Controller
 
         if ($user->role == 'Admin') {
 
-            return view('admin.dashboard');
+            $registration_requests = UserRegistrationRequest::all();
+
+            return view('admin.dashboard',
+                [
+                    'registration_requests' => $registration_requests,
+                ]
+            );
 
         } elseif ($user->role == 'Employer') {
 
@@ -32,5 +38,10 @@ class Routing extends Controller
         } else {
             return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
         }
+    }
+
+    public function dataCollection()
+    {
+
     }
 }

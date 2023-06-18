@@ -8,7 +8,7 @@
 
     <ul class="side-menu top">
 
-        @yield('nav_content')
+        @yield('content')
 
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'settings')"

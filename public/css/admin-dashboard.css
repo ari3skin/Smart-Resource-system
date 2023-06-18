@@ -32,4 +32,8 @@ li {
     --title-color: hsl(215, 8%, 95%);
 }
 
+.admin__body .uil {
+    font-size: 25px;
+}
+
 /*common styling end*/

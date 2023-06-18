@@ -10,7 +10,6 @@
 
 <section id="content">
     {{--top navigation--}}
-
     <nav>
         <i class="uil uil-bars"></i>
 

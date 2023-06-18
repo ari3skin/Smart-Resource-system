@@ -186,6 +186,7 @@
     padding: 16px;
     border-radius: 36px;
     background: var(--first-color);
+    border: solid var(--first-color) 1px;
     color: var(--body-color);
     display: flex;
     justify-content: center;
