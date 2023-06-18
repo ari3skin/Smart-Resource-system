@@ -419,6 +419,7 @@ img {
     .nav__list {
         display: flex;
         column-gap: 2rem;
+        align-items: center;
     }
 
     .nav__menu {

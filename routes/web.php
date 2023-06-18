@@ -31,5 +31,5 @@ Route::group(['prefix' => 'auth'], function () {
 Route::prefix('admin/')->group(function () {
 
     //admin access to their default page
-    Route::get('/', [Routing::class, 'admin']);
+    Route::get('/', [Routing::class, 'dashboards']);
 });

@@ -29,9 +29,9 @@
                         <input type="password" name="password" id="password" placeholder="Password" required/>
                     </div>
                     <div class="form-group">
-                        <input type="checkbox" name="remember-me" id="remember-me" class="agree-term"
+                        <input type="checkbox" name="remember" id="remember" class="agree-term"
                                style="width: 20px; margin-left: 140px;"/>
-                        <label for="remember-me" class="label-agree-term">Remember me</label>
+                        <label for="remember" class="label-agree-term">Remember me</label>
                     </div>
                     <div class="">
                         <input type="submit" name="signin" id="signin" class="form-submit" value="Log in"/>

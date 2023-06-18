@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Routing extends Controller
 {
@@ -12,14 +13,24 @@ class Routing extends Controller
         return view('index');
     }
 
-    public function admin()
+    public function dashboards()
     {
-        $user = auth()->user();
-        if ($user == null || $user->role != "admin") {
-            return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
-        } else {
-            return view('admin.dashboard');
-        }
+        $user = Auth::user();
 
+        if ($user->role == 'Admin') {
+
+            return view('admin.dashboard');
+
+        } elseif ($user->role == 'Employer') {
+
+            return view('users.employers.employers');
+
+        } elseif ($user->role == 'Employee') {
+
+            return view('users.employees.employees');
+
+        } else {
+            return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
+        }
     }
 }

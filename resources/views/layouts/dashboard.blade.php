@@ -6,7 +6,7 @@
 </head>
 <body class="admin__body">
 
-@include('admin.sections.navigation')
+@include('layouts.navigation')
 
 <section id="content">
     {{--top navigation--}}
@@ -31,10 +31,11 @@
             <i class="uil uil-bell"></i>
             <span class="num">8</span>
         </a>
+
     </nav>
 
     {{--main navigation content--}}
-    @include('admin.sections.main')
+    @yield('dashboard_content')
 </section>
 
 
@@ -61,3 +62,4 @@
 </script>
 </body>
 </html>
+

@@ -1,7 +1,9 @@
 <section id="sidebar">
-    <a href="/" class="brand">
+    <a href="/admin" class="brand">
         <i class="uil uil-star"></i>
-        <span class="text">Super Admin</span>
+        <span class="text">
+            Welcome {{session('first_name')}}
+        </span>
     </a>
 
     <ul class="side-menu top">

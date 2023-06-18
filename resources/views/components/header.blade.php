@@ -17,18 +17,31 @@
                     </a>
                 </li>
 
-                @if(session()->has('email'))
-                    @if(session('role')=='employee')
-                        <a href="#" style="margin-left: 1rem; margin-right: 1rem;"
-                           title="Logged in as {{session('first_name')}} {{session('last_name')}}">
-                            <i class="uil uil-user-check" style="font-size: 1.5rem; color: var(--title-color);"></i>
-                        </a>
-                    @elseif(session('role')=='employer')
-                        <a href="#" style="margin-left: 1rem; margin-right: 1rem;"
-                           title="Logged in as {{session('first_name')}} {{session('last_name')}}">
-                            <i class="uil uil-user-check" style="font-size: 1.5rem; color: var(--title-color);"></i>
-                        </a>
-                    @endif
+                @if(session()->has('work_id'))
+                    <li>
+                        @if(session('role')=='Employee')
+                            <a href="/admin/" style="margin-left: 1rem; margin-right: 1rem;"
+                               title="Logged in as {{session('first_name')}} {{session('last_name')}}">
+                                <i class="uil uil-user-md nav__icon"
+                                   style="font-size: 1.5rem; color: var(--title-color);"></i>
+                                {{session('role')}} {{session('first_name')}}
+                            </a>
+                        @elseif(session('role')=='Employer')
+                            <a href="/admin/" style="margin-left: 1rem; margin-right: 1rem;"
+                               title="Logged in as {{session('first_name')}} {{session('last_name')}}">
+                                <i class="uil uil-user-md nav__icon"
+                                   style="font-size: 1.5rem; color: var(--title-color);"></i>
+                                {{session('role')}} {{session('first_name')}}
+                            </a>
+                        @elseif(session('role')=='Admin')
+                            <a href="/admin/" style="margin-left: 1rem; margin-right: 1rem;"
+                               title="Logged in as {{session('first_name')}} {{session('last_name')}}">
+                                <i class="uil uil-user-md nav__icon"
+                                   style="font-size: 1.5rem; color: var(--title-color);"></i>
+                                {{session('role')}} {{session('first_name')}}
+                            </a>
+                        @endif
+                    </li>
                 @else
                     <li class="nav__item">
                         <a href="/auth/login" class="nav__link">

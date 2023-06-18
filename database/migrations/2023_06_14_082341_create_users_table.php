@@ -17,10 +17,11 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('employer_id')->nullable()->unsigned();
             $table->bigInteger('employee_id')->nullable()->unsigned();
-            $table->enum('role', ['admin', 'employer', 'employee'])->default('admin');
+            $table->enum('role', ['Admin', 'Employer', 'Employee'])->default('Admin');
             $table->string('username');
             $table->string('password')->nullable();
             $table->timestamp('email_verified_at')->nullable();
+            $table->timestamp('last_login')->nullable();
             $table->rememberToken();
             $table->timestamps();
 
