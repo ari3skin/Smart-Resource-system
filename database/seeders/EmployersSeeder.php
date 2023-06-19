@@ -31,6 +31,18 @@ class EmployersSeeder extends Seeder
                     'created_at' => Carbon::now(),
                     'updated_at' => Carbon::now(),
                 ],
+                [
+                    'department_id' => 103,
+                    'designation_id' => 102,
+                    'first_name' => 'Megan',
+                    'last_name' => 'Mwago',
+                    'email' => 'megan.mwago@strathmore.edu',
+                    'phone_number' => '0797236922',
+                    'employed_date' => '2004-06-18',
+                    'DOB' => '1979-11-21',
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ],
             ]);
 
         for ($i = 0; $i < 14; $i++) {

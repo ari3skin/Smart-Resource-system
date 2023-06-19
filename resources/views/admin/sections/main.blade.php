@@ -1,3 +1,70 @@
+@php
+    use Illuminate\Support\Facades\DB;
+@endphp
+<main class="tabcontent" id="dashboard">
+    <div class="head-title">
+        <div class="left">
+            <h1>Dashboard</h1>
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                </li>
+                <li><i class="uil uil-angle-right-b"></i></li>
+                <li>
+                    <a class="active" href="#">Home</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="box-info">
+        <li>
+            <a class="tablinks" onclick="switchcommon(event, 'sent-messages')"
+               style="cursor: pointer" title="Sent Messages">
+                <i class="uil uil-clipboard-alt"></i>
+            </a>
+            <div class="text">
+                <h3>10</h3>
+                <p>Registration Requests</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="tablinks" onclick="switchcommon(event, 'verifications')"
+               style="cursor: pointer" title="Verifications">
+                <i class="uil uil-user-square"></i>
+            </a>
+            <div class="text">
+                <h3>10</h3>
+                <p>Available Employees</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="tablinks" onclick="switchcommon(event, 'to-do')"
+               style="cursor: pointer" title="To Do">
+                <i class="uil uil-clipboard-notes"></i>
+            </a>
+            <div class="text">
+                <h3>10</h3>
+                <p>Open Projects</p>
+            </div>
+        </li>
+
+        <li>
+            <a class="tablinks" onclick="switchcommon(event, 'chat-zone')"
+               style="cursor: pointer" title="Chat Zone">
+                <i class="uil uil-comments-alt"></i>
+            </a>
+            <div class="text">
+                <h3>10</h3>
+                <p>Number of Chats</p>
+            </div>
+        </li>
+    </ul>
+</main>
+
 <main class="tabcontent" id="registration-request">
     <div class="head-title">
         <div class="left">
@@ -5,7 +72,7 @@
 
             <ul class="breadcrumb">
                 <li>
-                    <a href="#">{{session('first_name')}} {{session('last_name')}}'s</a>
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
                 <li>
@@ -23,8 +90,10 @@
                 <tr>
                     <th>Employer Id</th>
                     <th>Employee Id</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
                     <th>Work Email</th>
-                    <th>Request Date Sent</th>
+                    <th>Request Date</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -32,11 +101,44 @@
                 <tbody>
                 @foreach($registration_requests as $item)
                     <tr>
+                        @php
+                            $userInfo = DB::table('user_registration_requests')
+                                ->select('user_registration_requests.employer_id', 'user_registration_requests.employee_id',
+                                         'employers.first_name as emlr_first', 'employers.last_name as emlr_last',
+                                         'employees.first_name as emle_first', 'employees.last_name as emle_last',
+                                         'user_registration_requests.work_email', 'user_registration_requests.request_date', 'user_registration_requests.status')
+                                ->leftJoin('employers', 'user_registration_requests.work_email', '=', 'employers.email')
+                                ->leftJoin('employees', 'user_registration_requests.work_email', '=', 'employees.email')
+                                ->where('user_registration_requests.work_email', '=', $item['work_email'])
+                                ->first();
+
+
+                                // Access the properties
+                                $employerId = $userInfo->employer_id;
+                                $employeeId = $userInfo->employee_id;
+                                $employerFirstName = $userInfo->emlr_first;
+                                $employerLastName = $userInfo->emlr_last;
+                                $employeeFirstName = $userInfo->emle_first;
+                                $employeeLastName = $userInfo->emle_last;
+                                $workEmail = $userInfo->work_email;
+                                $requestDateSent = $userInfo->request_date;
+                                $status = $userInfo->status;
+
+                                // Do something with the retrieved data
+
+                        @endphp
+
                         <td>
                             <p>{{$item->employer_id}}</p>
                         </td>
                         <td>
                             <p>{{$item->employee_id}}</p>
+                        </td>
+                        <td>
+                            <p>{{$employeeFirstName}}</p>
+                        </td>
+                        <td>
+                            <p>{{$employeeLastName}}</p>
                         </td>
                         <td>{{$item->work_email}}</td>
                         <td>{{$item->request_date}}</td>

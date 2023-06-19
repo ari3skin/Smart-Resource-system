@@ -9,11 +9,8 @@
 @include('admin.sections.navigation')
 
 <section id="content">
-    {{--top navigation--}}
-
     <nav>
         <i class="uil uil-bars"></i>
-
         <a href="#" class="nav-link">Actions</a>
 
         <form action="#">
@@ -26,7 +23,6 @@
         </form>
 
         <i class="uil uil-moon change-theme" id="dashboard-theme"></i>
-
         <a href="#" class="notification">
             <i class="uil uil-bell"></i>
             <span class="num">8</span>

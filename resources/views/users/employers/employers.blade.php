@@ -1,6 +1,6 @@
-@extends('layouts/dashboard')
+@extends('layouts.dashboard')
 
-@section('dashboard_content')
+@section('dashboard-content')
     <main class="tabcontent" id="dashboard">
         <div class="head-title">
             <div class="left">
@@ -8,7 +8,7 @@
 
                 <ul class="breadcrumb">
                     <li>
-                        <a href="#">John Smith</a>
+                        <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                     </li>
                     <li><i class="uil uil-angle-right-b"></i></li>
                     <li>
@@ -16,44 +16,39 @@
                     </li>
                 </ul>
             </div>
-
-            <a href="#" class="btn-download">
-                <i class="uil uil-cloud-download"></i>
-                <span class="text">Download Resume</span>
-            </a>
         </div>
 
         <ul class="box-info">
             <li>
                 <a class="tablinks" onclick="switchcommon(event, 'sent-messages')"
                    style="cursor: pointer" title="Sent Messages">
-                    <i class="uil uil-at"></i>
+                    <i class="uil uil-constructor"></i>
                 </a>
                 <div class="text">
                     <h3>10</h3>
-                    <p>Pending "Contact Me" Messages</p>
+                    <p>Ongoing Employee Assigned Projects</p>
                 </div>
             </li>
 
             <li>
                 <a class="tablinks" onclick="switchcommon(event, 'verifications')"
                    style="cursor: pointer" title="Verifications">
-                    <i class="uil uil-user"></i>
+                    <i class="uil uil-user-square"></i>
                 </a>
                 <div class="text">
                     <h3>10</h3>
-                    <p>Unverified Users</p>
+                    <p>Available Employees</p>
                 </div>
             </li>
 
             <li>
                 <a class="tablinks" onclick="switchcommon(event, 'to-do')"
                    style="cursor: pointer" title="To Do">
-                    <i class="uil uil-clipboard"></i>
+                    <i class="uil uil-clipboard-notes"></i>
                 </a>
                 <div class="text">
                     <h3>10</h3>
-                    <p>To Do Items</p>
+                    <p>Open Projects</p>
                 </div>
             </li>
 

@@ -39,9 +39,4 @@ class Routing extends Controller
             return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
         }
     }
-
-    public function dataCollection()
-    {
-
-    }
 }
