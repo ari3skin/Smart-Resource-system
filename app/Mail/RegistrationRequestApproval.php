@@ -9,18 +9,29 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RequestApproval extends Mailable
+class RegistrationRequestApproval extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public $first_name;
+    public $last_name;
+    public $type;
+    public $username;
+    public $password;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data, $type, $username)
     {
         //
+        $this->first_name = $data->first_name;
+        $this->last_name = $data->last_name;
+        $this->type = $type;
+        $this->username = $username;
+        $this->password = 'arcadian_user_resource_123';
     }
 
     /**

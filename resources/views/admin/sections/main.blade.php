@@ -12,7 +12,7 @@
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
                 <li>
-                    <a class="active" href="#">Home</a>
+                    <a class="active" href="#">Summaries</a>
                 </li>
             </ul>
         </div>
@@ -20,46 +20,52 @@
 
     <ul class="box-info">
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'sent-messages')"
-               style="cursor: pointer" title="Sent Messages">
+            <a style="cursor: pointer" title="Registrations">
                 <i class="uil uil-clipboard-alt"></i>
             </a>
             <div class="text">
-                <h3>10</h3>
+                <h3>{{$requestsCount}} pending</h3>
                 <p>Registration Requests</p>
             </div>
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'verifications')"
-               style="cursor: pointer" title="Verifications">
+            <a style="cursor: pointer" title="Registrations">
+                <i class="uil uil-clipboard-alt"></i>
+            </a>
+            <div class="text">
+                <h3>{{$usersCount}}</h3>
+                <p>User Accounts</p>
+            </div>
+        </li>
+
+        <li>
+            <a style="cursor: pointer" title="Company Employees">
                 <i class="uil uil-user-square"></i>
             </a>
             <div class="text">
-                <h3>10</h3>
+                <h3>{{$employeesCount}}</h3>
                 <p>Available Employees</p>
             </div>
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'to-do')"
-               style="cursor: pointer" title="To Do">
-                <i class="uil uil-clipboard-notes"></i>
+            <a style="cursor: pointer" title="Company Employers">
+                <i class="uil uil-user-md"></i>
             </a>
             <div class="text">
-                <h3>10</h3>
-                <p>Open Projects</p>
+                <h3>{{$employersCount}}</h3>
+                <p>Available Employers</p>
             </div>
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'chat-zone')"
-               style="cursor: pointer" title="Chat Zone">
-                <i class="uil uil-comments-alt"></i>
+            <a style="cursor: pointer" title="Project Aprovals">
+                <i class="uil uil-clipboard-notes"></i>
             </a>
             <div class="text">
-                <h3>10</h3>
-                <p>Number of Chats</p>
+                <h3>--</h3>
+                <p>Open Projects</p>
             </div>
         </li>
     </ul>
@@ -83,7 +89,6 @@
     </div>
 
     <div class="table-data">
-
         <div class="order">
             <table>
                 <thead>
@@ -95,12 +100,13 @@
                     <th>Work Email</th>
                     <th>Request Date</th>
                     <th>Status</th>
-                    <th>Action</th>
+                    <th>Approve</th>
+                    <th>Reject</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($registration_requests as $item)
-                    <tr>
+                    <tr style="border-bottom: solid var(--title-color) 1px">
                         @php
                             $userInfo = DB::table('user_registration_requests')
                                 ->select('user_registration_requests.employer_id', 'user_registration_requests.employee_id',
@@ -111,9 +117,7 @@
                                 ->leftJoin('employees', 'user_registration_requests.work_email', '=', 'employees.email')
                                 ->where('user_registration_requests.work_email', '=', $item['work_email'])
                                 ->first();
-
-
-                                // Access the properties
+                            //store the respective data
                                 $employerId = $userInfo->employer_id;
                                 $employeeId = $userInfo->employee_id;
                                 $employerFirstName = $userInfo->emlr_first;
@@ -123,9 +127,6 @@
                                 $workEmail = $userInfo->work_email;
                                 $requestDateSent = $userInfo->request_date;
                                 $status = $userInfo->status;
-
-                                // Do something with the retrieved data
-
                         @endphp
 
                         <td>
@@ -135,9 +136,11 @@
                             <p>{{$item->employee_id}}</p>
                         </td>
                         <td>
+                            <p>{{$employerFirstName}}</p>
                             <p>{{$employeeFirstName}}</p>
                         </td>
                         <td>
+                            <p>{{$employerLastName}}</p>
                             <p>{{$employeeLastName}}</p>
                         </td>
                         <td>{{$item->work_email}}</td>
@@ -148,12 +151,22 @@
                             </span>
                         </td>
                         <td>
-                            <form action="#" method="post">
+                            <form method="POST" action="/admin/creation/approved">
                                 @csrf
-                                <input type="hidden" name="MID" value="{{$item->id}}">
-                                <input type="hidden" name="status" value="sent">
+                                <input type="hidden" name="request_mail" value="{{$item->work_email}}">
+                                <input type="hidden" name="status" value="approved">
                                 <button type="submit">
                                     <i class="uil uil-envelope-check" style="cursor: pointer"></i>
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST" action="/admin/creation/rejected">
+                                @csrf
+                                <input type="hidden" name="request_mail" value="{{$item->work_email}}">
+                                <input type="hidden" name="status" value="rejected">
+                                <button type="submit">
+                                    <i class="uil uil-envelope-block" style="cursor: pointer"></i>
                                 </button>
                             </form>
                         </td>

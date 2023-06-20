@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Admin Dashboard</title>
+    <title>Super Admin Dashboard</title>
     <x-header-tag></x-header-tag>
 </head>
 <body class="admin__body">
@@ -10,10 +10,12 @@
 
 <section id="content">
     <nav>
-        <i class="uil uil-bars"></i>
-        <a href="#" class="nav-link">Actions</a>
+        <div style="display: flex; align-items: center;">
+            <i class="uil uil-bars"></i>
+            <a href="#" class="nav-link">Actions</a>
+        </div>
 
-        <form action="#">
+        <form action="#" style="display: none">
             <div class="form-input">
                 <input type="search" placeholder="Search...">
                 <button type="submit" class="search-btn">
@@ -22,10 +24,12 @@
             </div>
         </form>
 
+        {{--top left navigation icons--}}
         <i class="uil uil-moon change-theme" id="dashboard-theme"></i>
-        <a href="#" class="notification">
-            <i class="uil uil-bell"></i>
-            <span class="num">8</span>
+
+        <a href="#" class="profile notification" title="Chat Box">
+            <i class="uil uil-comments-alt"></i>
+            <span class="num">--</span>
         </a>
     </nav>
 

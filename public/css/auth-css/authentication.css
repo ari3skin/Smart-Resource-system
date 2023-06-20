@@ -36,7 +36,22 @@ list-type-ulli, .socials {
     width: 60%;
 }
 
+.modal__text__success {
+    color: var(--green);
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.modal__text__error {
+    color: var(--red);
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
 .modal__text {
+    text-align: center;
     color: var(--title-color);
 }
 
@@ -121,7 +136,7 @@ figure {
 p {
     margin-bottom: 0;
     font-size: 15px;
-    color: #777;
+    color: var(--title-color)
 }
 
 h2 {

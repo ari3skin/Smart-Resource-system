@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
+use App\Models\Employer;
+use App\Models\User;
 use App\Models\UserRegistrationRequest;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,12 +21,25 @@ class Routing extends Controller
         $user = Auth::user();
 
         if ($user->role == 'Admin') {
+            //fetching all records
+            $employers = Employer::all();
+            $employees = Employee::all();
+            $users = User::all();
+            $registration_requests = UserRegistrationRequest::all()->where('status', '=', 'pending');
 
-            $registration_requests = UserRegistrationRequest::all();
+            //doing the numbers
+            $requestsCount = $registration_requests->count();
+            $employersCount = $employers->count();
+            $employeesCount = $employees->count();
+            $usersCount = $users->count();
 
             return view('admin.dashboard',
                 [
                     'registration_requests' => $registration_requests,
+                    'requestsCount' => $requestsCount,
+                    'employersCount' => $employersCount,
+                    'employeesCount' => $employeesCount,
+                    'usersCount' => $usersCount,
                 ]
             );
 

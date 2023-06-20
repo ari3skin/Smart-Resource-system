@@ -34,7 +34,7 @@ class EmployeeSeeder extends Seeder
                 ],
             ]);
 
-        for ($i = 0; $i < 14; $i++) {
+        for ($i = 0; $i < 150; $i++) {
             Employee::factory()->create();
         }
     }

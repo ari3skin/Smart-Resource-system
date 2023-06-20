@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Employee;
+use App\Models\Employer;
 use App\Models\User;
 use App\Models\UserRegistrationRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -17,7 +20,6 @@ class AuthController extends Controller
     public function accounts()
     {
         if (request()->is('auth/login')) {
-
             $user = Auth::user();
             if ($user == null) {
                 return view('auth.login');
@@ -106,8 +108,22 @@ class AuthController extends Controller
     //2-2. Registration Request
     public function registration(Request $request)
     {
-        $data = $request->all();
-        $this->createRequest($data);
+        $existingRequest = UserRegistrationRequest::where('work_email', $request->input('email'))->exists();
+        $existingEmployer = Employer::where('email', $request->input('email'))->exists();
+        $existingEmployee = Employee::where('email', $request->input('email'))->exists();
+
+        if (!$existingRequest) {
+            if ($existingEmployer || $existingEmployee) {
+                $data = $request->all();
+                $this->createRequest($data);
+                return response()->json(['success' => true]);
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } else {
+            return response()->json(['success' => false]);
+        }
+
     }
 
     public function createRequest(array $data)
@@ -142,8 +158,41 @@ class AuthController extends Controller
         ]);
     }
 
+    //3. account creation
+    public function createAccount($data, $type)
+    {
+        // Extract the necessary fields from $data
+        $id = $data->id;
+        $first_name = $data->first_name;
+        $last_name = $data->last_name;
 
-    //3. logout
+        $username = strtolower($first_name . "_" . $last_name . "@resource.arcadian.org");
+
+        if ($type == 'Employer') {
+            return User::create([
+                'employer_id' => $id,
+                'employee_id' => null,
+                'role' => $type,
+                'username' => $username,
+                'password' => Hash::make('arcadian_user_resource_123'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        } elseif ($type == 'Employee') {
+            return User::create([
+                'employee_id' => $id,
+                'employer_id' => null,
+                'role' => $type,
+                'username' => $username,
+                'password' => Hash::make('arcadian_user_resource_123'),
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        }
+    }
+
+
+    //4. logout
     public function logout(Request $request)
     {
         Auth::logout();

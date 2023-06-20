@@ -18,12 +18,14 @@
 
             <div class="signin-form">
                 <h2 class="form-title">Registration Request</h2>
-                <form method="POST" action="/auth/registration" class="register-form" id="registration_form">
+                <form method="POST" action="/auth/registration" class="register-form" id="registration_form"
+                      autocomplete="on">
                     @csrf
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
                         <input type="text" name="email" id="email" placeholder="Your Work Email" required/>
                     </div>
+                    <div id="email-notification" class="notification"></div>
                     <div class="form-group">
                         <label for="datetime"><i class="uil uil-calendar-alt"></i></label>
                         <input type="datetime-local" name="datetime" id="datetime" placeholder="Current Date" required/>
@@ -48,14 +50,17 @@
     <div id="modal_success" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <p class="modal__text">Your Registration Request has been successfully placed.</p>
+            <p class="modal__text__success">Your Registration Request has been successfully placed.</p>
+            <p class="modal__text">Kindly wait for a minimum of 2 days for further system procedures</p>
         </div>
     </div>
 
     <div id="modal_fail" class="modal">
         <div class="modal-content">
-            <p class="modal__text">Your Registration Request has failed.</p>
-            <p class="modal__text">There was an error in your input</p>
+            <p class="modal__text__error">Registration Request has failed.</p>
+            <p class="modal__text">Your request has already been placed</p>
+            <p class="modal__text">OR</p>
+            <p class="modal__text">There is an error in your inputs</p>
         </div>
     </div>
 </section>
@@ -76,7 +81,7 @@
     window.onclick = function (event) {
         if (event.target === modal_success) {
             modal_success.style.display = "none";
-            window.location.href = "/";
+            window.location.href = "/auth/login";
 
         } else if (event.target === modal_fail) {
             modal_fail.style.display = "none";
@@ -104,9 +109,16 @@
         })
             .then(function (response) {
                 if (response.ok) {
-                    showSuccessModal()
+                    return response.json();
                 } else {
-                    showFailedModal()
+                    throw new Error('Request failed');
+                }
+            })
+            .then(function (data) {
+                if (data.success) {
+                    showSuccessModal();
+                } else {
+                    showFailedModal();
                 }
             })
             .catch(function (error) {
