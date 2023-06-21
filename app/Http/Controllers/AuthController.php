@@ -101,7 +101,7 @@ class AuthController extends Controller
                 return redirect()->intended('/admin/');
             }
         } else {
-            return "not able to login";
+            return redirect()->route('login')->withErrors(['error' => 'Invalid credentials. Please try again.']);
         }
     }
 
