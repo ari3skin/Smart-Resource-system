@@ -38,10 +38,13 @@
                     </div>
                 </form>
                 <div class="social-login">
-                    <button id="google-signin-button">
-                        <span class="google-icon"></span>
-                        <span class="btn-text">Sign in with Google</span>
-                    </button>
+                    <a href="/auth/g-login">
+                        <button id="google-signin-button">
+                            <span class="google-icon"></span>
+                            <span class="btn-text">Sign in with Google</span>
+                        </button>
+                    </a>
+
                 </div>
             </div>
         </div>

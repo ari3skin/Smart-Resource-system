@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\Routing;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +25,9 @@ Route::prefix('auth')->group(function () {
 
     Route::post('login', [AuthController::class, 'login']);
     Route::post('registration', [AuthController::class, 'registration']);
+
+    Route::get('/g-login', [GoogleController::class, 'loginWithGoogle']);
+    Route::get('/g-callback', [GoogleController::class, 'callBackFromGoogle']);
 
     Route::get('logout', [AuthController::class, 'logout']);
 });
