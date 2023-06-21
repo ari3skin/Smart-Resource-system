@@ -18,7 +18,8 @@ class EmployerFactory extends Factory
     {
         $firstName = fake()->firstName();
         $lastName = fake()->lastName();
-        $domain = fake()->randomElement(['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com']);
+        $org_domain = 'arcadianbank.com';
+        $com_domains = fake()->randomElement(['gmail.com', 'outlook.com', 'yahoo.com', 'icloud.com']);
 
         return [
             //
@@ -26,7 +27,7 @@ class EmployerFactory extends Factory
             'designation_id' => fake()->randomElement([101, 102, 103, 104, 105, 106]),
             'first_name' => $firstName,
             'last_name' => $lastName,
-            'email' => strtolower($firstName . '.' . $lastName . '@' . $domain),
+            'email' => strtolower($firstName . '.' . $lastName . '@' . $org_domain),
             'phone_number' => fake()->phoneNumber(),
             'employed_date' => fake()->dateTime(),
             'DOB' => fake()->dateTime(),
