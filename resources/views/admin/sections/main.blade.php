@@ -7,7 +7,7 @@
             <h1>Dashboard</h1>
 
             <ul class="breadcrumb">
-                <li>
+                <li class="tablinks" onclick="switchcommon(event, 'dashboard')" style="cursor: pointer">
                     <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
@@ -77,7 +77,7 @@
             <h1>Registration Requests</h1>
 
             <ul class="breadcrumb">
-                <li>
+                <li class="tablinks" onclick="switchcommon(event, 'dashboard')" style="cursor: pointer">
                     <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
@@ -112,6 +112,7 @@
                                 ->select('user_registration_requests.employer_id', 'user_registration_requests.employee_id',
                                          'employers.first_name as emlr_first', 'employers.last_name as emlr_last',
                                          'employees.first_name as emle_first', 'employees.last_name as emle_last',
+                                         'employers.identifier as MNG_', 'employees.identifier as EMP_',
                                          'user_registration_requests.work_email', 'user_registration_requests.request_date', 'user_registration_requests.status')
                                 ->leftJoin('employers', 'user_registration_requests.work_email', '=', 'employers.email')
                                 ->leftJoin('employees', 'user_registration_requests.work_email', '=', 'employees.email')
@@ -120,6 +121,8 @@
                             //store the respective data
                                 $employerId = $userInfo->employer_id;
                                 $employeeId = $userInfo->employee_id;
+                                $employerRole = $userInfo->MNG_;
+                                $employeeRole = $userInfo->EMP_;
                                 $employerFirstName = $userInfo->emlr_first;
                                 $employerLastName = $userInfo->emlr_last;
                                 $employeeFirstName = $userInfo->emle_first;
@@ -154,6 +157,7 @@
                             <form method="POST" action="/admin/creation/approved">
                                 @csrf
                                 <input type="hidden" name="request_mail" value="{{$item->work_email}}">
+                                <input type="hidden" name="user_type" value="{{$employerRole}}{{$employeeRole}}">
                                 <input type="hidden" name="status" value="approved">
                                 <button type="submit">
                                     <i class="uil uil-envelope-check" style="cursor: pointer"></i>
@@ -164,6 +168,7 @@
                             <form method="POST" action="/admin/creation/rejected">
                                 @csrf
                                 <input type="hidden" name="request_mail" value="{{$item->work_email}}">
+                                <input type="hidden" name="user_type" value="{{$employerRole}}{{$employeeRole}}">
                                 <input type="hidden" name="status" value="rejected">
                                 <button type="submit">
                                     <i class="uil uil-envelope-block" style="cursor: pointer"></i>
@@ -176,4 +181,45 @@
             </table>
         </div>
     </div>
+</main>
+
+<main class="tabcontent" id="settings">
+    <div class="head-title">
+        <div class="left">
+            <h1>Settings</h1>
+
+            <ul class="breadcrumb">
+                <li class="tablinks" onclick="switchcommon(event, 'dashboard')" style="cursor: pointer">
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                </li>
+                <li><i class="uil uil-angle-right-b"></i></li>
+                <li>
+                    <a class="active" href="#">Setings</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="box-info">
+        <li class="tablinks" onclick="switchcommon(event, 'reset-password')" style="cursor: pointer">
+            <i class="uil uil-history-alt"></i>
+            <div class="text">
+                <p>Reset Your Password</p>
+            </div>
+        </li>
+
+        <li class="tablinks" onclick="switchcommon(event, 'new-employer')" style="cursor: pointer">
+            <i class="uil uil-user-plus"></i>
+            <div class="text">
+                <p>Create new Employer</p>
+            </div>
+        </li>
+
+        <li class="tablinks" onclick="switchcommon(event, 'new-employee')" style="cursor: pointer">
+            <i class="uil uil-user-plus"></i>
+            <div class="text">
+                <p>Create new Employee</p>
+            </div>
+        </li>
+    </ul>
 </main>

@@ -16,6 +16,23 @@ class Routing extends Controller
         return view('index');
     }
 
+    public function passwordReset($user_id, $role)
+    {
+        if ($user_id == null) {
+
+            return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
+
+        } elseif ($role == 'Manager') {
+
+            return view('auth.manager_reset', ['user_id' => $user_id]);
+
+        } elseif ($role == 'Employee') {
+
+            return view('auth.user_reset', ['user_id' => $user_id]);
+
+        }
+    }
+
     public function dashboards()
     {
         $user = Auth::user();
@@ -43,7 +60,7 @@ class Routing extends Controller
                 ]
             );
 
-        } elseif ($user->role == 'Employer') {
+        } elseif ($user->role == 'Manager') {
 
             return view('users.employers.employers');
 

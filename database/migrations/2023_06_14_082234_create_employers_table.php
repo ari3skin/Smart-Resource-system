@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->bigInteger('designation_id')->nullable()->unsigned();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('identifier')->default('EPR_');
             $table->string('email');
             $table->string('phone_number');
             $table->date('employed_date');

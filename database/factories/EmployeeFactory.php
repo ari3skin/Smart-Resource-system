@@ -31,7 +31,6 @@ class EmployeeFactory extends Factory
             'phone_number' => fake()->phoneNumber(),
             'employed_date' => fake()->dateTime(),
             'DOB' => fake()->dateTime(),
-            'current_salary_amount' => fake()->randomElement(['Ksh 160000', 'Ksh 2350000', 'Ksh 757890', 'Ksh 1750630'])
         ];
     }
 }

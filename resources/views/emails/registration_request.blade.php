@@ -1,5 +1,5 @@
 <x-mail::message>
-# Dear {{$type}} {{$first_name}} {{$last_name}},
+# Dear {{$first_name}} {{$last_name}},
 <br>
 We are pleased to inform you that your account registration request has been accepted. You can now log in to our system
 using the following credentials:
@@ -12,7 +12,7 @@ using the following credentials:
 <br>
 Please note that for security purposes, we recommend you promptly reset your password upon logging in.
 
-@component('mail::button', ['url' => '/'])
+@component('mail::button', ['url' => 'http://127.0.0.1:8000/auth/reset-password/' . $user_id . '/'.$type.''])
 Reset Password
 @endcomponent
 

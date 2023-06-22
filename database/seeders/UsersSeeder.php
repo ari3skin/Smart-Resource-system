@@ -22,6 +22,7 @@ class UsersSeeder extends Seeder
         DB::table('users')
             ->insert([
                 [
+                    'identifier'=>'ADM_',
                     'employer_id' => 101,
                     'employee_id' => null,
                     'role' => 'Admin',
@@ -32,9 +33,10 @@ class UsersSeeder extends Seeder
                     'updated_at' => Carbon::now(),
                 ],
                 [
+                    'identifier'=>'MNGR_',
                     'employer_id' => 102,
                     'employee_id' => null,
-                    'role' => 'Employer',
+                    'role' => 'Manager',
                     'username' => 'megan_mwago@resource.arcadian.com',
                     'password' => Hash::make('admin@123'),
                     'email_verified_at' => '2007-12-17 12:00:00',
@@ -42,6 +44,7 @@ class UsersSeeder extends Seeder
                     'updated_at' => Carbon::now(),
                 ],
                 [
+                    'identifier'=>'EPE_',
                     'employer_id' => null,
                     'employee_id' => 101,
                     'role' => 'Employee',

@@ -35,10 +35,12 @@
 
     {{--main navigation content--}}
     @include('admin.sections.main')
+    @include('admin.sections.settings_content')
 </section>
 
 
 <script src="{{asset('js/admin.js')}}"></script>
+<script src="{{asset('js/index.js')}}"></script>
 <script>
     // tab switching
     function switchcommon(evt, mainName) {
@@ -56,8 +58,21 @@
         evt.currentTarget.className += " active";
     }
 
-    // for default page
     document.getElementById("defaultOpen").click();
+
+    //modal views
+    var modal_fail = document.getElementById("modal_fail");
+    var close_span = document.getElementsByClassName("close")[0];
+
+    // Events that close both modals
+    close_span.onclick = function () {
+        modal_fail.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target === modal_fail) {
+            modal_fail.style.display = "none";
+        }
+    };
 </script>
 </body>
 </html>

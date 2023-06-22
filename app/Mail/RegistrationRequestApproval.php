@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -18,6 +19,7 @@ class RegistrationRequestApproval extends Mailable
     public $type;
     public $username;
     public $password;
+    public $user_id;
 
     /**
      * Create a new message instance.
@@ -27,11 +29,25 @@ class RegistrationRequestApproval extends Mailable
     public function __construct($data, $type, $username)
     {
         //
-        $this->first_name = $data->first_name;
-        $this->last_name = $data->last_name;
-        $this->type = $type;
-        $this->username = $username;
-        $this->password = 'arcadian_user_resource_123';
+        if ($type == 'Manager') {
+            $UID = User::all()->where('employer_id', '=', $data->id)->first();
+            $this->user_id = $UID->id;
+            $this->first_name = $data->first_name;
+            $this->last_name = $data->last_name;
+            $this->type = $type;
+            $this->username = $username;
+            $this->password = 'arcadian_user_resource_123';
+
+        } elseif ($type == 'Employee') {
+            $UID = User::all()->where('employee_id', '=', $data->id)->first();
+            $this->user_id = $UID->id;
+            $this->first_name = $data->first_name;
+            $this->last_name = $data->last_name;
+            $this->type = $type;
+            $this->username = $username;
+            $this->password = 'arcadian_user_resource_123';
+        }
+
     }
 
     /**

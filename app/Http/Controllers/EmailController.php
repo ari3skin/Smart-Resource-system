@@ -14,15 +14,12 @@ use function Symfony\Component\Translation\t;
 class EmailController extends Controller
 {
     //
-    public function approvedRegistration(Request $request)
+    public function approved(Request $request)
     {
         $data = $request->all();
-        $existingEmployer = Employer::where('email', $request->input('request_mail'))->exists();
-        $existingEmployee = Employee::where('email', $request->input('request_mail'))->exists();
 
-        if ($existingEmployer) {
-            //define the type and other data preparations
-            $type = 'Employer';
+        if ($data['user_type'] == 'EPR_') {
+            $type = 'Manager';
             $employer_data = Employer::all()->where('email', '=', $request->input('request_mail'))->first();
             $username = strtolower($employer_data->first_name . "_" . $employer_data->last_name . '@resource.arcadian.org');
 
@@ -34,9 +31,7 @@ class EmailController extends Controller
             } else {
                 return 'not sent';
             }
-
-        } elseif ($existingEmployee) {
-            //define the type and other data preparations
+        } elseif ($data['user_type'] == 'EPE_') {
             $type = 'Employee';
             $employee_data = Employee::all()->where('email', '=', $request->input('request_mail'))->first();
             $username = strtolower($employee_data->first_name . "_" . $employee_data->last_name . '@resource.arcadian.org');

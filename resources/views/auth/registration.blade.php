@@ -51,7 +51,8 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <p class="modal__text__success">Your Registration Request has been successfully placed.</p>
-            <p class="modal__text">Kindly wait for a minimum of 2 days for further system procedures</p>
+            <p class="modal__text">Kindly wait for a minimum of 5 hours for further system procedures and check your
+                email for account creation, reset password and verification</p>
         </div>
     </div>
 

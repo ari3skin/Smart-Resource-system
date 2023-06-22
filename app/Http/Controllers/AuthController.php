@@ -39,84 +39,61 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('username', 'password');
-
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $user = Auth::user();
-            // Update the login column
             DB::table('users')->where('id', $user->id)->update(['last_login' => now()]);
-
-            //searching, creating and storing data into session variables
+            $identifier = DB::table('users')->where('id', $user->id)->get('identifier')->first()->identifier;
             $user_role = DB::table('users')->where('id', $user->id)->get('role')->first()->role;
 
-            $employer_id = DB::table('employers')
-                ->select('id')
-                ->where('id', $user->employer_id)
-                ->first('id')->id;
+            //session creations depending on the user type logged in
+            if ($identifier == 'ADM_' || $identifier == 'MNGR_') {
 
-            $first_name = DB::table('employers')
-                ->select('first_name')
-                ->where('id', $user->employer_id)
-                ->first('first_name')->first_name;
-
-            $last_name = DB::table('employers')
-                ->select('last_name')
-                ->where('id', $user->employer_id)
-                ->first('last_name')->last_name;
-
-            if ($first_name && $last_name) {
-                $request->session()->put('work_id', $employer_id);
-                $request->session()->put('first_name', $first_name);
-                $request->session()->put('last_name', $last_name);
+                $user_info = DB::table('employers')
+                    ->select('id', 'first_name', 'last_name', 'identifier')
+                    ->where('id', $user->employer_id)
+                    ->first();
+                $request->session()->put('work_id', $user_info->id);
+                $request->session()->put('first_name', $user_info->first_name);
+                $request->session()->put('last_name', $user_info->last_name);
                 $request->session()->put('role', $user_role,);
 
-            } else {
-                $employee_id = DB::table('employees')
-                    ->select('id')
-                    ->where('id', $user->employee_id)
-                    ->first('id')->id;
+            } elseif ($identifier == 'EMP_') {
 
-                $first_name = DB::table('employees')
-                    ->select('first_name')
-                    ->where('id', $user->employee_id)
-                    ->first('first_name')->first_name;
-
-                $last_name = DB::table('employees')
-                    ->select('last_name')
-                    ->where('id', $user->employee_id)
-                    ->first('last_name')->last_name;
-
-                $request->session()->put('work_id', $employee_id);
-                $request->session()->put('first_name', $first_name);
-                $request->session()->put('last_name', $last_name);
+                $user_info = DB::table('employees')
+                    ->select('id', 'first_name', 'last_name', 'identifier')
+                    ->where('id', $user->employer_id)
+                    ->first();
+                $request->session()->put('work_id', $user_info->id);
+                $request->session()->put('first_name', $user_info->first_name);
+                $request->session()->put('last_name', $user_info->last_name);
                 $request->session()->put('role', $user_role,);
             }
 
-
-            //decision maker to where a user will go
             if ($user_role == 'Admin') {
                 return redirect()->intended('/admin/');
-            } elseif ($user_role == 'Employer') {
+
+            } elseif ($user_role == 'Manager') {
                 return redirect()->intended('/admin/');
+
             } elseif ($user_role == 'Employee') {
                 return redirect()->intended('/admin/');
             }
-        } else {
-            return redirect()->route('login')->withErrors(['error' => 'Invalid credentials. Please try again.']);
         }
     }
 
     //2-2. Registration Request
     public function registration(Request $request)
     {
+        $data = $request->all();
         $existingRequest = UserRegistrationRequest::where('work_email', $request->input('email'))->exists();
         $existingEmployer = Employer::where('email', $request->input('email'))->exists();
         $existingEmployee = Employee::where('email', $request->input('email'))->exists();
 
         if (!$existingRequest) {
             if ($existingEmployer || $existingEmployee) {
-                $data = $request->all();
                 $this->createRequest($data);
                 return response()->json(['success' => true]);
+
             } else {
                 return response()->json(['success' => false]);
             }
@@ -168,8 +145,9 @@ class AuthController extends Controller
 
         $username = strtolower($first_name . "_" . $last_name . "@resource.arcadian.org");
 
-        if ($type == 'Employer') {
+        if ($type == 'Manager') {
             return User::create([
+                'identifier'=>'MNGR_',
                 'employer_id' => $id,
                 'employee_id' => null,
                 'role' => $type,
@@ -180,6 +158,7 @@ class AuthController extends Controller
             ]);
         } elseif ($type == 'Employee') {
             return User::create([
+                'identifier'=>'EPE_',
                 'employee_id' => $id,
                 'employer_id' => null,
                 'role' => $type,

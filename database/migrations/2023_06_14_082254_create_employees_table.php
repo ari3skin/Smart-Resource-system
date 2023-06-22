@@ -19,11 +19,11 @@ return new class extends Migration {
             $table->bigInteger('designation_id')->nullable()->unsigned();
             $table->string('first_name');
             $table->string('last_name');
+            $table->string('identifier')->default('EPE_');
             $table->string('email');
             $table->string('phone_number');
             $table->date('employed_date');
             $table->date('DOB');
-            $table->string('current_salary_amount');
             $table->timestamps();
 
             //relationships

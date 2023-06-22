@@ -13,6 +13,7 @@
     justify-content: space-between;
     grid-gap: 16px;
     flex-wrap: wrap;
+    margin-top: -20px;
 }
 
 #content main .head-title .left h1 {
@@ -78,7 +79,7 @@
     width: 80px;
     height: 80px;
     border-radius: 10px;
-    font-size: 36px;
+    font-size: 50px;
     display: flex;
     justify-content: center;
     align-items: center;

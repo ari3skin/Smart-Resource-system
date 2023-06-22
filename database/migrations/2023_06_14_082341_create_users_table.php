@@ -14,10 +14,11 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
+            $table->enum('identifier', ['ADM_', 'MNGR_', 'EPE_']);
             $table->id();
             $table->bigInteger('employer_id')->nullable()->unsigned();
             $table->bigInteger('employee_id')->nullable()->unsigned();
-            $table->enum('role', ['Admin', 'Employer', 'Employee'])->default('Admin');
+            $table->enum('role', ['Admin', 'Manager', 'Employee'])->default('Manager');
             $table->string('username');
             $table->string('password')->nullable();
             $table->timestamp('email_verified_at')->nullable();

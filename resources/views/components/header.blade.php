@@ -26,7 +26,7 @@
                                    style="font-size: 1.5rem; color: var(--title-color);"></i>
                                 {{session('role')}} {{session('first_name')}}
                             </a>
-                        @elseif(session('role')=='Employer')
+                        @elseif(session('role')=='Manager')
                             <a href="/admin/" style="margin-left: 1rem; margin-right: 1rem;"
                                title="Logged in as {{session('first_name')}} {{session('last_name')}}">
                                 <i class="uil uil-user-md nav__icon"
