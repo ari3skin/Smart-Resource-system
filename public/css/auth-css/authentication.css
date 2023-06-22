@@ -36,6 +36,13 @@ list-type-ulli, .socials {
     width: 60%;
 }
 
+.modal__text__notice {
+    color: var(--first-color);
+    font-size: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
 .modal__text__success {
     color: var(--green);
     font-size: 30px;

@@ -6,6 +6,7 @@ use App\Models\Employee;
 use App\Models\Employer;
 use App\Models\User;
 use App\Models\UserRegistrationRequest;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class Routing extends Controller
@@ -16,20 +17,33 @@ class Routing extends Controller
         return view('index');
     }
 
-    public function passwordReset($user_id, $role)
+    //2. accessing the login and registration
+    public function accounts()
+    {
+        if (request()->is('auth/login')) {
+            $user = Auth::user();
+            if ($user == null) {
+                return view('auth.login');
+            }
+            return redirect("/")->withErrors(['msg' => "You are already logged in"]);
+
+        } elseif (request()->is('auth/registration')) {
+
+            return view('auth.registration');
+
+        } else {
+            abort(404);
+        }
+    }
+
+    public function passwordReset($user_id)
     {
         if ($user_id == null) {
 
             return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
 
-        } elseif ($role == 'Manager') {
-
-            return view('auth.manager_reset', ['user_id' => $user_id]);
-
-        } elseif ($role == 'Employee') {
-
-            return view('auth.user_reset', ['user_id' => $user_id]);
-
+        } else {
+            return view('auth.reset', ['user_id' => $user_id]);
         }
     }
 
@@ -69,7 +83,7 @@ class Routing extends Controller
             return view('users.employees.employees');
 
         } else {
-            return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
+            return redirect("/")->withErrors(['msg' => "Unauthorized access denied"]);
         }
     }
 }

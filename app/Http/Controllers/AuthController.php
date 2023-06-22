@@ -16,25 +16,6 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     //
-    //1. accessing the login and registration
-    public function accounts()
-    {
-        if (request()->is('auth/login')) {
-            $user = Auth::user();
-            if ($user == null) {
-                return view('auth.login');
-            }
-            return redirect("/")->withErrors(['msg' => "you are already logged in"]);
-
-        } elseif (request()->is('auth/registration')) {
-
-            return view('auth.registration');
-
-        } else {
-            abort(404);
-        }
-    }
-
     //2-1. Login -- work in progress
     public function login(Request $request)
     {
@@ -78,31 +59,12 @@ class AuthController extends Controller
             } elseif ($user_role == 'Employee') {
                 return redirect()->intended('/admin/');
             }
-        }
-    }
-
-    //2-2. Registration Request
-    public function registration(Request $request)
-    {
-        $data = $request->all();
-        $existingRequest = UserRegistrationRequest::where('work_email', $request->input('email'))->exists();
-        $existingEmployer = Employer::where('email', $request->input('email'))->exists();
-        $existingEmployee = Employee::where('email', $request->input('email'))->exists();
-
-        if (!$existingRequest) {
-            if ($existingEmployer || $existingEmployee) {
-                $this->createRequest($data);
-                return response()->json(['success' => true]);
-
-            } else {
-                return response()->json(['success' => false]);
-            }
         } else {
-            return response()->json(['success' => false]);
+            return redirect()->route('login')->withErrors(['error' => 'Invalid credentials. Please try again.']);
         }
-
     }
 
+    //2-2. Registration Request and others
     public function createRequest(array $data)
     {
         $email = $data['email'];
@@ -135,6 +97,27 @@ class AuthController extends Controller
         ]);
     }
 
+    public function registration(Request $request)
+    {
+        $data = $request->all();
+        $existingRequest = UserRegistrationRequest::where('work_email', $request->input('email'))->exists();
+        $existingEmployer = Employer::where('email', $request->input('email'))->exists();
+        $existingEmployee = Employee::where('email', $request->input('email'))->exists();
+
+        if (!$existingRequest) {
+            if ($existingEmployer || $existingEmployee) {
+                $this->createRequest($data);
+                return response()->json(['success' => true]);
+
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } else {
+            return response()->json(['success' => false]);
+        }
+
+    }
+
     //3. account creation
     public function createAccount($data, $type)
     {
@@ -147,7 +130,7 @@ class AuthController extends Controller
 
         if ($type == 'Manager') {
             return User::create([
-                'identifier'=>'MNGR_',
+                'identifier' => 'MNGR_',
                 'employer_id' => $id,
                 'employee_id' => null,
                 'role' => $type,
@@ -158,7 +141,7 @@ class AuthController extends Controller
             ]);
         } elseif ($type == 'Employee') {
             return User::create([
-                'identifier'=>'EPE_',
+                'identifier' => 'EPE_',
                 'employee_id' => $id,
                 'employer_id' => null,
                 'role' => $type,
@@ -170,8 +153,18 @@ class AuthController extends Controller
         }
     }
 
+    //4. password reset
+    public function resetPassword(Request $request)
+    {
+        $new_password = Hash::make($request->input('new_password'));
+        $user_update = User::all()->where('id', '=', $request->input('user_id'))->first();
+        $user_update->password = $new_password;
+        $user_update->email_verified_at = Carbon::now();
+        $user_update->update();
+        return redirect()->route('/')->withErrors(['msg' => 'Password Reset Successfully.']);
+    }
 
-    //4. logout
+    //5. logout
     public function logout(Request $request)
     {
         Auth::logout();

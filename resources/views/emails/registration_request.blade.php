@@ -12,7 +12,7 @@ using the following credentials:
 <br>
 Please note that for security purposes, we recommend you promptly reset your password upon logging in.
 
-@component('mail::button', ['url' => 'http://127.0.0.1:8000/auth/reset-password/' . $user_id . '/'.$type.''])
+@component('mail::button', ['url' => 'http://127.0.0.1:8000/auth/reset-password/' . $user_id . ''])
 Reset Password
 @endcomponent
 
