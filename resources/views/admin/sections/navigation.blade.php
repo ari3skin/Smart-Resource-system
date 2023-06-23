@@ -1,5 +1,5 @@
 <section id="sidebar">
-    <a href="/admin" class="brand">
+    <a href="/" class="brand">
         <img src="{{asset('icons/icon-2.png')}}">
         <span class="text">
             Welcome {{session('first_name')}}

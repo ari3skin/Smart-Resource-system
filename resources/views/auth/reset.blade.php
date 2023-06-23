@@ -21,11 +21,12 @@
                     @csrf
                     <div class="form-group">
                         <label for="username"><i class="uil uil-padlock"></i></label>
-                        <input type="text" name="username" id="username" placeholder="Current Password"/>
+                        <input type="text" name="password" id="username" minlength="8" placeholder="Current Password"/>
                     </div>
                     <div class="form-group">
                         <label for="password"><i class="uil uil-padlock"></i></label>
-                        <input type="password" name="new_password" id="password" placeholder="New Password" required/>
+                        <input type="password" name="new_password" id="password" minlength="8"
+                               placeholder="New Password" required/>
                     </div>
                     <div class="">
                         <input type="hidden" name="user_id" value="{{$user_id}}">

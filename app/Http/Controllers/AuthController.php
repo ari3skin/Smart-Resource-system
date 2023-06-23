@@ -126,7 +126,7 @@ class AuthController extends Controller
         $first_name = $data->first_name;
         $last_name = $data->last_name;
 
-        $username = strtolower($first_name . "_" . $last_name . "@resource.arcadian.org");
+        $username = strtolower($first_name . "_" . $last_name . "@arcadian.resource");
 
         if ($type == 'Manager') {
             return User::create([
@@ -170,9 +170,11 @@ class AuthController extends Controller
         Auth::logout();
 
         $request->session()->invalidate();
-
         $request->session()->regenerateToken();
+        $request->session()->flush();
 
-        return redirect('/');
+        return redirect()->to('/auth/login')->with('loggedout', true);
+//        $request->session()->forget('url.intented');
+//        return redirect('/auth/login')->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 }

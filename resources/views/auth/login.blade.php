@@ -26,7 +26,8 @@
                     </div>
                     <div class="form-group">
                         <label for="password"><i class="uil uil-padlock"></i></label>
-                        <input type="password" name="password" id="password" placeholder="Password" required/>
+                        <input type="password" name="password" id="password" placeholder="Password" minlength="8"
+                               required/>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember" id="remember" class="agree-term"

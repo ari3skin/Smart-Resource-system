@@ -50,40 +50,48 @@ class Routing extends Controller
     public function dashboards()
     {
         $user = Auth::user();
+        if (Auth::check()) {
 
-        if ($user->role == 'Admin') {
-            //fetching all records
-            $employers = Employer::all();
-            $employees = Employee::all();
-            $users = User::all();
-            $registration_requests = UserRegistrationRequest::all()->where('status', '=', 'pending');
+            if ($user->role == 'Admin') {
 
-            //doing the numbers
-            $requestsCount = $registration_requests->count();
-            $employersCount = $employers->count();
-            $employeesCount = $employees->count();
-            $usersCount = $users->count();
+                if ($user != null) {
+                    //fetching all records
+                    $employers = Employer::all();
+                    $employees = Employee::all();
+                    $users = User::all();
+                    $registration_requests = UserRegistrationRequest::all()->where('status', '=', 'pending');
 
-            return view('admin.dashboard',
-                [
-                    'registration_requests' => $registration_requests,
-                    'requestsCount' => $requestsCount,
-                    'employersCount' => $employersCount,
-                    'employeesCount' => $employeesCount,
-                    'usersCount' => $usersCount,
-                ]
-            );
+                    //doing the numbers
+                    $requestsCount = $registration_requests->count();
+                    $employersCount = $employers->count();
+                    $employeesCount = $employees->count();
+                    $usersCount = $users->count();
 
-        } elseif ($user->role == 'Manager') {
+                    return view('admin.dashboard',
+                        [
+                            'registration_requests' => $registration_requests,
+                            'requestsCount' => $requestsCount,
+                            'employersCount' => $employersCount,
+                            'employeesCount' => $employeesCount,
+                            'usersCount' => $usersCount,
+                        ]
+                    );
+                } else {
+                    return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
+                }
+            } elseif ($user->role == 'Manager') {
 
-            return view('users.employers.employers');
+                return view('users.employers.employers');
 
-        } elseif ($user->role == 'Employee') {
+            } elseif ($user->role == 'Employee') {
 
-            return view('users.employees.employees');
+                return view('users.employees.employees');
 
-        } else {
-            return redirect("/")->withErrors(['msg' => "Unauthorized access denied"]);
+            } else {
+                return redirect("/")->withErrors(['msg' => "Unauthorized access denied"]);
+            }
+        }else{
+            return redirect("/auth/login")->withErrors(['error' => "unauthorized access denied"]);
         }
     }
 }
