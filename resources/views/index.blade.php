@@ -18,6 +18,14 @@
                 <p class="modal__text">{{ $errors->first('msg') }}</p>
             </div>
         </div>
+    @elseif($errors->has('error'))
+        <div id="modal_fail" class="modal" style="display: block;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal__text__error">!! Warning !!</p>
+                <p class="modal__text">{{ $errors->first('error') }}</p>
+            </div>
+        </div>
     @endif
 </main>
 

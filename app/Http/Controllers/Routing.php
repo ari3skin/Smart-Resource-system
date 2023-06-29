@@ -25,7 +25,7 @@ class Routing extends Controller
             if ($user == null) {
                 return view('auth.login');
             }
-            return redirect("/")->withErrors(['msg' => "You are already logged in"]);
+            return redirect("/")->withErrors(['error' => "You are already logged in"]);
 
         } elseif (request()->is('auth/registration')) {
 
@@ -77,7 +77,7 @@ class Routing extends Controller
                         ]
                     );
                 } else {
-                    return redirect("/")->withErrors(['msg' => "unauthorized access denied"]);
+                    return redirect("/")->withErrors(['error' => "unauthorized access denied"]);
                 }
             } elseif ($user->role == 'Manager') {
 
@@ -88,7 +88,7 @@ class Routing extends Controller
                 return view('users.employees.employees');
 
             } else {
-                return redirect("/")->withErrors(['msg' => "Unauthorized access denied"]);
+                return redirect("/")->withErrors(['error' => "Unauthorized access denied"]);
             }
         }else{
             return redirect("/auth/login")->withErrors(['error' => "unauthorized access denied"]);
