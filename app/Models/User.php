@@ -22,9 +22,11 @@ class User extends Authenticatable
         'employee_id',
         'username',
         'password',
+        'email_token',
         'email_verified_at',
         'role',
         'identifier',
+        'account_status',
     ];
 
     /**

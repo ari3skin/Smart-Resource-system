@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordMail;
 use App\Models\Employee;
 use App\Models\Employer;
+use App\Models\PasswordReset;
 use App\Models\User;
 use App\Models\UserRegistrationRequest;
 use Carbon\Carbon;
@@ -11,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -19,48 +22,47 @@ class AuthController extends Controller
     //2-1. Login -- work in progress
     public function login(Request $request)
     {
-        $credentials = $request->only('username', 'password');
-        if (Auth::attempt($credentials, $request->filled('remember'))) {
-            $user = Auth::user();
-            DB::table('users')->where('id', $user->id)->update(['last_login' => now()]);
-            $identifier = DB::table('users')->where('id', $user->id)->get('identifier')->first()->identifier;
-            $user_role = DB::table('users')->where('id', $user->id)->get('role')->first()->role;
+        $user_confirmation = User::all()->where('username', '=', $request->input('username'))->first();
+        if ($user_confirmation->account_status == 'activated') {
 
-            //session creations depending on the user type logged in
-            if ($identifier == 'ADM_' || $identifier == 'MNGR_') {
+            $credentials = $request->only('username', 'password');
+            if (Auth::attempt($credentials, $request->filled('remember'))) {
 
-                $user_info = DB::table('employers')
-                    ->select('id', 'first_name', 'last_name', 'identifier')
-                    ->where('id', $user->employer_id)
-                    ->first();
-                $request->session()->put('work_id', $user_info->id);
-                $request->session()->put('first_name', $user_info->first_name);
-                $request->session()->put('last_name', $user_info->last_name);
-                $request->session()->put('role', $user_role,);
+                $user = Auth::user();
+                DB::table('users')->where('id', $user->id)->update(['last_login' => now()]);
+                $identifier = DB::table('users')->where('id', $user->id)->get('identifier')->first()->identifier;
+                $user_role = DB::table('users')->where('id', $user->id)->get('role')->first()->role;
 
-            } elseif ($identifier == 'EMP_') {
+                //session creations depending on the user type logged in
+                if ($identifier == 'ADM_' || $identifier == 'MNGR_') {
 
-                $user_info = DB::table('employees')
-                    ->select('id', 'first_name', 'last_name', 'identifier')
-                    ->where('id', $user->employer_id)
-                    ->first();
-                $request->session()->put('work_id', $user_info->id);
-                $request->session()->put('first_name', $user_info->first_name);
-                $request->session()->put('last_name', $user_info->last_name);
-                $request->session()->put('role', $user_role,);
-            }
+                    $user_info = DB::table('employers')
+                        ->select('id', 'first_name', 'last_name', 'identifier')
+                        ->where('id', $user->employer_id)
+                        ->first();
+                    $request->session()->put('work_id', $user_info->id);
+                    $request->session()->put('first_name', $user_info->first_name);
+                    $request->session()->put('last_name', $user_info->last_name);
+                    $request->session()->put('role', $user_role,);
 
-            if ($user_role == 'Admin') {
+                } elseif ($identifier == 'EMP_') {
+
+                    $user_info = DB::table('employees')
+                        ->select('id', 'first_name', 'last_name', 'identifier')
+                        ->where('id', $user->employer_id)
+                        ->first();
+                    $request->session()->put('work_id', $user_info->id);
+                    $request->session()->put('first_name', $user_info->first_name);
+                    $request->session()->put('last_name', $user_info->last_name);
+                    $request->session()->put('role', $user_role,);
+                }
                 return redirect()->intended('/admin/');
 
-            } elseif ($user_role == 'Manager') {
-                return redirect()->intended('/admin/');
-
-            } elseif ($user_role == 'Employee') {
-                return redirect()->intended('/admin/');
+            } else {
+                return redirect()->route('login')->withErrors(['error' => 'Invalid credentials. Please try again.']);
             }
         } else {
-            return redirect()->route('login')->withErrors(['error' => 'Invalid credentials. Please try again.']);
+            return redirect()->route('login')->withErrors(['error' => 'Your Account has not been activated yet']);
         }
     }
 
@@ -154,14 +156,68 @@ class AuthController extends Controller
     }
 
     //4. password reset
-    public function resetPassword(Request $request)
+
+    //the first method is for token generation mostly to verify the existence of the user and their credentials
+    public function passwordReset(Request $request)
+    {
+        $token = str::random(60);
+        $employer_search = Employer::where('email', '=', $request->input('email'))->exists();
+        $employee_search = Employee::where('email', '=', $request->input('email'))->exists();
+
+        if ($employer_search) {
+            $employer = Employer::all()->where('email', '=', $request->input('email'))->first();
+            $user = User::all()->where('employer_id', '=', $employer->id)->first();
+
+            $reset = new PasswordReset();
+            $reset->user_id = $user->id;
+            $reset->token = $token;
+            $reset->token_used = 'false';
+            $reset->created_at = Carbon::now();
+            $reset->save();
+
+            Mail::to($employer->email)->send(new ResetPasswordMail($employer, $token));
+
+        } elseif ($employee_search) {
+            $employee = Employee::all()->where('email', '=', $request->input('email'))->first();
+            $user = User::all()->where('employee_id', '=', $employee->id)->first();
+
+            $reset = new PasswordReset();
+            $reset->user_id = $user->id;
+            $reset->token = $token;
+            $reset->token_used = 'false';
+            $reset->created_at = Carbon::now();
+            $reset->save();
+
+            Mail::to($employee->email)->send(new ResetPasswordMail($employee, $token));
+        } else {
+            return redirect()->intended('/auth/reset')->withErrors(['error' => 'Kindly confirm you have input your details correctly.']);
+        }
+        return redirect()->route('/')->withErrors(['msg' => 'Check your mail for instructions.']);
+    }
+
+    public function saveReset(Request $request)
     {
         $new_password = Hash::make($request->input('new_password'));
-        $user_update = User::all()->where('id', '=', $request->input('user_id'))->first();
-        $user_update->password = $new_password;
-        $user_update->email_verified_at = Carbon::now();
-        $user_update->update();
-        return redirect()->route('/')->withErrors(['msg' => 'Password Reset Successfully.']);
+
+        if ($request->input('user_id') == null) {
+            $token_info = PasswordReset::all()->where('token', '=', $request->input('token'))->first();
+            $user_update = User::all()->where('id', '=', $token_info->user_id)->first();
+            DB::table('users')->where('id', $user_update->id)->update(['account_status' => 'activated']);
+            $user_update->password = $new_password;
+            $user_update->email_verified_at = Carbon::now();
+            $user_update->update();
+            return redirect()->route('/')->withErrors(['msg' => 'Password Reset Successfully.']);
+
+        } elseif ($request->input('token') == null) {
+            $user_update = User::all()->where('id', '=', $request->input('user_id'))->first();
+            DB::table('users')->where('id', $user_update->id)->update(['account_status' => 'activated']);
+            $user_update->password = $new_password;
+            $user_update->email_verified_at = Carbon::now();
+            $user_update->update();
+            return redirect()->route('/')->withErrors(['msg' => 'Password Reset Successfully.']);
+        } else {
+            abort(406);
+        }
     }
 
     //5. logout
@@ -174,7 +230,5 @@ class AuthController extends Controller
         $request->session()->flush();
 
         return redirect()->to('/auth/login')->with('loggedout', true);
-//        $request->session()->forget('url.intented');
-//        return redirect('/auth/login')->header('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 }

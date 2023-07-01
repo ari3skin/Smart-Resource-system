@@ -10,3 +10,6 @@
 {{--css--}}
 <link rel="stylesheet" href="{{asset('css/index.css')}}">
 <link rel="stylesheet" href="{{asset('css/admin-dashboard.css')}}">
+
+{{--JS--}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

@@ -73,6 +73,20 @@
             modal_fail.style.display = "none";
         }
     };
+
+    //password comparison
+    $(document).ready(function () {
+        $('#password').on('keyup', function () {
+            var newPassword = $('#first_password').val();
+            var confirmPassword = $(this).val();
+
+            if (newPassword !== confirmPassword) {
+                $('#password-error').text('Passwords do not match');
+            } else {
+                $('#password-error').text('');
+            }
+        });
+    });
 </script>
 </body>
 </html>

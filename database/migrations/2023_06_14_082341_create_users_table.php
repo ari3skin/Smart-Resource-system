@@ -23,6 +23,7 @@ return new class extends Migration {
             $table->string('password')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login')->nullable();
+            $table->enum('account_status', ['activated', 'inactive', 'blocked'])->default('inactive');
             $table->rememberToken();
             $table->timestamps();
 

@@ -39,14 +39,11 @@
                     </div>
                 </form>
                 <div class="social-login">
-                    <a id="reset-password">
-                        <i class="uil uil-history"></i>
-                        <span class="btn-text">Reset Password</span>
-                    </a>
                     <button id="google-signin-button">
-                        <span class="google-icon"></span>
-                        <span class="btn-text">Sign in with Google</span>
+                        <span class="google-icon" style="background-image: url({{asset('icons/google.svg')}});"></span>
+                        <p style="margin-left: -10px">oogle</p>
                     </button>
+                    <a href="/auth/reset" id="reset-password">Forgot Password</a>
                 </div>
             </div>
         </div>

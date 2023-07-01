@@ -21,7 +21,7 @@ class EmailController extends Controller
         if ($data['user_type'] == 'EPR_') {
             $type = 'Manager';
             $employer_data = Employer::all()->where('email', '=', $request->input('request_mail'))->first();
-            $username = strtolower($employer_data->first_name . "_" . $employer_data->last_name . '@resource.arcadian.org');
+            $username = strtolower($employer_data->first_name . "_" . $employer_data->last_name . '@arcadian.resource');
 
             //create for them an account
             $createAccount = new AuthController();
@@ -34,7 +34,7 @@ class EmailController extends Controller
         } elseif ($data['user_type'] == 'EPE_') {
             $type = 'Employee';
             $employee_data = Employee::all()->where('email', '=', $request->input('request_mail'))->first();
-            $username = strtolower($employee_data->first_name . "_" . $employee_data->last_name . '@resource.arcadian.org');
+            $username = strtolower($employee_data->first_name . "_" . $employee_data->last_name . '@arcadian.resource');
 
             //create for them an account
             $createAccount = new AuthController();

@@ -201,7 +201,7 @@
     </div>
 
     <ul class="box-info">
-        <li class="tablinks" onclick="switchcommon(event, 'reset-password')" style="cursor: pointer">
+        <li class="tablinks" onclick="switchcommon(event, 'reset_password')" style="cursor: pointer">
             <i class="uil uil-history-alt"></i>
             <div class="text">
                 <p>Reset Your Password</p>

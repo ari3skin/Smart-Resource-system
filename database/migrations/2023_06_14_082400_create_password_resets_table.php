@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -14,9 +13,13 @@ return new class extends Migration
     public function up()
     {
         Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->primary();
+            $table->id();
+            $table->bigInteger('user_id')->unsigned();
             $table->string('token');
-            $table->timestamp('created_at')->nullable();
+            $table->enum('token_used', ['true', 'false']);
+            $table->timestamps();
+
+            $table->foreign("user_id")->references("id")->on("users");
         });
     }
 

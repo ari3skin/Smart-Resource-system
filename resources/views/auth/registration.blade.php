@@ -10,13 +10,13 @@
 
 <section class="sign-in">
     <div class="login__container">
-        <div class="signin-content">
-            <div class="signin-image">
+        <div class="signup-content">
+            <div class="signup-image">
                 <figure><img src="{{asset('icons/icon-2-1.png')}}" alt="sing up image"></figure>
                 <a href="/auth/login" class="signup-image-link">Login Instead</a>
             </div>
 
-            <div class="signin-form">
+            <div class="signup-form">
                 <h2 class="form-title">Registration Request</h2>
                 <form method="POST" action="/auth/registration" class="register-form" id="registration_form"
                       autocomplete="on">
@@ -37,8 +37,8 @@
                 </form>
                 <div class="social-login">
                     <button id="google-signin-button">
-                        <span class="google-icon"></span>
-                        <span class="btn-text">Sign up with Google</span>
+                        <span class="google-icon" style="background-image: url({{asset('icons/google.svg')}});"></span>
+                        <span class="btn-text">Google Sign Up</span>
                     </button>
                 </div>
             </div>
