@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('last_name');
             $table->string('identifier')->default('EPE_');
             $table->string('email');
+            $table->string('google_email')->nullable();
             $table->string('phone_number');
             $table->date('employed_date');
             $table->date('DOB');

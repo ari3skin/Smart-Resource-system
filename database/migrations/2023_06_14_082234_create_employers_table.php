@@ -13,7 +13,7 @@ return new class extends Migration {
      */
     public function up()
     {
-        Schema::create('employers', function (Blueprint $table) {
+Schema::create('employers', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('department_id')->nullable()->unsigned();
             $table->bigInteger('designation_id')->nullable()->unsigned();
@@ -21,6 +21,7 @@ return new class extends Migration {
             $table->string('last_name');
             $table->string('identifier')->default('EPR_');
             $table->string('email');
+            $table->string('google_email')->nullable();
             $table->string('phone_number');
             $table->date('employed_date');
             $table->date('DOB');

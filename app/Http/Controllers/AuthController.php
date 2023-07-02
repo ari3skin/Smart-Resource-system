@@ -19,13 +19,53 @@ use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     //
-    //2-1. Login -- work in progress
+    //1. Login -- work in progress
     public function login(Request $request)
     {
-        $user_confirmation = User::all()->where('username', '=', $request->input('username'))->first();
+        $user_confirmation = User::where('username', $request->input('username'))
+            ->orWhere('google_id', $request->input('google_id'))
+            ->first();
         if ($user_confirmation->account_status == 'activated') {
 
-            $credentials = $request->only('username', 'password');
+            $credentials = $request->only('username', 'password', 'google_id');
+            $googleId = $request->input('google_id');
+
+            if ($googleId) {
+                $user = User::where('google_id', $googleId)->first();
+                if ($user) {
+
+                    Auth::login($user, $request->filled('remember'));
+                    DB::table('users')->where('id', $user->id)->update(['last_login' => now()]);
+                    $identifier = DB::table('users')->where('id', $user->id)->get('identifier')->first()->identifier;
+                    $user_role = DB::table('users')->where('id', $user->id)->get('role')->first()->role;
+
+                    //session creations depending on the user type logged in
+                    if ($identifier == 'ADM_' || $identifier == 'MNGR_') {
+
+                        $user_info = DB::table('employers')
+                            ->select('id', 'first_name', 'last_name', 'identifier')
+                            ->where('id', $user->employer_id)
+                            ->first();
+                        $request->session()->put('work_id', $user_info->id);
+                        $request->session()->put('first_name', $user_info->first_name);
+                        $request->session()->put('last_name', $user_info->last_name);
+                        $request->session()->put('role', $user_role,);
+
+                    } elseif ($identifier == 'EMP_') {
+
+                        $user_info = DB::table('employees')
+                            ->select('id', 'first_name', 'last_name', 'identifier')
+                            ->where('id', $user->employee_id)
+                            ->first();
+                        $request->session()->put('work_id', $user_info->id);
+                        $request->session()->put('first_name', $user_info->first_name);
+                        $request->session()->put('last_name', $user_info->last_name);
+                        $request->session()->put('role', $user_role,);
+                    }
+                    return redirect()->intended('/admin/');
+                }
+            }
+
             if (Auth::attempt($credentials, $request->filled('remember'))) {
 
                 $user = Auth::user();
@@ -66,7 +106,28 @@ class AuthController extends Controller
         }
     }
 
-    //2-2. Registration Request and others
+    //2. Creating a Registration Request
+    public function registration(Request $request)
+    {
+        $data = $request->all();
+        $existingRequest = UserRegistrationRequest::where('work_email', $request->input('email'))->exists();
+        $existingEmployer = Employer::where('email', $request->input('email'))->exists();
+        $existingEmployee = Employee::where('email', $request->input('email'))->exists();
+
+        if (!$existingRequest) {
+            if ($existingEmployer || $existingEmployee) {
+                $this->createRequest($data);
+                return response()->json(['success' => true]);
+
+            } else {
+                return response()->json(['success' => false]);
+            }
+        } else {
+            return response()->json(['success' => false]);
+        }
+
+    }
+
     public function createRequest(array $data)
     {
         $email = $data['email'];
@@ -99,28 +160,8 @@ class AuthController extends Controller
         ]);
     }
 
-    public function registration(Request $request)
-    {
-        $data = $request->all();
-        $existingRequest = UserRegistrationRequest::where('work_email', $request->input('email'))->exists();
-        $existingEmployer = Employer::where('email', $request->input('email'))->exists();
-        $existingEmployee = Employee::where('email', $request->input('email'))->exists();
 
-        if (!$existingRequest) {
-            if ($existingEmployer || $existingEmployee) {
-                $this->createRequest($data);
-                return response()->json(['success' => true]);
-
-            } else {
-                return response()->json(['success' => false]);
-            }
-        } else {
-            return response()->json(['success' => false]);
-        }
-
-    }
-
-    //3. account creation
+    //2-1. account creation
     public function createAccount($data, $type)
     {
         // Extract the necessary fields from $data
@@ -155,13 +196,12 @@ class AuthController extends Controller
                     'updated_at' => Carbon::now(),
                 ]);
             }
-        }else{
+        } else {
             return redirect()->intended('/')->withErrors(['error' => 'The selected user already exists.']);
         }
     }
 
-    //4. password reset
-
+    //3. password reset
     //the first method is for token generation mostly to verify the existence of the user and their credentials
     public function passwordReset(Request $request)
     {

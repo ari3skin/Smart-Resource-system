@@ -17,7 +17,10 @@ Route::middleware(['disable_back'])->group(function () {
         Route::get('create_reset/{user_id}', [Routing::class, 'fromEmailReset'])->name('create_reset');
         Route::get('form_reset/{user_token}', [Routing::class, 'fromEmailReset'])->name('form_reset');
 
-        Route::get('google', [GoogleController::class, 'redirectToGoogle']);
+        Route::prefix('google')->group(function () {
+            Route::get('/', [GoogleController::class, 'redirectToGoogle']);
+            Route::get('call-back', [GoogleController::class, 'handleGoogleCallback']);
+        });
 
         Route::post('login', [AuthController::class, 'login']);
         Route::post('registration', [AuthController::class, 'registration']);
