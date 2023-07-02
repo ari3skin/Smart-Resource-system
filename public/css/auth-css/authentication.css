@@ -55,6 +55,17 @@
     color: var(--title-color);
 }
 
+.modal_button {
+    color: var(--title-color);
+    background-color: var(--red);
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    width: fit-content;
+    margin: auto;
+    align-items: center;
+}
+
 /* The Close Button */
 .close {
     color: var(--title-color);

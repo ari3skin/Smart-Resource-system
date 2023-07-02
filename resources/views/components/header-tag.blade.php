@@ -12,4 +12,4 @@
 <link rel="stylesheet" href="{{asset('css/admin-dashboard.css')}}">
 
 {{--JS--}}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">

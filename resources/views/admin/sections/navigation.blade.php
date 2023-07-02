@@ -34,8 +34,8 @@
     </ul>
 
     <ul class="side-menu">
-        <li>
-            <a href="/auth/logout" class="logout" title="Logout">
+        <li id="logout_btn">
+            <a style="cursor: pointer" class="logout" title="Logout">
                 <i class="uil uil-signout"></i>
                 <span class="text">Logout</span>
             </a>

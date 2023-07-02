@@ -36,11 +36,66 @@
     {{--main navigation content--}}
     @include('admin.sections.main')
     @include('admin.sections.settings_content')
+
+    @if($errors->has('msg'))
+        <div id="confirmation" class="modal" style="display: block;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal__text__notice">!! Notice !!</p>
+                <p class="modal__text">{{ $errors->first('msg') }}</p>
+            </div>
+        </div>
+    @elseif($errors->has('error'))
+        <div id="confirmation" class="modal" style="display: block;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal__text__error">!! Warning !!</p>
+                <p class="modal__text">{{ $errors->first('error') }}</p>
+            </div>
+        </div>
+    @else
+        <div id="confirmation confirm_logout" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal__text__error">!! Warning !!</p>
+                <p class="modal__text">You are about to logout</p>
+                <a href="/auth/logout" class="modal_button" title="Logout">
+                    <i class="uil uil-signout"></i>
+                    <span class="text">Logout</span>
+                </a>
+            </div>
+        </div>
+    @endif
 </section>
 
 
 <script src="{{asset('js/admin.js')}}"></script>
 <script src="{{asset('js/index.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+<script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script>
+    //password comparison
+    $(document).ready(function () {
+        $('#password').on('keyup', function () {
+            var newPassword = $('#first_password').val();
+            var confirmPassword = $(this).val();
+
+            if (newPassword !== confirmPassword) {
+                $('#password-error').text('Passwords do not match');
+            } else {
+                $('#password-error').text('');
+            }
+        });
+
+        $('#tableData').DataTable(
+            {
+                "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
+                "iDisplayLength": 5
+            }
+        );
+    });
+</script>
 <script>
     // tab switching
     function switchcommon(evt, mainName) {
@@ -61,32 +116,23 @@
     document.getElementById("defaultOpen").click();
 
     //modal views
-    var modal_fail = document.getElementById("modal_fail");
+    var modal = document.getElementById("confirmation");
+    var modal_logout = document.getElementById("confirm_logout");
+    var btn = document.getElementById("logout_btn");
     var close_span = document.getElementsByClassName("close")[0];
 
     // Events that close both modals
+    btn.onclick = function () {
+        modal_logout.style.display = "block";
+    }
     close_span.onclick = function () {
-        modal_fail.style.display = "none";
+        modal.style.display = "none";
     }
     window.onclick = function (event) {
-        if (event.target === modal_fail) {
-            modal_fail.style.display = "none";
+        if (event.target === modal) {
+            modal.style.display = "none";
         }
     };
-
-    //password comparison
-    $(document).ready(function () {
-        $('#password').on('keyup', function () {
-            var newPassword = $('#first_password').val();
-            var confirmPassword = $(this).val();
-
-            if (newPassword !== confirmPassword) {
-                $('#password-error').text('Passwords do not match');
-            } else {
-                $('#password-error').text('');
-            }
-        });
-    });
 </script>
 </body>
 </html>

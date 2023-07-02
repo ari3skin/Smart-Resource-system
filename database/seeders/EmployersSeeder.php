@@ -45,7 +45,7 @@ class EmployersSeeder extends Seeder
                 ],
             ]);
 
-        for ($i = 0; $i < 23; $i++) {
+        for ($i = 0; $i < 103; $i++) {
             Employer::factory()->create();
         }
     }

@@ -29,7 +29,7 @@ class EmailController extends Controller
                 $this->updateStatus($data);
                 Mail::to($request->input('request_mail'))->send(new RegistrationRequestApproval($employer_data, $type, $username));
             } else {
-                return 'not sent';
+                return redirect("/admin")->withErrors(['error' => "There has been an error in sending the email"]);
             }
         } elseif ($data['user_type'] == 'EPE_') {
             $type = 'Employee';
@@ -42,7 +42,7 @@ class EmailController extends Controller
                 $this->updateStatus($data);
                 Mail::to($request->input('request_mail'))->send(new RegistrationRequestApproval($employee_data, $type, $username));
             } else {
-                return 'not sent';
+                return redirect("/admin")->withErrors(['error' => "There has been an error in sending the email"]);
             }
         }
         return redirect("/admin")->withErrors(['msg' => "email successfully sent"]);

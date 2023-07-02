@@ -90,7 +90,7 @@
 
     <div class="table-data">
         <div class="order">
-            <table>
+            <table id="tableData">
                 <thead>
                 <tr>
                     <th>Employer Id</th>
@@ -101,7 +101,6 @@
                     <th>Request Date</th>
                     <th>Status</th>
                     <th>Approve</th>
-                    <th>Reject</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -161,17 +160,6 @@
                                 <input type="hidden" name="status" value="approved">
                                 <button type="submit">
                                     <i class="uil uil-envelope-check" style="cursor: pointer"></i>
-                                </button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="POST" action="/admin/creation/rejected">
-                                @csrf
-                                <input type="hidden" name="request_mail" value="{{$item->work_email}}">
-                                <input type="hidden" name="user_type" value="{{$employerRole}}{{$employeeRole}}">
-                                <input type="hidden" name="status" value="rejected">
-                                <button type="submit">
-                                    <i class="uil uil-envelope-block" style="cursor: pointer"></i>
                                 </button>
                             </form>
                         </td>
