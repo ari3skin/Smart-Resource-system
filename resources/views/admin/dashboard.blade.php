@@ -37,35 +37,23 @@
     @include('admin.sections.main')
     @include('admin.sections.settings_content')
 
-    @if($errors->has('msg'))
-        <div id="confirmation" class="modal" style="display: block;">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p class="modal__text__notice">!! Notice !!</p>
-                <p class="modal__text">{{ $errors->first('msg') }}</p>
-            </div>
+
+    <div id="confirm_logout" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p class="modal__text__error">
+                <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                Warning
+                <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+            </p>
+            <p class="modal__text">You are about to logout</p>
+            <a href="/auth/logout" class="modal_button" title="Logout">
+                <i class="uil uil-signout"></i>
+                <span class="text">Logout</span>
+            </a>
         </div>
-    @elseif($errors->has('error'))
-        <div id="confirmation" class="modal" style="display: block;">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p class="modal__text__error">!! Warning !!</p>
-                <p class="modal__text">{{ $errors->first('error') }}</p>
-            </div>
-        </div>
-    @else
-        <div id="confirmation confirm_logout" class="modal">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <p class="modal__text__error">!! Warning !!</p>
-                <p class="modal__text">You are about to logout</p>
-                <a href="/auth/logout" class="modal_button" title="Logout">
-                    <i class="uil uil-signout"></i>
-                    <span class="text">Logout</span>
-                </a>
-            </div>
-        </div>
-    @endif
+    </div>
+
 </section>
 
 
@@ -116,7 +104,6 @@
     document.getElementById("defaultOpen").click();
 
     //modal views
-    var modal = document.getElementById("confirmation");
     var modal_logout = document.getElementById("confirm_logout");
     var btn = document.getElementById("logout_btn");
     var close_span = document.getElementsByClassName("close")[0];
@@ -126,11 +113,11 @@
         modal_logout.style.display = "block";
     }
     close_span.onclick = function () {
-        modal.style.display = "none";
+        modal_logout.style.display = "none";
     }
     window.onclick = function (event) {
-        if (event.target === modal) {
-            modal.style.display = "none";
+        if (event.target === modal_logout) {
+            modal_logout.style.display = "none";
         }
     };
 </script>

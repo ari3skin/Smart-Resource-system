@@ -129,29 +129,34 @@ class AuthController extends Controller
         $last_name = $data->last_name;
 
         $username = strtolower($first_name . "_" . $last_name . "@arcadian.resource");
+        $existing_user = User::where('username', $username)->exists();
 
-        if ($type == 'Manager') {
-            return User::create([
-                'identifier' => 'MNGR_',
-                'employer_id' => $id,
-                'employee_id' => null,
-                'role' => $type,
-                'username' => $username,
-                'password' => Hash::make('arcadian_user_resource_123'),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
-        } elseif ($type == 'Employee') {
-            return User::create([
-                'identifier' => 'EPE_',
-                'employee_id' => $id,
-                'employer_id' => null,
-                'role' => $type,
-                'username' => $username,
-                'password' => Hash::make('arcadian_user_resource_123'),
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+        if (!$existing_user) {
+            if ($type == 'Manager') {
+                return User::create([
+                    'identifier' => 'MNGR_',
+                    'employer_id' => $id,
+                    'employee_id' => null,
+                    'role' => $type,
+                    'username' => $username,
+                    'password' => Hash::make('arcadian_user_resource_123'),
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            } elseif ($type == 'Employee') {
+                return User::create([
+                    'identifier' => 'EPE_',
+                    'employee_id' => $id,
+                    'employer_id' => null,
+                    'role' => $type,
+                    'username' => $username,
+                    'password' => Hash::make('arcadian_user_resource_123'),
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            }
+        }else{
+            return redirect()->intended('/')->withErrors(['error' => 'The selected user already exists.']);
         }
     }
 

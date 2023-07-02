@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Routing::class, 'showIndex'])->name('/');
 
-Route::group(['middleware' => 'disable_back'], function () {
+Route::middleware(['disable_back'])->group(function () {
 
     Route::prefix('auth')->group(function () {
         Route::get('login', [Routing::class, 'accounts'])->name('login');
@@ -27,15 +27,16 @@ Route::group(['middleware' => 'disable_back'], function () {
         Route::get('logout', [AuthController::class, 'logout']);
     });
 
-    Route::prefix('admin')->group(function () {
+    Route::middleware(['session_timeout'])->group(function () {
+        Route::prefix('admin')->group(function () {
 
-        //admin access to their default page
-        Route::get('/', [Routing::class, 'dashboards'])->name('admin');
+            //admin access to their default page
+            Route::get('/', [Routing::class, 'dashboards'])->name('admin');
 
-        Route::prefix('creation')->group(function () {
-            Route::post('approved', [EmailController::class, 'approved']);
-            Route::post('rejected', [EmailController::class, '']);
+            Route::prefix('creation')->group(function () {
+                Route::post('approved', [EmailController::class, 'approved']);
+                Route::post('rejected', [EmailController::class, '']);
+            });
         });
     });
-
 });

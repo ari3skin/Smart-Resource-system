@@ -38,7 +38,7 @@
                 @else
                     <li class="nav__item">
                         <a href="/auth/login" class="nav__link">
-                            <i class="uil uil-user nav__icon"></i> Login Instead
+                            <i class="uil uil-user nav__icon"></i> Login
                         </a>
                     </li>
                 @endif

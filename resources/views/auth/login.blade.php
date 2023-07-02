@@ -54,7 +54,11 @@
         <div id="modal_fail" class="modal" style="display: block;">
             <div class="modal-content">
                 <span class="close">&times;</span>
-                <p class="modal__text__error">Login Request Failed.</p>
+                <p class="modal__text__error">
+                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                    Access Denied.
+                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                </p>
                 <p class="modal__text">{{ $errors->first('error') }}</p>
             </div>
         </div>

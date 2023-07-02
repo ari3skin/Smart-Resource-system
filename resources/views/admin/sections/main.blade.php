@@ -99,7 +99,6 @@
                     <th>Last Name</th>
                     <th>Work Email</th>
                     <th>Request Date</th>
-                    <th>Status</th>
                     <th>Approve</th>
                 </tr>
                 </thead>
@@ -128,7 +127,6 @@
                                 $employeeLastName = $userInfo->emle_last;
                                 $workEmail = $userInfo->work_email;
                                 $requestDateSent = $userInfo->request_date;
-                                $status = $userInfo->status;
                         @endphp
 
                         <td>
@@ -147,11 +145,6 @@
                         </td>
                         <td>{{$item->work_email}}</td>
                         <td>{{$item->request_date}}</td>
-                        <td>
-                            <span class="status {{$item->status}}">
-                                {{$item->status}}
-                            </span>
-                        </td>
                         <td>
                             <form method="POST" action="/admin/creation/approved">
                                 @csrf
