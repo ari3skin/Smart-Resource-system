@@ -6,6 +6,8 @@ use App\Models\Employee;
 use App\Models\Employer;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 use Laravel\Socialite\Facades\Socialite;
 use mysql_xdevapi\Exception;
 
@@ -30,6 +32,16 @@ class GoogleController extends Controller
                 $finduser = User::where('employer_id', $employer->id)->first();
                 if ($finduser) {
                     $finduser->google_id = $user->id;
+
+                    // Download and save the profile picture
+//                    $profilePictureUrl = $user->avatar_original;
+//                    $filename = 'profile_picture.jpg'; // Change the filename if desired
+//                    $picture = Image::make($profilePictureUrl);
+//                    Storage::disk('public')->put($filename, $picture->stream());
+//
+                    // Save the filename to the user's record
+//                    $finduser->profile_picture = $filename;
+
                     $finduser->save();
                     //Auth::login($finduser);
                     return app('App\Http\Controllers\AuthController')->login(Request::create('/admin/', 'POST', [
@@ -51,8 +63,10 @@ class GoogleController extends Controller
                 } else {
                     return redirect()->intended('/auth/registration');
                 }
+            } else {
+                return redirect()->intended('/auth/registration')->withErrors(['error' => 'User does not exist']);
             }
-        } catch (Exception $exception) {
+        } catch (\Exception $exception) {
             return redirect('/auth/google/');
         }
     }

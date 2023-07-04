@@ -25,7 +25,7 @@ class EmployeeSeeder extends Seeder
                     'first_name' => 'Reece',
                     'last_name' => 'Elroy',
                     'email' => 'reece.elroy@arcadianbank.com',
-                    'google_email'=>'reece.elroy@gmail.com',
+                    'google_email' => 'ryan.kathurima@strathmore.edu',
                     'phone_number' => '0797236922',
                     'employed_date' => '2005-03-30',
                     'DOB' => '1976-05-23',

@@ -27,36 +27,38 @@ class AuthController extends Controller
             ->first();
         if ($user_confirmation->account_status == 'activated') {
 
-            $credentials = $request->only('username', 'password', 'google_id');
+            $credentials = $request->only('username', 'password');
             $googleId = $request->input('google_id');
 
             if ($googleId) {
-                $user = User::where('google_id', $googleId)->first();
-                if ($user) {
+                $google_user = User::where('google_id', $googleId)->first();
+                if ($google_user) {
 
-                    Auth::login($user, $request->filled('remember'));
-                    DB::table('users')->where('id', $user->id)->update(['last_login' => now()]);
-                    $identifier = DB::table('users')->where('id', $user->id)->get('identifier')->first()->identifier;
-                    $user_role = DB::table('users')->where('id', $user->id)->get('role')->first()->role;
+                    Auth::login($google_user, $request->filled('remember'));
+                    DB::table('users')->where('id', $google_user->id)->update(['last_login' => now()]);
+                    $identifier = DB::table('users')->where('id', $google_user->id)->get('identifier')->first()->identifier;
+                    $user_role = DB::table('users')->where('id', $google_user->id)->get('role')->first()->role;
 
                     //session creations depending on the user type logged in
                     if ($identifier == 'ADM_' || $identifier == 'MNGR_') {
 
                         $user_info = DB::table('employers')
                             ->select('id', 'first_name', 'last_name', 'identifier')
-                            ->where('id', $user->employer_id)
+                            ->where('id', $google_user->employer_id)
                             ->first();
+                        $request->setLaravelSession(app('session.store'));
                         $request->session()->put('work_id', $user_info->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
                         $request->session()->put('role', $user_role,);
 
-                    } elseif ($identifier == 'EMP_') {
+                    } elseif ($identifier == 'EPE_') {
 
                         $user_info = DB::table('employees')
                             ->select('id', 'first_name', 'last_name', 'identifier')
-                            ->where('id', $user->employee_id)
+                            ->where('id', $google_user->employee_id)
                             ->first();
+                        $request->setLaravelSession(app('session.store'));
                         $request->session()->put('work_id', $user_info->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
@@ -64,9 +66,7 @@ class AuthController extends Controller
                     }
                     return redirect()->intended('/admin/');
                 }
-            }
-
-            if (Auth::attempt($credentials, $request->filled('remember'))) {
+            } elseif (Auth::attempt($credentials, $request->filled('remember'))) {
 
                 $user = Auth::user();
                 DB::table('users')->where('id', $user->id)->update(['last_login' => now()]);
@@ -85,11 +85,11 @@ class AuthController extends Controller
                     $request->session()->put('last_name', $user_info->last_name);
                     $request->session()->put('role', $user_role,);
 
-                } elseif ($identifier == 'EMP_') {
+                } elseif ($identifier == 'EPE_') {
 
                     $user_info = DB::table('employees')
                         ->select('id', 'first_name', 'last_name', 'identifier')
-                        ->where('id', $user->employer_id)
+                        ->where('id', $user->employee_id)
                         ->first();
                     $request->session()->put('work_id', $user_info->id);
                     $request->session()->put('first_name', $user_info->first_name);

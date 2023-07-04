@@ -13,7 +13,7 @@ return new class extends Migration {
      */
     public function up()
     {
-Schema::create('users', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->enum('identifier', ['ADM_', 'MNGR_', 'EPE_']);
             $table->id();
             $table->bigInteger('employer_id')->nullable()->unsigned();
@@ -25,6 +25,7 @@ Schema::create('users', function (Blueprint $table) {
             $table->timestamp('last_login')->nullable();
             $table->enum('account_status', ['activated', 'inactive', 'blocked'])->default('inactive');
             $table->string('google_id')->nullable();
+            $table->string('profile_picture')->nullable();
             $table->rememberToken();
             $table->timestamps();
 

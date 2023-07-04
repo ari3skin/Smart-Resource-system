@@ -35,12 +35,6 @@
                         <input type="submit" name="signin" id="signin" class="form-submit" value="Place Request"/>
                     </div>
                 </form>
-                <div class="social-login">
-                    <button id="google-signin-button">
-                        <span class="google-icon" style="background-image: url({{asset('icons/google.svg')}});"></span>
-                        <span class="btn-text">Google Sign Up</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -64,6 +58,19 @@
             <p class="modal__text">There is an error in your inputs</p>
         </div>
     </div>
+    @if($errors->has('error'))
+        <div id="modal_fail" class="modal" style="display: block;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal__text__error">
+                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                    Access Denied.
+                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                </p>
+                <p class="modal__text">{{ $errors->first('error') }}</p>
+            </div>
+        </div>
+    @endif
 </section>
 
 

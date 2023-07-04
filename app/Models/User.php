@@ -28,6 +28,7 @@ class User extends Authenticatable
         'identifier',
         'account_status',
         'google_id',
+        'profile_picture',
     ];
 
     /**
