@@ -26,6 +26,7 @@ Route::middleware(['disable_back'])->group(function () {
 
         Route::prefix('projects')->group(function () {
             Route::get('/', [ProjectController::class, 'index']);
+            Route::get('users', [ProjectController::class, 'getUser']);
         });
     });
 });

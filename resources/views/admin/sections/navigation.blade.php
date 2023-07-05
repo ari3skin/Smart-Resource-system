@@ -24,7 +24,7 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'projects')"
+            <a class="tablinks" onclick="projectListing(); switchcommon(event, 'projects')"
                style="cursor: pointer" title="Registration Requests">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">View Projects</span>

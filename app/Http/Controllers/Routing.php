@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Employer;
+use App\Models\Project;
 use App\Models\User;
 use App\Models\UserRegistrationRequest;
 use Illuminate\Support\Facades\Auth;
@@ -63,6 +64,7 @@ class Routing extends Controller
                 //fetching all records
                 $employers = Employer::all();
                 $employees = Employee::all();
+                $projects = Project::all();
                 $users = User::all();
                 $registration_requests = UserRegistrationRequest::all()->where('status', '=', 'pending');
 
@@ -70,6 +72,7 @@ class Routing extends Controller
                 $requestsCount = $registration_requests->count();
                 $employersCount = $employers->count();
                 $employeesCount = $employees->count();
+                $projectsCount = $projects->count();
                 $usersCount = $users->count();
 
                 return view('admin.dashboard',
@@ -78,6 +81,7 @@ class Routing extends Controller
                         'requestsCount' => $requestsCount,
                         'employersCount' => $employersCount,
                         'employeesCount' => $employeesCount,
+                        'projectsCount' => $projectsCount,
                         'usersCount' => $usersCount,
                     ]
                 );

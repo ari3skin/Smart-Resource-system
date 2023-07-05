@@ -37,7 +37,19 @@
     @include('admin.sections.main')
     @include('admin.sections.settings_content')
 
-
+    @if($errors->has('error'))
+        <div id="modal_fail" class="modal" style="display: block;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p class="modal__text__error">
+                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                    Access Denied.
+                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                </p>
+                <p class="modal__text">{{ $errors->first('error') }}</p>
+            </div>
+        </div>
+    @endif
     <div id="confirm_logout" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -59,9 +71,12 @@
 
 <script src="{{asset('js/admin.js')}}"></script>
 <script src="{{asset('js/index.js')}}"></script>
+<script src="{{asset('js/ajax.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
 <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+{{--scripts that load upon opening the document itself--}}
 <script>
     //password comparison
     $(document).ready(function () {
@@ -76,6 +91,7 @@
             }
         });
 
+        //configuring my datatable
         $('#tableData').DataTable(
             {
                 "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
@@ -84,6 +100,8 @@
         );
     });
 </script>
+{{--script for tab switching and modals--}}
+
 <script>
     // tab switching
     function switchcommon(evt, mainName) {
@@ -103,23 +121,26 @@
 
     document.getElementById("defaultOpen").click();
 
-    //modal views
+    //modal script
+    function setupModalEvents(modal, button, closeSpan) {
+        button.onclick = function () {
+            modal.style.display = "block";
+        }
+        closeSpan.onclick = function () {
+            modal.style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    }
+
     var modal_logout = document.getElementById("confirm_logout");
     var btn = document.getElementById("logout_btn");
     var close_span = document.getElementsByClassName("close")[0];
 
-    // Events that close both modals
-    btn.onclick = function () {
-        modal_logout.style.display = "block";
-    }
-    close_span.onclick = function () {
-        modal_logout.style.display = "none";
-    }
-    window.onclick = function (event) {
-        if (event.target === modal_logout) {
-            modal_logout.style.display = "none";
-        }
-    };
+    setupModalEvents(modal_logout, btn, close_span);
 </script>
 </body>
 </html>

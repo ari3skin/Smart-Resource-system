@@ -64,7 +64,7 @@
                 <i class="uil uil-clipboard-notes"></i>
             </a>
             <div class="text">
-                <h3>--</h3>
+                <h3>{{$projectsCount}}</h3>
                 <p>Open Projects</p>
             </div>
         </li>
@@ -173,93 +173,13 @@
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
                 <li>
-                    <a class="active" href="#">Proposed Projects</a>
+                    <a class="active" href="#">Ongoing Projects</a>
                 </li>
             </ul>
         </div>
     </div>
 
-    <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));">
-        <li>
-            <div>
-                PID.101
-            </div>
-            <div class="text">
-                <h3>Auditing South Africa</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
-                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
-                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
-                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
-                    consectetur accumsan tellus vitae placerat.
-                </p>
-            </div>
-        </li>
-
-        <li>
-            <div>
-                PID.102
-            </div>
-            <div class="text">
-                <h3>Auditing Namibia</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
-                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
-                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
-                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
-                    consectetur accumsan tellus vitae placerat.
-                </p>
-            </div>
-        </li>
-
-        <li>
-            <div>
-                PID.103
-            </div>
-            <div class="text">
-                <h3>Auditing Kenya</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
-                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
-                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
-                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
-                    consectetur accumsan tellus vitae placerat.
-                </p>
-            </div>
-        </li>
-
-        <li>
-            <div>
-                PID.104
-            </div>
-            <div class="text">
-                <h3>Auditing Nigeria</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
-                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
-                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
-                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
-                    consectetur accumsan tellus vitae placerat.
-                </p>
-            </div>
-        </li>
-
-        <li>
-            <div>
-                PID.105
-            </div>
-            <div class="text">
-                <h3>Auditing Uganda</h3>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
-                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
-                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
-                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
-                    consectetur accumsan tellus vitae placerat.
-                </p>
-            </div>
-        </li>
-    </ul>
+    <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="project-list"></ul>
 
 </main>
 
