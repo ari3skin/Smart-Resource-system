@@ -51,6 +51,7 @@ function projectListing() {
     });
 }
 
+//error displays
 function displayErrorModal(errorMessage) {
     var modal = `
         <div id="modal_fail" class="modal" style="display: block;">

@@ -88,11 +88,11 @@ class Routing extends Controller
 
             } elseif ($user->role == 'Manager') {
 
-                return view('users.employers.employers');
+                return view('users.employers');
 
             } elseif ($user->role == 'Employee') {
 
-                return view('users.employees.employees');
+                return view('users.employees');
 
             } else {
                 return redirect("/")->withErrors(['error' => "Unauthorized access denied."]);

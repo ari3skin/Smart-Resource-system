@@ -1,6 +1,6 @@
 <section id="sidebar">
     <a href="/" class="brand">
-        <img src="{{asset('icons/icon-2.png')}}">
+        <i class="uil uil-user-square"></i>
         <span class="text">
             {{session('first_name')}} {{session('last_name')}}
         </span>
@@ -26,7 +26,7 @@
         <li>
             <a class="tablinks" onclick="projectListing(); switchcommon(event, 'projects')"
                style="cursor: pointer" title="Registration Requests">
-                <i class="uil uil-clipboard-notes"></i>
+                <i class="uil uil-file-check-alt"></i>
                 <span class="text">View Projects</span>
             </a>
         </li>
