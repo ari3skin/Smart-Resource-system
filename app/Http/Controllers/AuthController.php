@@ -39,7 +39,7 @@ class AuthController extends Controller
                     $identifier = DB::table('users')->where('id', $google_user->id)->get('identifier')->first()->identifier;
                     $user_role = DB::table('users')->where('id', $google_user->id)->get('role')->first()->role;
 
-                    //session creations depending on the user type logged in
+                    //session creation depending on the user type logged in
                     if ($identifier == 'ADM_' || $identifier == 'MNGR_') {
 
                         $user_info = DB::table('employers')
@@ -47,7 +47,7 @@ class AuthController extends Controller
                             ->where('id', $google_user->employer_id)
                             ->first();
                         $request->setLaravelSession(app('session.store'));
-                        $request->session()->put('work_id', $user_info->id);
+                        $request->session()->put('sys_id', $google_user->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
                         $request->session()->put('role', $user_role,);
@@ -59,7 +59,7 @@ class AuthController extends Controller
                             ->where('id', $google_user->employee_id)
                             ->first();
                         $request->setLaravelSession(app('session.store'));
-                        $request->session()->put('work_id', $user_info->id);
+                        $request->session()->put('sys_id', $google_user->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
                         $request->session()->put('role', $user_role,);
@@ -80,7 +80,7 @@ class AuthController extends Controller
                         ->select('id', 'first_name', 'last_name', 'identifier')
                         ->where('id', $user->employer_id)
                         ->first();
-                    $request->session()->put('work_id', $user_info->id);
+                    $request->session()->put('sys_id', $user->id);
                     $request->session()->put('first_name', $user_info->first_name);
                     $request->session()->put('last_name', $user_info->last_name);
                     $request->session()->put('role', $user_role,);
@@ -91,7 +91,7 @@ class AuthController extends Controller
                         ->select('id', 'first_name', 'last_name', 'identifier')
                         ->where('id', $user->employee_id)
                         ->first();
-                    $request->session()->put('work_id', $user_info->id);
+                    $request->session()->put('sys_id', $user->id);
                     $request->session()->put('first_name', $user_info->first_name);
                     $request->session()->put('last_name', $user_info->last_name);
                     $request->session()->put('role', $user_role,);

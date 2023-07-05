@@ -38,7 +38,6 @@ Route::middleware(['disable_back'])->group(function () {
 
             Route::prefix('creation')->group(function () {
                 Route::post('approved', [EmailController::class, 'approved']);
-                Route::post('rejected', [EmailController::class, '']);
             });
         });
     });

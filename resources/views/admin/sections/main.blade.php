@@ -7,7 +7,7 @@
             <h1>Dashboard</h1>
 
             <ul class="breadcrumb">
-                <li class="tablinks" onclick="switchcommon(event, 'dashboard')" style="cursor: pointer">
+                <li>
                     <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
@@ -77,7 +77,7 @@
             <h1>Registration Requests</h1>
 
             <ul class="breadcrumb">
-                <li class="tablinks" onclick="switchcommon(event, 'dashboard')" style="cursor: pointer">
+                <li>
                     <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
@@ -125,8 +125,6 @@
                                 $employerLastName = $userInfo->emlr_last;
                                 $employeeFirstName = $userInfo->emle_first;
                                 $employeeLastName = $userInfo->emle_last;
-                                $workEmail = $userInfo->work_email;
-                                $requestDateSent = $userInfo->request_date;
                         @endphp
 
                         <td>
@@ -164,13 +162,114 @@
     </div>
 </main>
 
+<main class="tabcontent" id="projects">
+    <div class="head-title">
+        <div class="left">
+            <h1>Projects</h1>
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                </li>
+                <li><i class="uil uil-angle-right-b"></i></li>
+                <li>
+                    <a class="active" href="#">Proposed Projects</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));">
+        <li>
+            <div>
+                PID.101
+            </div>
+            <div class="text">
+                <h3>Auditing South Africa</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
+                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
+                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
+                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
+                    consectetur accumsan tellus vitae placerat.
+                </p>
+            </div>
+        </li>
+
+        <li>
+            <div>
+                PID.102
+            </div>
+            <div class="text">
+                <h3>Auditing Namibia</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
+                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
+                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
+                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
+                    consectetur accumsan tellus vitae placerat.
+                </p>
+            </div>
+        </li>
+
+        <li>
+            <div>
+                PID.103
+            </div>
+            <div class="text">
+                <h3>Auditing Kenya</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
+                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
+                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
+                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
+                    consectetur accumsan tellus vitae placerat.
+                </p>
+            </div>
+        </li>
+
+        <li>
+            <div>
+                PID.104
+            </div>
+            <div class="text">
+                <h3>Auditing Nigeria</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
+                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
+                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
+                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
+                    consectetur accumsan tellus vitae placerat.
+                </p>
+            </div>
+        </li>
+
+        <li>
+            <div>
+                PID.105
+            </div>
+            <div class="text">
+                <h3>Auditing Uganda</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat ante vel massa vulputate, at
+                    dignissim lectus volutpat. Sed interdum felis ac suscipit interdum. In aliquam tellus in efficitur
+                    bibendum. Quisque congue sollicitudin eros, non pharetra enim lacinia nec. Proin semper posuere
+                    erat, ac tincidunt ex auctor non. Nulla facilisi. Nulla facilisis dui vitae finibus auctor. Nulla
+                    consectetur accumsan tellus vitae placerat.
+                </p>
+            </div>
+        </li>
+    </ul>
+
+</main>
+
 <main class="tabcontent" id="settings">
     <div class="head-title">
         <div class="left">
             <h1>Settings</h1>
 
             <ul class="breadcrumb">
-                <li class="tablinks" onclick="switchcommon(event, 'dashboard')" style="cursor: pointer">
+                <li>
                     <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
@@ -186,6 +285,13 @@
             <i class="uil uil-history-alt"></i>
             <div class="text">
                 <p>Reset Your Password</p>
+            </div>
+        </li>
+
+        <li class="tablinks" onclick="switchcommon(event, '')" style="cursor: pointer">
+            <i class="uil uil-sliders-v-alt"></i>
+            <div class="text">
+                <p>User Settings</p>
             </div>
         </li>
 

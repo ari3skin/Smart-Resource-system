@@ -41,6 +41,7 @@
                     </div>
                     <span id="password-error" style="margin: 5px 20px; color: red;"></span>
                     <div class="">
+                        <input type="hidden" name="user_id" value="{{session('sys_id')}}">
                         <input type="submit" name="signin" id="signin" class="form-submit" value="Reset Password"/>
                     </div>
                 </form>

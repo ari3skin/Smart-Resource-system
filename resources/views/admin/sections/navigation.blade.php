@@ -2,7 +2,7 @@
     <a href="/" class="brand">
         <img src="{{asset('icons/icon-2.png')}}">
         <span class="text">
-            Welcome {{session('first_name')}}
+            {{session('first_name')}} {{session('last_name')}}
         </span>
     </a>
 
@@ -23,6 +23,13 @@
             </a>
         </li>
 
+        <li>
+            <a class="tablinks" onclick="switchcommon(event, 'projects')"
+               style="cursor: pointer" title="Registration Requests">
+                <i class="uil uil-clipboard-notes"></i>
+                <span class="text">View Projects</span>
+            </a>
+        </li>
 
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'settings')"
