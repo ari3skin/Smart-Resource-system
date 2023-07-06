@@ -7,6 +7,7 @@ use App\Models\Employer;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -17,8 +18,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
-        $projects = Project::all()->where('status', '=', 'ongoing');
+        $projects = Project::where('status', 'ongoing')->get();
         return response()->json($projects);
     }
 

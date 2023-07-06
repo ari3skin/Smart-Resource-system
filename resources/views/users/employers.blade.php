@@ -11,12 +11,13 @@
         </li>
 
         <li class="active">
-            <a class="tablinks" id="defaultOpen" onclick="switchcommon(event, 'project')"
+            <a class="tablinks" onclick="projectListing(); switchcommon(event, 'projects')"
                style="cursor: pointer" title="Projects">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">Projects</span>
             </a>
         </li>
+
         <li>
             <a class="tablinks" onclick="switchcommon(event, 'settings')"
                style="cursor: pointer" title="Settings">
@@ -76,4 +77,25 @@
             </li>
         </ul>
     </main>
+
+    <main class="tabcontent" id="projects">
+    <div class="head-title">
+        <div class="left">
+            <h1>Projects</h1>
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                </li>
+                <li><i class="uil uil-angle-right-b"></i></li>
+                <li>
+                    <a class="active" href="#">My Ongoing Projects</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="project-list"></ul>
+
+</main>
 @endsection

@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('project_manager')->unsigned()->nullable();
             $table->string('project_title');
-            $table->string('project_description');
+            $table->string('project_description', 500);
             $table->enum('status', ['completed', 'ongoing', 'closed'])->default('ongoing');
             $table->timestamps();
 

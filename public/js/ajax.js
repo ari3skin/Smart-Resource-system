@@ -58,9 +58,9 @@ function displayErrorModal(errorMessage) {
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <p class="modal__text__error">
-                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                    <img src="icons/denied-logo.svg" alt="access denied">
                     Access Denied.
-                    <img src="{{asset('icons/denied-logo.svg')}}" alt="access denied">
+                    <img src="icons/denied-logo.svg" alt="access denied">
                 </p>
                 <p class="modal__text">${errorMessage}</p>
             </div>
