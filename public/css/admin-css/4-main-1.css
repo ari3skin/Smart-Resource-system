@@ -34,7 +34,7 @@
 }
 
 #content main .head-title .left .breadcrumb li a {
-    color: var(--dark-grey);
+    color: var(--text-color);
     pointer-events: none;
 }
 
@@ -90,6 +90,12 @@
 #content main .box-info li .text h3 {
     font-size: 24px;
     font-weight: 600;
+    color: var(--title-color);
+}
+
+#content main .box-info li .text h3 sub {
+    font-size: 12px;
+    font-weight: 300;
     color: var(--title-color);
 }
 

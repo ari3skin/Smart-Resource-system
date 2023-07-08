@@ -11,7 +11,7 @@
         </li>
 
         <li class="active">
-            <a class="tablinks" onclick="projectListing(); switchcommon(event, 'projects')"
+            <a class="tablinks" onclick="projectListing({{session('sys_id')}}); switchcommon(event, 'projects')"
                style="cursor: pointer" title="Projects">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">Projects</span>

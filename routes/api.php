@@ -25,8 +25,12 @@ Route::middleware(['disable_back'])->group(function () {
     Route::middleware(['session_timeout'])->group(function () {
 
         Route::prefix('projects')->group(function () {
-            Route::get('/', [ProjectController::class, 'index']);
-            Route::get('users', [ProjectController::class, 'getUser']);
+            Route::get('/{user_id}', [ProjectController::class, 'index'])->name('projectInfo');
+            Route::get('user/{projectManagerId}', [ProjectController::class, 'index'])->name('getUserInfo');
+            Route::get('employer/{employerId}', [ProjectController::class, 'getEmployer']);
         });
     });
 });
+
+
+

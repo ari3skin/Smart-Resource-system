@@ -1,42 +1,50 @@
 //displaying all projects
-function projectListing() {
+function projectListing(user_id) {
     $.ajax({
-        url: '/api/projects/',
+        url: '/api/projects/' + user_id,
         type: 'GET',
         success: function (response) {
-            // Clear the container before appending new data
             $('#project-list').empty();
-            // Populate the blade page with the received data
             response.forEach(function (item) {
                 var projectId = item.id;
                 var projectTitle = item.project_title;
                 var projectDescription = item.project_description;
                 var projectManagerId = item.project_manager;
 
-                // Fetch the project manager's details from the appropriate table
+                // Fetch user data based on projectManagerId
                 $.ajax({
-                    url: '/api/projects/users',
+                    url: '/api/projects/user/' + projectManagerId,
                     type: 'GET',
-                    data: {managerId: projectManagerId},
-                    success: function (managerResponse) {
-                        var firstName = managerResponse.first_name;
-                        var lastName = managerResponse.last_name;
+                    success: function (userResponse) {
+                        var employerId = userResponse.employer_id;
+                        var empty = null;
 
-                        var listItem = `
-                            <li>
-                                <div>PID.${projectId}</div>
-                                <div class="text">
-                                    <h3>${projectTitle}</h3>
-                                    <h4>Manager ${firstName} ${lastName}</h4>
-                                    <p>${projectDescription}</p>
-                                </div>
-                            </li>`;
+                        // Fetch employer data based on employerId
+                        $.ajax({
+                            url: '/api/projects/employer/' + employerId,
+                            type: 'GET',
+                            success: function (employerResponse) {
+                                var firstName = employerResponse.first_name;
+                                var lastName = employerResponse.last_name;
 
-                        // Append the list item to the desired container
-                        $('#project-list').append(listItem);
+                                var listItem = `
+                                    <li>
+                                        <div class="text">
+                                            <h3>${projectTitle}<sub>PID.${projectId}</sub></h3>
+                                            <h4>Manager ${firstName} ${lastName}</h4>
+                                            <p>${projectDescription}</p>
+                                        </div>
+                                    </li>`;
+
+                                $('#project-list').append(listItem);
+                            },
+                            error: function (xhr, status, error) {
+                                console.log(error);
+                                displayErrorModal(error);
+                            }
+                        });
                     },
                     error: function (xhr, status, error) {
-                        // Handle error case
                         console.log(error);
                         displayErrorModal(error);
                     }
@@ -44,12 +52,12 @@ function projectListing() {
             });
         },
         error: function (xhr, status, error) {
-            // Handle error case
             console.log(error);
             displayErrorModal(error);
         }
     });
 }
+
 
 //error displays
 function displayErrorModal(errorMessage) {

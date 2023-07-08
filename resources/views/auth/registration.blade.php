@@ -23,7 +23,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
-                        <input type="text" name="email" id="email" placeholder="Your Work Email" required/>
+                        <input type="text" name="email" id="email" placeholder="Your Work Email" required autocomplete="off"/>
                     </div>
                     <div id="email-notification" class="notification"></div>
                     <div class="form-group">

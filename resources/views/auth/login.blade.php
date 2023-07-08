@@ -22,12 +22,12 @@
                     @csrf
                     <div class="form-group">
                         <label for="username"><i class="uil uil-user"></i></label>
-                        <input type="text" name="username" id="username" placeholder="Your Username" required/>
+                        <input type="text" name="username" id="username" placeholder="Your Username" required autocomplete="off"/>
                     </div>
                     <div class="form-group">
                         <label for="password"><i class="uil uil-padlock"></i></label>
                         <input type="password" name="password" id="password" placeholder="Password" minlength="8"
-                               required/>
+                               required autocomplete="off"/>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember" id="remember" class="agree-term"

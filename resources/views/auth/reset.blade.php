@@ -17,7 +17,7 @@
 
             <div class="signin-form">
                 <h2 class="form-title">Reset Password</h2>
-                <form method="POST" action="/auth/save-reset" class="register-form" id="login-form">
+                <form method="POST" action="/auth/save-reset" class="register-form" id="login-form" autocomplete="off">
                     @csrf
                     <div class="form-group">
                         <label for="first_password"><i class="uil uil-padlock"></i></label>

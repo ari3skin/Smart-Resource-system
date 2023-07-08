@@ -6,8 +6,9 @@ use App\Models\Employee;
 use App\Models\Employer;
 use App\Models\Project;
 use App\Models\User;
+use http\Env\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ProjectController extends Controller
 {
@@ -16,35 +17,45 @@ class ProjectController extends Controller
      *
      * @return string
      */
-    public function index()
+    public function index($user_id)
     {
-        $projects = Project::where('status', 'ongoing')->get();
-        return response()->json($projects);
+        $user_info = User::all()->where('id', '=', $user_id)->first();
+
+        if (request()->route()->named('projectInfo')) {
+
+            if ($user_info->identifier == 'ADM_') {
+                $projects = Project::where('status', 'ongoing')->get();
+                return response()->json($projects);
+
+            } elseif ($user_info->identifier == 'MNGR_') {
+                $projects = DB::table('projects')->where('status', '=', 'ongoing')
+                    ->where('project_manager', '=', $user_id)->get();
+                return response()->json($projects);
+            } else {
+                return response()->json(['error' => 'Project not found']);
+            }
+        } elseif (request()->route()->named('getUserInfo')) {
+
+            $user = User::find($user_id);
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found']);
+            }
+            return response()->json($user);
+        } else {
+            return response()->json(['error' => 'Unauthorized Access']);
+        }
     }
 
-    public function getUser(Request $request)
+    public function getEmployer($employerId)
     {
-        $managerId = $request->input('managerId');
+        $employer = Employer::find($employerId);
 
-        // Retrieve the user's details based on the managerId
-        $user = User::find($managerId);
-
-        if ($user) {
-            if ($user->employer_id) {
-                // User is an employer, retrieve employer's information
-                $employer = Employer::find($user->employer_id);
-                if ($employer) {
-                    return response()->json($employer);
-                }
-            } elseif ($user->employee_id) {
-                // User is an employee, retrieve employee's information
-                $employee = Employee::find($user->employee_id);
-                if ($employee) {
-                    return response()->json($employee);
-                }
-            }
+        if (!$employer) {
+            return response()->json(['error' => 'Employer not found']);
         }
-        return response()->json(['error' => 'User not found'], 404);
+
+        return response()->json($employer);
     }
 
 
