@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->id();
             $table->bigInteger('project_id')->unsigned();
             $table->bigInteger('team_manager')->unsigned();
+            $table->enum('type', ['individual', 'team']);
             $table->string('task_title');
             $table->string('task_description');
             $table->enum('status', ['completed', 'ongoing', 'closed'])->default('ongoing');
