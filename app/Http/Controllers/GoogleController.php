@@ -31,6 +31,11 @@ class GoogleController extends Controller
                 if ($finduser) {
                     $finduser->google_id = $user->id;
 
+                    // Check if there is already a profile picture stored
+                    if ($finduser->profile_picture) {
+                        // Delete the existing profile picture file
+                        Storage::delete($finduser->profile_picture);
+                    }
                     //procedure for saving profile pictures
                     $avatarPath = 'public/avatars/employers/' . $user->id . '.jpg';
                     $avatarContents = file_get_contents($user->getAvatar());
@@ -52,6 +57,11 @@ class GoogleController extends Controller
                 if ($finduser) {
                     $finduser->google_id = $user->id;
 
+                    // Check if there is already a profile picture stored
+                    if ($finduser->profile_picture) {
+                        // Delete the existing profile picture file
+                        Storage::delete($finduser->profile_picture);
+                    }
                     //procedure for saving profile pictures
                     $avatarPath = 'public/avatars/employees/' . $user->id . '.jpg';
                     $avatarContents = file_get_contents($user->getAvatar());
