@@ -34,6 +34,17 @@
     justify-content: center;
 }
 
+#sidebar .brand .project_pic {
+    min-width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 6px 0 3px;
+}
+
 #sidebar .side-menu {
     width: 100%;
     margin-top: 48px;

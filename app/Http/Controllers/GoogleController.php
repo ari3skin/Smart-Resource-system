@@ -7,9 +7,7 @@ use App\Models\Employer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 use Laravel\Socialite\Facades\Socialite;
-use mysql_xdevapi\Exception;
 
 class GoogleController extends Controller
 {
@@ -33,14 +31,11 @@ class GoogleController extends Controller
                 if ($finduser) {
                     $finduser->google_id = $user->id;
 
-                    // Download and save the profile picture
-//                    $profilePictureUrl = $user->avatar_original;
-//                    $filename = 'profile_picture.jpg'; // Change the filename if desired
-//                    $picture = Image::make($profilePictureUrl);
-//                    Storage::disk('public')->put($filename, $picture->stream());
-//
-                    // Save the filename to the user's record
-//                    $finduser->profile_picture = $filename;
+                    //procedure for saving profile pictures
+                    $avatarPath = 'public/avatars/employers/' . $user->id . '.jpg';
+                    $avatarContents = file_get_contents($user->getAvatar());
+                    Storage::put($avatarPath, $avatarContents);
+                    $finduser->profile_picture = $avatarPath;
 
                     $finduser->save();
                     //Auth::login($finduser);
@@ -56,6 +51,13 @@ class GoogleController extends Controller
                 $finduser = User::where('employee_id', $employee->id)->first();
                 if ($finduser) {
                     $finduser->google_id = $user->id;
+
+                    //procedure for saving profile pictures
+                    $avatarPath = 'public/avatars/employees/' . $user->id . '.jpg';
+                    $avatarContents = file_get_contents($user->getAvatar());
+                    Storage::put($avatarPath, $avatarContents);
+                    $finduser->profile_picture = $avatarPath;
+
                     $finduser->save();
                     return app('App\Http\Controllers\AuthController')->login(Request::create('/admin/', 'POST', [
                         'google_id' => $user->id,

@@ -17,7 +17,7 @@
                     </a>
                 </li>
 
-                @if(session()->has('work_id'))
+                @if(session()->has('sys_id'))
                     <li>
                         @if(session('role')=='Employee')
                             <a href="/admin/" style="margin-left: 1rem; margin-right: 1rem;"
