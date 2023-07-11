@@ -118,7 +118,6 @@ class AuthController extends Controller
             if ($existingEmployer || $existingEmployee) {
                 $this->createRequest($data);
                 return response()->json(['success' => true]);
-
             } else {
                 return response()->json(['success' => false]);
             }

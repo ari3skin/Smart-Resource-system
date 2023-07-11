@@ -8,7 +8,7 @@
 
 <x-registration-request-header></x-registration-request-header>
 
-<section class="sign-in">
+<section class="main_content">
     <div class="login__container">
         <div class="signup-content">
             <div class="signup-image">
@@ -23,7 +23,8 @@
                     @csrf
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
-                        <input type="text" name="email" id="email" placeholder="Your Work Email" required autocomplete="off"/>
+                        <input type="text" name="email" id="email" placeholder="Your Work Email" required
+                               autocomplete="off"/>
                     </div>
                     <div id="email-notification" class="notification"></div>
                     <div class="form-group">
@@ -75,6 +76,8 @@
 
 
 <script src="{{asset('js/index.js')}}"></script>
+<script src="{{asset('js/modals.js')}}"></script>
+<script src="{{asset('js/ajax.js')}}"></script>
 <script>
     var modal_success = document.getElementById("modal_success");
     var modal_fail = document.getElementById("modal_fail");

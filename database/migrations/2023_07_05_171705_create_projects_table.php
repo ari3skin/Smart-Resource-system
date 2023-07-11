@@ -15,7 +15,8 @@ return new class extends Migration {
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('project_manager')->unsigned()->nullable();
+            $table->bigInteger('project_manager')->unsigned();
+            $table->bigInteger('sub_project_manager')->unsigned()->nullable();
             $table->string('project_title');
             $table->string('project_description', 500);
             $table->enum('status', ['completed', 'ongoing', 'closed'])->default('ongoing');
@@ -23,6 +24,7 @@ return new class extends Migration {
 
             //relationships
             $table->foreign("project_manager")->references("id")->on("users");
+            $table->foreign("sub_project_manager")->references("id")->on("users");
         });
 
         DB::update("ALTER TABLE projects AUTO_INCREMENT=101; ");

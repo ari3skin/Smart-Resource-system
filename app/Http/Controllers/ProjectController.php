@@ -6,7 +6,6 @@ use App\Models\Employee;
 use App\Models\Employer;
 use App\Models\Project;
 use App\Models\User;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -25,12 +24,26 @@ class ProjectController extends Controller
 
             if ($user_info->identifier == 'ADM_') {
                 $projects = Project::where('status', 'ongoing')->get();
-                return response()->json($projects);
+                $data = [
+                    'projects' => $projects,
+                ];
+                return response()->json($data);
 
             } elseif ($user_info->identifier == 'MNGR_') {
-                $projects = DB::table('projects')->where('status', '=', 'ongoing')
-                    ->where('project_manager', '=', $user_id)->get();
-                return response()->json($projects);
+                $projects = DB::table('projects')
+                    ->where('status', '=', 'ongoing')
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('project_manager', $user_id)
+                            ->orWhere('sub_project_manager', $user_id);
+                    })
+                    ->get();
+
+                $managers = User::where('role', 'Manager')->get();
+                $data = [
+                    'projects' => $projects,
+                    'managers' => $managers,
+                ];
+                return response()->json($data);
             } else {
                 return response()->json(['error' => 'Project not found']);
             }
@@ -62,11 +75,41 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        $projectName = $request->input('project_name');
+        $projectDescription = $request->input('project_description');
+        $projectManager = $request->input('project_manager');
+        $subProjectManager = $request->input('sub_project_manager');
+        $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
+        $sub_manager = User::all()->where('employer_id', '=', $subProjectManager)->first();
+
+        try {
+            $newProject = new Project();
+            $newProject->project_manager = $user_manager->id;
+            $newProject->sub_project_manager = $sub_manager->id;
+            $newProject->project_title = $projectName;
+            $newProject->project_description = $projectDescription;
+            $newProject->save();
+
+            return response()->json([
+                'message' => [
+                    'title' => 'Success',
+                    'info' => 'Project Created Successfully.',
+                ]
+            ]);
+        } catch (\Exception $e) {
+            // Handle any other exceptions or errors that may occur
+            return response()->json([
+                'error' => [
+                    'title' => 'Error',
+                    'info' => 'An error occurred while creating the project.',
+                ]
+            ]);
+        }
     }
 
     /**

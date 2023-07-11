@@ -1,17 +1,17 @@
-#content {
+#main_content {
     position: relative;
     width: calc(100% - 280px);
     left: 280px;
     transition: .3s ease;
 }
 
-#sidebar.hide ~ #content {
+#sidebar.hide ~ #main_content {
     width: calc(100% - 60px);
     left: 60px;
 }
 
 /*base navigation css*/
-#content nav {
+#main_content nav {
     height: 56px;
     background: var(--body-color);
     padding: 0 24px;
@@ -25,38 +25,38 @@
     z-index: 1000;
 }
 
-#content nav a {
+#main_content nav a {
     color: var(--title-color);
 }
 
-#content nav .uil.uil-bars {
+#main_content nav .uil.uil-bars {
     cursor: pointer;
     color: var(--title-color);
 }
 
-#content nav .nav-link {
+#main_content nav .nav-link {
     font-size: 16px;
     transition: .3s ease;
     margin-left: 10px;
 }
 
-#content nav .nav-link:hover {
+#main_content nav .nav-link:hover {
     color: var(--first-color);
 }
 
-#content nav form {
+#main_content nav form {
     max-width: 400px;
     width: 100%;
     margin-right: auto;
 }
 
-#content nav form .form-input {
+#main_content nav form .form-input {
     display: flex;
     align-items: center;
     height: 36px;
 }
 
-#content nav form .form-input input {
+#main_content nav form .form-input input {
     flex-grow: 1;
     padding: 0 16px;
     height: 100%;
@@ -68,7 +68,7 @@
     color: var(--title-color);
 }
 
-#content nav form .form-input button {
+#main_content nav form .form-input button {
     width: 36px;
     height: 100%;
     display: flex;
@@ -84,7 +84,7 @@
 }
 
 /*dark mode switching*/
-#content nav .switch-mode {
+#main_content nav .switch-mode {
     display: block;
     min-width: 50px;
     height: 25px;
@@ -94,7 +94,7 @@
     position: relative;
 }
 
-#content nav .switch-mode::before {
+#main_content nav .switch-mode::before {
     content: '';
     position: absolute;
     top: 2px;
@@ -106,18 +106,18 @@
     transition: all .3s ease;
 }
 
-#content nav #switch-mode:checked + .switch-mode::before {
+#main_content nav #switch-mode:checked + .switch-mode::before {
     left: calc(100% - (25px - 4px) - 2px);
 }
 
 /*dark mode switching*/
 
-#content nav .notification {
+#main_content nav .notification {
     font-size: 20px;
     position: relative;
 }
 
-#content nav .notification .num {
+#main_content nav .notification .num {
     position: absolute;
     top: -6px;
     right: -6px;
@@ -134,14 +134,14 @@
     align-items: center;
 }
 
-#content nav .profile img {
+#main_content nav .profile img {
     width: 36px;
     height: 36px;
     object-fit: cover;
     border-radius: 50%;
 }
 
-#content nav::before {
+#main_content nav::before {
     content: '';
     position: absolute;
     width: 40px;
@@ -157,11 +157,11 @@
 
 /*responsive css*/
 @media screen and (max-width: 576px) {
-    #content nav form .form-input input {
+    #main_content nav form .form-input input {
         display: none;
     }
 
-    #content nav form .form-input button {
+    #main_content nav form .form-input button {
         width: auto;
         height: auto;
         background: transparent;
@@ -169,12 +169,12 @@
         color: var(--first-color);
     }
 
-    #content nav form.show .form-input input {
+    #main_content nav form.show .form-input input {
         display: block;
         width: 100%;
     }
 
-    #content nav form.show .form-input button {
+    #main_content nav form.show .form-input button {
         width: 36px;
         height: 100%;
         border-radius: 0 36px 36px 0;
@@ -182,20 +182,20 @@
         background: var(--red);
     }
 
-    #content nav form.show ~ .notification,
-    #content nav form.show ~ .profile {
+    #main_content nav form.show ~ .notification,
+    #main_content nav form.show ~ .profile {
         display: none;
     }
 }
 
 @media screen and (max-width: 768px) {
 
-    #content {
+    #main_content {
         width: calc(100% - 60px);
         left: 200px;
     }
 
-    #content nav .nav-link {
+    #main_content nav .nav-link {
         display: none;
     }
 }

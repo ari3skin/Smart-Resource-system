@@ -8,7 +8,7 @@
 
 @include('admin.sections.navigation')
 
-<section id="content">
+<section id="main_content">
     <nav>
         <div style="display: flex; align-items: center;">
             <i class="uil uil-bars"></i>

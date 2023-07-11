@@ -9,7 +9,7 @@
 .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 2000;
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -34,6 +34,10 @@
     font-size: 30px;
     text-align: center;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: auto;
 }
 
 .modal__text__success {
@@ -41,6 +45,10 @@
     font-size: 30px;
     text-align: center;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    margin: auto;
 }
 
 .modal__text__error {
@@ -265,12 +273,23 @@ body {
     margin-bottom: 0;
 }
 
-.form-group input {
+.form-group input, .form-group select {
     color: var(--title-color);
     width: 100%;
     display: block;
     background: transparent;
     border: none;
+    border-bottom: 1px solid #999;
+    padding: 6px 30px;
+    font-family: Poppins, serif;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    color: var(--title-color);
+    width: 100%;
+    display: block;
+    background: transparent;
     border-bottom: 1px solid #999;
     padding: 6px 30px;
     font-family: Poppins, serif;

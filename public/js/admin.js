@@ -14,7 +14,7 @@ allSideMenuTop.forEach(item => {
 
 
 //used to toggle the sidebar:
-const menuBar = document.querySelector('#content nav .uil.uil-bars');
+const menuBar = document.querySelector('#main_content nav .uil.uil-bars');
 const sidebar = document.getElementById('sidebar');
 
 menuBar.addEventListener('click', function () {
@@ -23,9 +23,9 @@ menuBar.addEventListener('click', function () {
 
 
 //responsive navbar js (mainly on the search, notification and profile
-const searchButton = document.querySelector('#content nav form .form-input button');
-const searchButtonIcon = document.querySelector('#content nav form .form-input button .uil');
-const searchForm = document.querySelector('#content nav form');
+const searchButton = document.querySelector('#main_content nav form .form-input button');
+const searchButtonIcon = document.querySelector('#main_content nav form .form-input button .uil');
+const searchForm = document.querySelector('#main_content nav form');
 
 searchButton.addEventListener('click', function (e) {
     if (window.innerWidth < 576) {

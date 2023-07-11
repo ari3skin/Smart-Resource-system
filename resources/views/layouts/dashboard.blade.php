@@ -18,7 +18,7 @@
 
 </section>
 
-<section id="content">
+<section id="main_content">
     <nav>
         <i class="uil uil-bars"></i>
         <a href="#" class="nav-link">Actions</a>
@@ -41,11 +41,13 @@
     </nav>
     {{--main navigation content--}}
     @yield('dashboard-content')
+    @yield('modals')
 </section>
 
 
 <script src="{{asset('js/admin.js')}}"></script>
 <script src="{{asset('js/index.js')}}"></script>
+<script src="{{asset('js/modals.js')}}"></script>
 <script src="{{asset('js/ajax.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"
         integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
@@ -75,7 +77,7 @@
         );
     });
 </script>
-{{--script for tab switching and modals--}}
+{{--script for tab switching--}}
 
 <script>
     // tab switching
@@ -95,27 +97,6 @@
     }
 
     document.getElementById("defaultOpen").click();
-
-    //modal script
-    function setupModalEvents(modal, button, closeSpan) {
-        button.onclick = function () {
-            modal.style.display = "block";
-        }
-        closeSpan.onclick = function () {
-            modal.style.display = "none";
-        }
-        window.onclick = function (event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-    }
-
-    var modal_logout = document.getElementById("confirm_logout");
-    var btn = document.getElementById("logout_btn");
-    var close_span = document.getElementsByClassName("close")[0];
-
-    setupModalEvents(modal_logout, btn, close_span);
 </script>
 </body>
 </html>

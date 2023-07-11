@@ -8,7 +8,7 @@
 
 <x-registration-request-header></x-registration-request-header>
 
-<section class="sign-in">
+<section class="main_content">
     <div class="login__container">
         <div class="signin-content">
             <div class="signin-image">
@@ -19,13 +19,6 @@
                 <h2 class="form-title">Reset Password</h2>
                 <form method="POST" action="/auth/reset-password" class="register-form" id="login-form">
                     @csrf
-                    {{--<div class="form-group">--}}
-                    {{--<label for="username"><i class="uil uil-user"></i></label>--}}
-                    {{--<input type="text" name="username" id="username" minlength="8" placeholder="Your Username"/>--}}
-                    {{--</div>--}}
-                    {{--<div class="form-group">--}}
-                    {{--<span style="margin: 0 125px;">OR</span>--}}
-                    {{--</div>--}}
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
                         <input type="text" name="email" id="email" minlength="8" placeholder="Your Work Email" required/>

@@ -88,7 +88,16 @@ class Routing extends Controller
 
             } elseif ($user->role == 'Manager') {
 
-                return view('users.employers');
+                $user_id = $user->id;
+                $projects = Project::where('status', 'ongoing')
+                    ->orWhere('project_manager', $user_id)
+                    ->orWhere('sub_project_manager', $user_id);
+
+                $projectsCount = $projects->count();
+                return view('users.employers',
+                    [
+                        'projectsCount' => $projectsCount,
+                    ]);
 
             } elseif ($user->role == 'Employee') {
 

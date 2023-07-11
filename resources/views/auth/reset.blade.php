@@ -8,7 +8,7 @@
 
 <x-registration-request-header></x-registration-request-header>
 
-<section class="sign-in">
+<section class="main_content">
     <div class="login__container">
         <div class="signin-content">
             <div class="signin-image">

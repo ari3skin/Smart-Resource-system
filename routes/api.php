@@ -28,6 +28,9 @@ Route::middleware(['disable_back'])->group(function () {
             Route::get('/{user_id}', [ProjectController::class, 'index'])->name('projectInfo');
             Route::get('user/{projectManagerId}', [ProjectController::class, 'index'])->name('getUserInfo');
             Route::get('employer/{employerId}', [ProjectController::class, 'getEmployer']);
+
+            //posts
+            Route::post('create', [ProjectController::class, 'create']);
         });
     });
 });

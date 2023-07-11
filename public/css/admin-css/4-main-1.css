@@ -1,4 +1,4 @@
-#content main {
+#main_content main {
     width: 100%;
     padding: 36px 24px;
     font-family: var(--poppins);
@@ -7,7 +7,7 @@
 }
 
 /*common title css for all pages*/
-#content main .head-title {
+#main_content main .head-title {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -16,34 +16,34 @@
     margin-top: -20px;
 }
 
-#content main .head-title .left h1 {
+#main_content main .head-title .left h1 {
     font-size: 36px;
     font-weight: 600;
     margin-bottom: 10px;
     color: var(--title-color);
 }
 
-#content main .head-title .left .breadcrumb {
+#main_content main .head-title .left .breadcrumb {
     display: flex;
     align-items: center;
     grid-gap: 16px;
 }
 
-#content main .head-title .left .breadcrumb li {
+#main_content main .head-title .left .breadcrumb li {
     color: var(--title-color);
 }
 
-#content main .head-title .left .breadcrumb li a {
+#main_content main .head-title .left .breadcrumb li a {
     color: var(--text-color);
     pointer-events: none;
 }
 
-#content main .head-title .left .breadcrumb li a.active {
+#main_content main .head-title .left .breadcrumb li a.active {
     color: var(--first-color);
     pointer-events: unset;
 }
 
-#content main .head-title .btn-download {
+#main_content main .head-title .btn-download {
     height: 36px;
     padding: 0 16px;
     border-radius: 36px;
@@ -59,14 +59,14 @@
 /*common title css for all pages*/
 
 /*css for home dashboard page:*/
-#content main .box-info {
+#main_content main .box-info {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     grid-gap: 24px;
     margin-top: 36px;
 }
 
-#content main .box-info li {
+#main_content main .box-info li {
     padding: 24px;
     background: var(--body-color);
     border-radius: 20px;
@@ -75,7 +75,7 @@
     grid-gap: 24px;
 }
 
-#content main .box-info li .uil {
+#main_content main .box-info li .uil {
     width: 80px;
     height: 80px;
     border-radius: 10px;
@@ -87,26 +87,37 @@
     color: var(--body-color);
 }
 
-#content main .box-info li .text h3 {
+#main_content main .box-info li .text h3 {
     font-size: 24px;
     font-weight: 600;
     color: var(--title-color);
 }
 
-#content main .box-info li .text h3 sub {
+#main_content main .box-info li .text h4 {
+    font-size: 15px;
+    margin: 10px 70px;
+}
+
+#main_content main .box-info li .text h3 sub {
     font-size: 12px;
     font-weight: 300;
     color: var(--title-color);
+    margin: 0 10px;
+    padding: 5px;
+    border: 1px solid;
+    border-radius: 10px;
 }
 
-#content main .box-info li .text p {
+#main_content main .box-info li .text p {
     color: var(--title-color);
+    width: 90%;
+    margin: 10px 20px;
 }
 
 /*css for home dashboard page (end) */
 
 /*css for contact me tables*/
-#content main .table-data {
+#main_content main .table-data {
     /*display: flex;*/
     /*flex-wrap: wrap;*/
     grid-gap: 24px;
@@ -115,58 +126,58 @@
     color: var(--title-color);
 }
 
-#content main .table-data > div {
+#main_content main .table-data > div {
     border-radius: 20px;
     background: var(--body-color);
     padding: 24px;
     overflow-x: auto;
 }
 
-#content main .table-data .head {
+#main_content main .table-data .head {
     display: flex;
     align-items: center;
     grid-gap: 16px;
     margin-bottom: 24px;
 }
 
-#content main .table-data .head h3 {
+#main_content main .table-data .head h3 {
     margin-right: auto;
     font-size: 24px;
     font-weight: 600;
 }
 
-#content main .table-data .head .uil {
+#main_content main .table-data .head .uil {
     cursor: pointer;
 }
 
-#content main .table-data .order {
+#main_content main .table-data .order {
     flex-grow: 1;
     flex-basis: 500px;
 }
 
-#content main .table-data .order table {
+#main_content main .table-data .order table {
     width: 100%;
     border-collapse: collapse;
 }
 
-#content main .table-data .order table th {
+#main_content main .table-data .order table th {
     padding-bottom: 12px;
     font-size: 13px;
     text-align: left;
     border-bottom: 2px solid var(--body-color-darker);
 }
 
-#content main .table-data .order table td {
+#main_content main .table-data .order table td {
     padding: 16px;
     width: 10%;
 }
 
 
-#content main .table-data .order table tbody tr:hover {
+#main_content main .table-data .order table tbody tr:hover {
     background: var(--body-color-darker);
 }
 
-#content main .table-data .order table tr td .status {
+#main_content main .table-data .order table tr td .status {
     font-size: 10px;
     padding: 6px 16px;
     color: var(--body-color);
@@ -174,21 +185,21 @@
     font-weight: 700;
 }
 
-#content main .table-data .order table tr td .status.replied,
-#content main .table-data .order table tr td .status.verified {
+#main_content main .table-data .order table tr td .status.replied,
+#main_content main .table-data .order table tr td .status.verified {
     background: var(--green);
 }
 
-#content main .table-data .order table tr td .status.pending,
-#content main .table-data .order table tr td .status.unverified {
+#main_content main .table-data .order table tr td .status.pending,
+#main_content main .table-data .order table tr td .status.unverified {
     background: var(--orange);
 }
 
-#content main .table-data .order table tr td .status.blocked {
+#main_content main .table-data .order table tr td .status.blocked {
     background: var(--red);
 }
 
-#content main .table-data .order table tr td form button {
+#main_content main .table-data .order table tr td form button {
     height: 36px;
     padding: 16px;
     border-radius: 36px;
@@ -202,24 +213,37 @@
     font-weight: 500;
 }
 
-/*css for contact me tables*/
+/*css for projects, tasks etc tables*/
+.dashboard-form {
+    margin-right: 90px;
+    margin-left: 80px;
+    width: 50%;
+}
+
+.dashboard-form .form-title {
+    width: fit-content;
+}
+
+.dashboard-form form {
+    width: 100%;
+}
 
 /*responsive designs*/
 @media screen and (max-width: 576px) {
 
-    #content main .box-info {
+    #main_content main .box-info {
         grid-template-columns: 1fr;
     }
 
-    #content main .table-data .head {
+    #main_content main .table-data .head {
         min-width: 420px;
     }
 
-    #content main .table-data .order table {
+    #main_content main .table-data .order table {
         min-width: 420px;
     }
 
-    #content main .table-data .todo .todo-list {
+    #main_content main .table-data .todo .todo-list {
         min-width: 420px;
     }
 }
