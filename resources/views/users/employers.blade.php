@@ -119,6 +119,60 @@
         <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="project-list"></ul>
 
     </main>
+
+    <main class="tabcontent" id="tasks">
+        <div class="head-title">
+            <div class="left">
+                <h1>Project Tasks</h1>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                    </li>
+                    <li><i class="uil uil-angle-right-b"></i></li>
+                    <li>
+                        <a class="active" href="#">Assigned Project Tasks</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main class="tabcontent" id="teams">
+        <div class="head-title">
+            <div class="left">
+                <h1>Project Teams</h1>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                    </li>
+                    <li><i class="uil uil-angle-right-b"></i></li>
+                    <li>
+                        <a class="active" href="#">Active Task Teams</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <main class="tabcontent" id="settings">
+        <div class="head-title">
+            <div class="left">
+                <h1>Settings</h1>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                    </li>
+                    <li><i class="uil uil-angle-right-b"></i></li>
+                    <li>
+                        <a class="active" href="#">Setings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
 @endsection
 
 @section('modals')

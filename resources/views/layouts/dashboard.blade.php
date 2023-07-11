@@ -46,7 +46,6 @@
 
 
 <script src="{{asset('js/admin.js')}}"></script>
-<script src="{{asset('js/index.js')}}"></script>
 <script src="{{asset('js/modals.js')}}"></script>
 <script src="{{asset('js/ajax.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.7.0.min.js"
