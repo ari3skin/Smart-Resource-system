@@ -111,7 +111,6 @@
 #main_content main .box-info li .text p {
     color: var(--title-color);
     width: 90%;
-    margin: 10px 20px;
 }
 
 /*css for home dashboard page (end) */

@@ -37,7 +37,7 @@ function projectListing(user_id) {
                                         <div class="text">
                                             <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
                                             <h4>Manager ${firstName} ${lastName}</h4>
-                                            <p>${projectDescription}</p>
+                                            <p style="margin: 10px 20px;">${projectDescription}</p>
                                         </div>
                                     </li>`;
 
