@@ -9,7 +9,7 @@
 <section id="sidebar">
     <a href="/" class="brand">
 
-        @if(\PHPUnit\Framework\isEmpty(Auth::user()->profile_picture))
+        @if (!Auth::user()->profile_picture)
             <i class="uil uil-user-square"></i>
         @else
             <img src="{{ Storage::url(Auth::user()->profile_picture) }}" alt="User Avatar" class="project_pic">
