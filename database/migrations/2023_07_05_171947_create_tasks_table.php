@@ -16,7 +16,8 @@ return new class extends Migration {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('project_id')->unsigned();
-            $table->bigInteger('team_manager')->unsigned();
+            $table->bigInteger('task_team_manager')->unsigned()->nullable();
+            $table->bigInteger('task_individual_user')->unsigned()->nullable();
             $table->enum('type', ['individual', 'team']);
             $table->string('task_title');
             $table->string('task_description');
@@ -25,7 +26,8 @@ return new class extends Migration {
 
             //relationships
             $table->foreign("project_id")->references("id")->on("projects");
-            $table->foreign("team_manager")->references('id')->on('users');
+            $table->foreign("task_team_manager")->references('id')->on('users');
+            $table->foreign("task_individual_user")->references('id')->on('users');
         });
 
         DB::update("ALTER TABLE tasks AUTO_INCREMENT=101; ");

@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Employee extends Model
 {
     use HasFactory;
+
     protected $table = 'employees';
+
+    public function user()
+    {
+        return $this->hasOne('App\Models\User', 'employee_id');
+    }
 }

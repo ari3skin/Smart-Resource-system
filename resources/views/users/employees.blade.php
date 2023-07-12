@@ -11,6 +11,14 @@
         </li>
 
         <li>
+            <a class="tablinks" onclick="switchcommon(event, 'tasks')"
+               style="cursor: pointer" title="tasks">
+                <i class="uil uil-clipboard-notes"></i>
+                <span class="text">Tasks</span>
+            </a>
+        </li>
+
+        <li>
             <a class="tablinks" onclick="switchcommon(event, 'settings')"
                style="cursor: pointer" title="Settings">
                 <i class="uil uil-setting"></i>
@@ -93,39 +101,45 @@
             </li>
         </ul>
     </main>
+
+    <main class="tabcontent" id="tasks">
+        <div class="head-title">
+            <div class="left">
+                <h1>Project Tasks</h1>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                    </li>
+                    <li><i class="uil uil-angle-right-b"></i></li>
+                    <li>
+                        <a class="active" href="#">Ongoing Assigned Project Tasks</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="table-data">
+            <div class="order">
+                <table id="tableData">
+                    <thead>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Task Title</th>
+                        <th>Task Description</th>
+                        <th>Assigned To</th>
+                        <th>Task Type</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="task_table"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
 @endsection
 
 @section('modals')
-
-    <div id="dashboard_modal" class="modal" style="z-index: 1500;">
-        <div class="modal-content" style="margin: 8% 20%;">
-            <span class="close">&times;</span>
-            <div class="dashboard-form">
-                <h2 class="form-title">Create New Project</h2>
-                <form method="POST" action="#" class="dashboard-form" id="login-form">
-                    @csrf
-                    <div class="form-group">
-                        <label for="project-name"><i class="uil uil-file-plus-alt"></i></label>
-                        <input type="text" name="project_name" id="project-name" placeholder="Project Name" required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="project-description"><i class="uil uil-file-plus-alt"></i></label>
-                        <textarea rows="5" cols="80" name="project_description" id="project-description"
-                                  placeholder="Project Description" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="project-manager"><i class="uil uil-user-plus"></i></label>
-                        <input type="text" name="project_manager" id="project-manager"
-                               placeholder="Leading Project Manager" required/>
-                    </div>
-                    <div class="">
-                        <input type="submit" name="signin" id="signin" class="form-submit" value="Create Project"/>
-                        <input type="reset" id="signin" class="form-submit" value="Reset Form">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     <div id="confirm_logout" class="modal">
         <div class="modal-content">

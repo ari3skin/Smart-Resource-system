@@ -11,15 +11,15 @@
         </li>
 
         <li class="active">
-            <a class="tablinks" onclick="projectListing({{session('sys_id')}}); switchcommon(event, 'projects')"
-               style="cursor: pointer" title="Projects">
+            <a class="tablinks" onclick="projectListing(this, {{session('sys_id')}}); switchcommon(event, 'projects')"
+               style="cursor: pointer" title="Projects" id="employers_projects">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">Projects</span>
             </a>
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'tasks')"
+            <a class="tablinks" onclick="taskListing({{session('sys_id')}}); switchcommon(event, 'tasks')"
                style="cursor: pointer" title="tasks">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">Tasks</span>
@@ -131,9 +131,38 @@
                     </li>
                     <li><i class="uil uil-angle-right-b"></i></li>
                     <li>
-                        <a class="active" href="#">Assigned Project Tasks</a>
+                        <a class="active" href="#">Ongoing Assigned Project Tasks</a>
                     </li>
                 </ul>
+            </div>
+
+            <button class="btn-download" onclick="" style="border: none; cursor: pointer;">
+                <i class="uil uil-plus-circle"></i>
+                <span class="text">New Task</span>
+            </button>
+        </div>
+
+        <div class="table-data">
+            <div class="order">
+                <label style="margin: 0 210px;">
+                    Project Filter:
+                    <select id="projectFilter">
+                        <option value="">All Projects</option>
+                    </select>
+                </label>
+                <table id="tableData">
+                    <thead>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Task Title</th>
+                        <th>Task Description</th>
+                        <th>Assigned To</th>
+                        <th>Task Type</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="task_table"></tbody>
+                </table>
             </div>
         </div>
     </main>

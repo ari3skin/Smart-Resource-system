@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Routing::class, 'showIndex'])->name('/');
 
+Route::get('sql', [\App\Http\Controllers\TaskController::class, 'sqlTrial']);
+
 Route::middleware(['disable_back'])->group(function () {
 
     Route::prefix('auth')->group(function () {

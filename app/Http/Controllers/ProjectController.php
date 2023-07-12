@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use function PHPUnit\Framework\isNull;
 
 class ProjectController extends Controller
 {
@@ -80,47 +81,75 @@ class ProjectController extends Controller
     public function create(Request $request)
     {
         //
-        $projectName = $request->input('project_name');
-        $projectDescription = $request->input('project_description');
-        $projectManager = $request->input('project_manager');
-        $subProjectManager = $request->input('sub_project_manager');
-        $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
-        $sub_manager = User::all()->where('employer_id', '=', $subProjectManager)->first();
-
-        try {
-            $newProject = new Project();
-            $newProject->project_manager = $user_manager->id;
-            $newProject->sub_project_manager = $sub_manager->id;
-            $newProject->project_title = $projectName;
-            $newProject->project_description = $projectDescription;
-            $newProject->save();
-
-            return response()->json([
-                'message' => [
-                    'title' => 'Success',
-                    'info' => 'Project Created Successfully.',
-                ]
-            ]);
-        } catch (\Exception $e) {
-            // Handle any other exceptions or errors that may occur
-            return response()->json([
-                'error' => [
-                    'title' => 'Error',
-                    'info' => 'An error occurred while creating the project.',
-                ]
-            ]);
-        }
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
         //
+        $projectName = $request->input('project_name');
+        $projectDescription = $request->input('project_description');
+        $projectManager = $request->input('project_manager');
+        $subProjectManager = $request->input('sub_project_manager');
+        if ($subProjectManager) {
+
+            $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
+            $sub_manager = User::all()->where('employer_id', '=', $subProjectManager)->first();
+
+            try {
+                $newProject = new Project();
+                $newProject->project_manager = $user_manager->id;
+                $newProject->sub_project_manager = $sub_manager->id;
+                $newProject->project_title = $projectName;
+                $newProject->project_description = $projectDescription;
+                $newProject->save();
+
+                return response()->json([
+                    'error' => [
+                        'title' => 'Success',
+                        'info' => 'Project Created Successfully.',
+                    ]
+                ], 200);
+            } catch (\Exception $e) {
+                // Handle any other exceptions or errors that may occur
+                return response()->json([
+                    'error' => [
+                        'title' => 'Error',
+                        'info' => 'An error occurred while creating the project.',
+                    ]
+                ]);
+            }
+        } else {
+            $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
+
+            try {
+                $newProject = new Project();
+                $newProject->project_manager = $user_manager->id;
+                $newProject->project_title = $projectName;
+                $newProject->project_description = $projectDescription;
+                $newProject->save();
+
+                return response()->json([
+                    'error' => [
+                        'title' => 'Success',
+                        'info' => 'Project Created Successfully.',
+                    ]
+                ], 200);
+            } catch (\Exception $e) {
+                // Handle any other exceptions or errors that may occur
+                return response()->json([
+                    'error' => [
+                        'title' => 'Error',
+                        'info' => 'An error occurred while creating the project.',
+                    ]
+                ]);
+            }
+        }
     }
 
     /**

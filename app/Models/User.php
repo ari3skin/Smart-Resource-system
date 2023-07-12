@@ -49,4 +49,34 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function employer()
+    {
+        return $this->belongsTo('App\Models\Employer', 'employer_id');
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo('App\Models\Employee', 'employee_id');
+    }
+
+    public function managedProjects()
+    {
+        return $this->hasMany('App\Models\Project', 'project_manager');
+    }
+
+    public function subManagedProjects()
+    {
+        return $this->hasMany('App\Models\Project', 'sub_project_manager');
+    }
+
+    public function managedTasks()
+    {
+        return $this->hasMany('App\Models\Task', 'task_team_manager');
+    }
+
+    public function individualTasks()
+    {
+        return $this->hasMany('App\Models\Task', 'task_individual_user');
+    }
 }

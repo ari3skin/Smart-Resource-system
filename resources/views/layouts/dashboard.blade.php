@@ -71,14 +71,6 @@
                 $('#password-error').text('');
             }
         });
-
-        //configuring my datatable
-        $('#tableData').DataTable(
-            {
-                "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
-                "iDisplayLength": 5
-            }
-        );
     });
 </script>
 {{--script for tab switching--}}

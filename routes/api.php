@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\Routing;
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -30,7 +30,12 @@ Route::middleware(['disable_back'])->group(function () {
             Route::get('employer/{employerId}', [ProjectController::class, 'getEmployer']);
 
             //posts
-            Route::post('create', [ProjectController::class, 'create']);
+            Route::post('create', [ProjectController::class, 'store']);
+        });
+
+        Route::prefix('tasks')->group(function () {
+            Route::get('managers/{user_id}', [TaskController::class, 'index'])->name('managers_tasks');
+            Route::get('employees/{user_id}', [TaskController::class, 'index'])->name('employees_tasks');
         });
     });
 });

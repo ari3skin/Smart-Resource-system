@@ -28,8 +28,8 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="projectListing({{session('sys_id')}}); switchcommon(event, 'projects')"
-               style="cursor: pointer" title="Registration Requests">
+            <a class="tablinks" onclick="projectListing(this,{{session('sys_id')}}); switchcommon(event, 'projects')"
+               style="cursor: pointer" title="Registration Requests" id="admin_projects">
                 <i class="uil uil-file-check-alt"></i>
                 <span class="text">View Projects</span>
             </a>
