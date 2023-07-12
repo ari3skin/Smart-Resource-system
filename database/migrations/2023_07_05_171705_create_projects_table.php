@@ -15,6 +15,7 @@ return new class extends Migration {
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('department_id')->unsigned();
             $table->bigInteger('project_manager')->unsigned();
             $table->bigInteger('sub_project_manager')->unsigned()->nullable();
             $table->string('project_title');
@@ -23,6 +24,7 @@ return new class extends Migration {
             $table->timestamps();
 
             //relationships
+            $table->foreign('department_id')->references('id')->on('departments');
             $table->foreign("project_manager")->references("id")->on("users");
             $table->foreign("sub_project_manager")->references("id")->on("users");
         });

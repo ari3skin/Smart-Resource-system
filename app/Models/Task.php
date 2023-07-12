@@ -11,18 +11,25 @@ class Task extends Model
 
     protected $table = 'tasks';
 
-    public function project()
+    public function project(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Project', 'project_id');
+        return $this->belongsTo(Project::class);
     }
 
-    public function teamManager()
+    public function taskTeamManager(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'task_team_manager');
+        return $this->belongsTo(User::class, 'task_team_manager', 'id');
     }
 
-    public function individualUser()
+    public function taskIndividualUser(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'task_individual_user');
+        return $this->belongsTo(User::class, 'task_individual_user', 'id');
+    }
+
+
+    // Get the department of the task via project
+    public function department()
+    {
+        return $this->project->department;
     }
 }

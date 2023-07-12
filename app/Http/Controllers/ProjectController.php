@@ -20,26 +20,53 @@ class ProjectController extends Controller
     public function index($user_id)
     {
         $user_info = User::all()->where('id', '=', $user_id)->first();
+        $currentUsersDepartmentId = User::find($user_id)->employer->department->id;
 
         if (request()->route()->named('projectInfo')) {
 
             if ($user_info->identifier == 'ADM_') {
-                $projects = Project::where('status', 'ongoing')->get();
+                $projects = Project::where('status', 'ongoing')
+                    ->with([
+                        'manager' => function ($query) {
+                            $query->with([
+                                'employer' => function ($query) {
+                                    $query->with('department');
+                                }
+                            ]);
+                        }
+                    ])
+                    ->get();
+
                 $data = [
                     'projects' => $projects,
                 ];
+
                 return response()->json($data);
 
             } elseif ($user_info->identifier == 'MNGR_') {
-                $projects = DB::table('projects')
-                    ->where('status', '=', 'ongoing')
+                $projects = Project::where('status', 'ongoing')
                     ->where(function ($query) use ($user_id) {
                         $query->where('project_manager', $user_id)
                             ->orWhere('sub_project_manager', $user_id);
                     })
+                    ->with([
+                        'manager' => function ($query) {
+                            $query->with([
+                                'employer' => function ($query) {
+                                    $query->with('department');
+                                }
+                            ]);
+                        }
+                    ])
                     ->get();
 
-                $managers = User::where('role', 'Manager')->get();
+                $managers = User::where('role', 'Manager')
+                    ->whereHas('employer', function ($query) use ($currentUsersDepartmentId) {
+                        $query->where('department_id', $currentUsersDepartmentId);
+                    })
+                    ->with('employer')
+                    ->get();
+
                 $data = [
                     'projects' => $projects,
                     'managers' => $managers,
@@ -48,28 +75,9 @@ class ProjectController extends Controller
             } else {
                 return response()->json(['error' => 'Project not found']);
             }
-        } elseif (request()->route()->named('getUserInfo')) {
-
-            $user = User::find($user_id);
-
-            if (!$user) {
-                return response()->json(['error' => 'User not found']);
-            }
-            return response()->json($user);
         } else {
             return response()->json(['error' => 'Unauthorized Access']);
         }
-    }
-
-    public function getEmployer($employerId)
-    {
-        $employer = Employer::find($employerId);
-
-        if (!$employer) {
-            return response()->json(['error' => 'Employer not found']);
-        }
-
-        return response()->json($employer);
     }
 
 
@@ -96,59 +104,60 @@ class ProjectController extends Controller
         $projectDescription = $request->input('project_description');
         $projectManager = $request->input('project_manager');
         $subProjectManager = $request->input('sub_project_manager');
+
+        $user_manager = User::where('id', $projectManager)->first();
+
+        if (!$user_manager) {
+            return response()->json([
+                'info' => [
+                    'title' => 'Error',
+                    'description' => 'Project manager not found.',
+                ]
+            ], 400);
+        }
+
+        // Get the department_id from the project manager's employer
+        $department_id = $user_manager->employer->department_id;
+
+        $sub_manager = null;
+
         if ($subProjectManager) {
+            $sub_manager = User::where('id', $subProjectManager)->first();
 
-            $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
-            $sub_manager = User::all()->where('employer_id', '=', $subProjectManager)->first();
-
-            try {
-                $newProject = new Project();
-                $newProject->project_manager = $user_manager->id;
-                $newProject->sub_project_manager = $sub_manager->id;
-                $newProject->project_title = $projectName;
-                $newProject->project_description = $projectDescription;
-                $newProject->save();
-
-                return response()->json([
-                    'info' => [
-                        'title' => 'Success',
-                        'description' => 'Project Created Successfully.',
-                    ]
-                ]);
-            } catch (\Exception $e) {
-                // Handle any other exceptions or errors that may occur
+            if (!$sub_manager) {
                 return response()->json([
                     'info' => [
                         'title' => 'Error',
-                        'description' => 'An error occurred while creating the project.',
+                        'description' => 'Sub project manager not found.',
                     ]
                 ], 400);
             }
-        } else {
-            $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
+        }
 
-            try {
-                $newProject = new Project();
-                $newProject->project_manager = $user_manager->id;
-                $newProject->project_title = $projectName;
-                $newProject->project_description = $projectDescription;
-                $newProject->save();
+        try {
+            $newProject = new Project();
+            $newProject->project_manager = $user_manager->id;
+            $newProject->sub_project_manager = $sub_manager ? $sub_manager->id : null;
+            $newProject->project_title = $projectName;
+            $newProject->project_description = $projectDescription;
+            // Set the department_id on the project
+            $newProject->department_id = $department_id;
+            $newProject->save();
 
-                return response()->json([
-                    'info' => [
-                        'title' => 'Success',
-                        'description' => 'Project Created Successfully.',
-                    ]
-                ]);
-            } catch (\Exception $e) {
-                // Handle any other exceptions or errors that may occur
-                return response()->json([
-                    'info' => [
-                        'title' => 'Error',
-                        'description' => 'An error occurred while creating the project.',
-                    ]
-                ], 400);
-            }
+            return response()->json([
+                'info' => [
+                    'title' => 'Success',
+                    'description' => 'Project Created Successfully.',
+                ]
+            ]);
+        } catch (\Exception $e) {
+            // Handle any other exceptions or errors that may occur
+            return response()->json([
+                'info' => [
+                    'title' => 'Error',
+                    'description' => 'An error occurred while creating the project.',
+                ]
+            ], 400);
         }
     }
 

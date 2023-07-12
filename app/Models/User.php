@@ -52,33 +52,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function employer()
+    public function tasks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->belongsTo('App\Models\Employer', 'employer_id');
+        return $this->hasMany(Task::class);
     }
 
-    public function employee()
+    public function employer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo('App\Models\Employee', 'employee_id');
+        return $this->belongsTo(Employer::class);
     }
 
-    public function managedProjects()
+    public function employee(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasMany('App\Models\Project', 'project_manager');
+        return $this->belongsTo(Employee::class);
     }
 
-    public function subManagedProjects()
+    public function projectsAsManager(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Project', 'sub_project_manager');
+        return $this->hasMany(Project::class, 'project_manager');
     }
 
-    public function managedTasks()
+    public function projectsAsSubManager(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany('App\Models\Task', 'task_team_manager');
+        return $this->hasMany(Project::class, 'sub_project_manager');
     }
 
-    public function individualTasks()
-    {
-        return $this->hasMany('App\Models\Task', 'task_individual_user');
-    }
 }

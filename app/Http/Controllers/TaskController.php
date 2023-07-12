@@ -8,7 +8,6 @@ use App\Models\TaskList;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
 {
@@ -23,71 +22,87 @@ class TaskController extends Controller
         $user_info = User::all()->where('id', '=', $user_id)->first();
 
         if (request()->route()->named('managers_tasks')) {
-            $query = DB::table('tasks')
-                ->join('projects', 'tasks.project_id', '=', 'projects.id')
-                ->where('projects.project_manager', $user_id)
-                ->orWhere('projects.sub_project_manager', $user_id)
-                ->leftJoin('users as team_manager_users', 'tasks.task_team_manager', '=', 'team_manager_users.id')
-                ->leftJoin('users as individual_user', 'tasks.task_individual_user', '=', 'individual_user.id')
-                ->leftJoin('employers as team_manager_employers', 'team_manager_users.employer_id', '=', 'team_manager_employers.id')
-                ->leftJoin('employees as team_manager_employees', 'team_manager_users.employee_id', '=', 'team_manager_employees.id')
-                ->leftJoin('employers as individual_employer', 'individual_user.employer_id', '=', 'individual_employer.id')
-                ->leftJoin('employees as individual_employee', 'individual_user.employee_id', '=', 'individual_employee.id')
-                ->select([
-                    'projects.project_title',
-                    'tasks.project_id',
-                    'tasks.task_title',
-                    'tasks.task_description',
-                    'tasks.type as task_type',
-                    DB::raw("CASE
-            WHEN tasks.task_team_manager IS NOT NULL THEN CONCAT(coalesce(team_manager_employers.first_name, team_manager_employees.first_name), ' ', coalesce(team_manager_employers.last_name, team_manager_employees.last_name))
-            ELSE CONCAT(coalesce(individual_employer.first_name, individual_employee.first_name), ' ', coalesce(individual_employer.last_name, individual_employee.last_name))
-            END AS assigned_to")
-                ]);
+            $tasks = Task::with([
+                'project',
+                'taskTeamManager.employee.department',
+                'taskTeamManager.employer.department',
+                'taskIndividualUser.employee.department',
+                'taskIndividualUser.employer.department',
+            ])->whereHas('project', function ($query) use ($user_id) {
+                $query->where('project_manager', $user_id)
+                    ->orWhere('sub_project_manager', $user_id);
+            })->get();
 
-            $tasks = $query->get();
 
-            $main_managers = DB::table('users')
-                ->join('projects', function ($join) {
-                    $join->on('users.id', '=', 'projects.project_manager');
-                })
-                ->join('employers', 'users.employer_id', '=', 'employers.id')
-                ->where(function ($query) {
-                    $query->where('users.role', '=', 'Manager')
-                        ->where('users.task_occupancy', '=', 'free');
-                })
-                ->select('users.id', 'users.identifier', 'users.role', 'users.username', 'employers.first_name', 'employers.last_name')
+            $tasks->each(function ($task) {
+                $assigned_to = $task->taskTeamManager ?? $task->taskIndividualUser;
+
+                if ($assigned_to) {
+                    $user = $assigned_to->employee ?? $assigned_to->employer;
+                    $task->assigned_to = [
+                        'first_name' => $user->first_name ?? null,
+                        'last_name' => $user->last_name ?? null,
+                    ];
+                } else {
+                    $task->assigned_to = null;
+                }
+            });
+
+
+            $main_managers = User::with('employer')
+                ->whereHas('projectsAsManager')
+                ->where('role', 'Manager')
+                ->where('task_occupancy', 'free')
                 ->distinct()
                 ->get();
 
-            $sub_manager = DB::table('users')
-                ->join('projects', function ($join) {
-                    $join->on('users.id', '=', 'projects.sub_project_manager');
-                })
-                ->join('employers', 'users.employer_id', '=', 'employers.id')
-                ->where(function ($query) {
-                    $query->where('users.role', '=', 'Manager')
-                        ->where('users.task_occupancy', '=', 'free');
-                })
-                ->select('users.id', 'employers.first_name', 'employers.last_name')
+            $sub_managers = User::with('employer')
+                ->whereHas('projectsAsSubManager')
+                ->where('role', 'Manager')
+                ->where('task_occupancy', 'free')
                 ->distinct()
                 ->get();
 
+
+            $department_id = User::find($user_id)->employer->department_id;
             $employees = User::where('task_occupancy', 'free')
-                ->join('employees', 'users.employee_id', '=', 'employees.id')
                 ->where('role', 'Employee')
-                ->select('users.*', 'employees.first_name', 'employees.last_name')
+                ->whereHas('employee', function ($query) use ($department_id) {
+                    $query->where('department_id', $department_id);
+                })->with([
+                    'employee' => function ($query) {
+                        $query->with('department');
+                    }
+                ])
                 ->get();
-            $projects = Project::where('status', 'ongoing')->get();
+
+
+            $projects = Project::where('status', 'ongoing')
+                ->where(function ($query) use ($user_id) {
+                    $query->where('project_manager', $user_id)
+                        ->orWhere('sub_project_manager', $user_id);
+                })
+                ->with([
+                    'manager' => function ($query) {
+                        $query->with([
+                            'employer' => function ($query) {
+                                $query->with('department');
+                            }
+                        ]);
+                    }
+                ])
+                ->get();
+
             $data = [
                 'tasks' => $tasks,
                 'managers' => [
                     'project_manager' => $main_managers,
-                    'sub_project_managers' => $sub_manager
+                    'sub_project_managers' => $sub_managers,
                 ],
                 'employees' => $employees,
                 'projects' => $projects,
             ];
+
             return response()->json($data);
         } elseif (request()->route()->named('employees_tasks')) {
 

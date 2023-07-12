@@ -10,7 +10,6 @@ function projectListing(element, user_id) {
         $.ajax({
             url: '/api/projects/' + user_id,
             type: 'GET',
-            cache: false,
             success: function (response) {
                 $('#project-list').empty();
                 let projectManager = $('#project-manager');
@@ -18,88 +17,56 @@ function projectListing(element, user_id) {
                 projectManager.empty();
                 subProjectManager.empty();
                 let projects = response.projects; // Retrieve projects data
-                let managers = response.managers; // Retrieve managers data
+                let managers = response.managers;
+
+                projectManager.append('<option value="0">--Leading Project Manager--</option>');
+                subProjectManager.append('<option value="0">--Sub Project Manager--</option>');
 
                 projects.forEach(function (project) {
                     let projectId = project.id;
                     let projectTitle = project.project_title;
                     let projectDescription = project.project_description;
-                    let projectManagerId = project.project_manager;
 
-                    // Fetch user data based on projectManagerId
-                    $.ajax({
-                        url: '/api/projects/user/' + projectManagerId,
-                        type: 'GET',
-                        cache: false,
-                        success: function (userResponse) {
-                            let employerId = userResponse.employer_id;
+                    // Extract project manager's user record, employer record and department record from the response
+                    let projectManagerFirstName = project.manager.employer.first_name;
+                    let projectManagerLastName = project.manager.employer.last_name;
+                    let departmentName = project.manager.employer.department.department_name;
+                    let managerEmployerID = project.manager.id;
 
-                            // Fetch employer data based on employerId
-                            $.ajax({
-                                url: '/api/projects/employer/' + employerId,
-                                type: 'GET',
-                                cache: false,
-                                success: function (employerResponse) {
-                                    let firstName = employerResponse.first_name;
-                                    let lastName = employerResponse.last_name;
-
-                                    let listItem = `
-                                    <li>
-                                        <div class="text">
-                                            <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
-                                            <h4>Manager ${firstName} ${lastName}</h4>
-                                            <p style="margin: 10px 20px;">${projectDescription}</p>
-                                        </div>
-                                    </li>`;
-
-                                    $('#project-list').append(listItem);
-                                },
-                                error: function (xhr, status, error) {
-                                    console.log(error);
-                                    displayErrorModal(error);
-                                }
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(error);
-                            displayErrorModal(error);
-                        }
-                    });
+                    let listItem = `
+                                        <li>
+                                            <div class="text">
+                                                <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
+                                                <h4>Manager ${projectManagerFirstName} ${projectManagerLastName}</h4>
+                                                <h5>Department: ${departmentName}</h5>
+                                                <p style="margin: 10px 20px;">${projectDescription}</p>
+                                            </div>
+                                        </li>`;
+                    $('#project-list').append(listItem);
                 });
 
-
-                projectManager.append('<option value="0">--Leading Project Manager--</option>');
-                subProjectManager.append('<option value="0">--Sub Project Manager--</option>');
                 managers.forEach(function (manager) {
-                    let managerEmployerID = manager.employer_id;
-                    $.ajax({
-                        url: '/api/projects/employer/' + managerEmployerID,
-                        type: 'GET',
-                        cache: false,
-                        success: function (employerResponse) {
-                            let firstName = employerResponse.first_name;
-                            let lastName = employerResponse.last_name;
-                            let managerOptions = `
-                                    <option value="${managerEmployerID}">
-                                        ${firstName} ${lastName}
-                                    </option>`;
-                            let subManagerOptions = `
-                                    <option value="${managerEmployerID}">
-                                        ${firstName} ${lastName}
-                                    </option>`;
-                            $('#project-manager').append(managerOptions);
-                            $('#sub-project-manager').append(subManagerOptions);
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(error);
-                            displayErrorModal(error);
-                        }
-                    });
+                    let sub_managerID = manager.id;
+                    let sub_managerFirstName = manager.employer.first_name;
+                    let sub_managerLastName = manager.employer.last_name;
+
+                    let subManagerOptions = `
+                                                <option value="${sub_managerID}">
+                                                    ${sub_managerFirstName} ${sub_managerLastName}
+                                                </option>`;
+                    let managerOptions = `
+                                                <option value="${sub_managerID}">
+                                                    ${sub_managerFirstName} ${sub_managerLastName}
+                                                </option>`;
+
+                    $('#project-manager').append(managerOptions);
+                    $('#sub-project-manager').append(subManagerOptions);
                 });
             },
             error: function (xhr, status, error) {
-                console.log(error);
-                displayErrorModal(error);
+                // console.log(error);
+                let title = "Project Error"
+                displayErrorModal(title, error);
             }
         });
     } else if (callerId === 'admin_projects') {
@@ -109,60 +76,38 @@ function projectListing(element, user_id) {
             type: 'GET',
             success: function (response) {
                 $('#project-list').empty();
-                $('#project-manager').empty();
-                $('#sub-project-manager').empty();
-                let adminProjects = response.projects; // Retrieve projects data
+                let projects = response.projects; // Retrieve projects data
 
-                adminProjects.forEach(function (project) {
+                projects.forEach(function (project) {
                     let projectId = project.id;
                     let projectTitle = project.project_title;
                     let projectDescription = project.project_description;
-                    let projectManagerId = project.project_manager;
 
-                    // Fetch user data based on projectManagerId
-                    $.ajax({
-                        url: '/api/projects/user/' + projectManagerId,
-                        type: 'GET',
-                        success: function (userResponse) {
-                            let employerId = userResponse.employer_id;
+                    // Extract project manager's user record, employer record and department record from the response
+                    let projectManagerFirstName = project.manager.first_name;
+                    let projectManagerLastName = project.manager.last_name;
+                    let departmentName = project.manager.employer.department.department_name;
 
-                            // Fetch employer data based on employerId
-                            $.ajax({
-                                url: '/api/projects/employer/' + employerId,
-                                type: 'GET',
-                                success: function (employerResponse) {
-                                    let firstName = employerResponse.first_name;
-                                    let lastName = employerResponse.last_name;
+                    let listItem = `
+                                        <li>
+                                            <div class="text">
+                                                <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
+                                                <h4>Manager ${projectManagerFirstName} ${projectManagerLastName}</h4>
+                                                <h5>Department: ${departmentName}</h5>
+                                                <p style="margin: 10px 20px;">${projectDescription}</p>
+                                            </div>
+                                        </li>`;
 
-                                    let listItem = `
-                                    <li>
-                                        <div class="text">
-                                            <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
-                                            <h4>Manager ${firstName} ${lastName}</h4>
-                                            <p style="margin: 10px 20px;">${projectDescription}</p>
-                                        </div>
-                                    </li>`;
-
-                                    $('#project-list').append(listItem);
-                                },
-                                error: function (xhr, status, error) {
-                                    console.log(error);
-                                    displayErrorModal(error);
-                                }
-                            });
-                        },
-                        error: function (xhr, status, error) {
-                            console.log(error);
-                            displayErrorModal(error);
-                        }
-                    });
+                    $('#project-list').append(listItem);
                 });
             },
             error: function (xhr, status, error) {
-                console.log(error);
-                displayErrorModal(error);
+                // console.log(error);
+                let title = "Project Error"
+                displayErrorModal(title, error);
             }
         });
+
     }
 }
 
@@ -182,44 +127,36 @@ function taskListing(user_id) {
             }
         });
     }).then(response => {
-        //getting the elements by their id
         let tableBody = $('#task_table');
-
-        //emptying the container
         tableBody.empty();
         let projectTitles = [];
 
-        //beginning the iterations
         $.each(response.tasks, function (i, task) {
             let row =
                 "<tr style=\"border-bottom: solid var(--title-color) 1px\">"
-                + "<td>" + task.project_title + "</td>"
+                + "<td>" + task.project.project_title + "</td>"
                 + "<td>" + task.task_title + "</td>"
                 + "<td>" + task.task_description + "</td>"
-                + "<td>" + task.assigned_to + "</td>"
-                + "<td>" + task.task_type + "</td>"
+                + "<td>" + (task.assigned_to.first_name + " " + task.assigned_to.last_name || 'Not Assigned') + "</td>"
+                + "<td>" + task.type + "</td>"
                 + "</tr>";
             tableBody.append(row);
-            // Add the project title to our list if it's not already there
-            if (!projectTitles.includes(task.project_title)) {
-                projectTitles.push(task.project_title);
+            if (!projectTitles.includes(task.project.project_title)) {
+                projectTitles.push(task.project.project_title);
             }
         });
 
-        // Populate the project filter dropdown with unique project titles
         let projectFilter = $('#projectFilter');
-        projectFilter.empty();  // Remove any old options
+        projectFilter.empty();
         projectFilter.append('<option value="">All Projects</option>');
         $.each(projectTitles, function (i, title) {
             projectFilter.append('<option value="' + title + '">' + title + '</option>');
         });
 
-        // Destroy any existing table instance before reinitializing
         if ($.fn.DataTable.isDataTable("#tableData")) {
             $('#tableData').DataTable().destroy();
         }
 
-        // Initialize DataTables
         let dataTable = $('#tableData').DataTable(
             {
                 "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
@@ -227,7 +164,6 @@ function taskListing(user_id) {
             }
         );
 
-        // Update the table filter whenever a new option is selected
         projectFilter.on('change', function () {
             dataTable.columns(0).search(this.value).draw();
         });
@@ -247,30 +183,28 @@ function taskForm(response) {
     taskManagerIndividual.empty();
     taskEmployeeIndividual.empty();
 
-    //appending the default values as per their uses
     projectList.append('<option value=""> -- Select Project -- </option>');
     taskTeamManager.append('<option value="">Select Team Manager</option>');
     taskManagerIndividual.append('<option value="">Select Manager Individual</option>');
     taskEmployeeIndividual.append('<option value="">Select Employee Individual</option>');
 
-    //appending the options for team and individual users who have free status
     $.each(response.projects, function (i, project) {
         let projectOptions = "<option value='" + project.id + "'>" + project.project_title + "</option>";
         projectList.append(projectOptions);
     });
 
-    let addedManagers = []; // Array to store added manager IDs
+    let addedManagers = [];
 
     $.each(response.managers, function (type, managers) {
         let managerOptions = '';
 
         $.each(managers, function (i, manager) {
-            if (!addedManagers.includes(manager.id)) { // Check if manager is already added
+            if (!addedManagers.includes(manager.id)) {
                 managerOptions += "<option value='" + manager.id + "'>"
-                    + manager.first_name + " " + manager.last_name
+                    + manager.employer.first_name + " " + manager.employer.last_name
                     + "</option>";
 
-                addedManagers.push(manager.id); // Add manager ID to the array
+                addedManagers.push(manager.id);
             }
         });
 
@@ -278,13 +212,17 @@ function taskForm(response) {
         taskManagerIndividual.append(managerOptions);
     });
 
-
     $.each(response.employees, function (i, employee) {
         let employeeOptions = "<option value='" + employee.id + "'>"
-            + employee.first_name + " " + employee.last_name
+            + employee.employee.first_name + " " + employee.employee.last_name
             + "</option>";
         taskEmployeeIndividual.append(employeeOptions);
     });
+}
+
+//displaying all teams
+function teamListing(element, user_id) {
+
 }
 
 // ----------------------------------------------------------------------------------------------------------------------//
@@ -362,6 +300,10 @@ function createTask() {
     task_xhr.send(formData);
 }
 
+//4.creating a team
+function createTeam() {
+
+}
 
 //modal displays
 function displayErrorModal(title, message) {
