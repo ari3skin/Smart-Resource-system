@@ -24,7 +24,9 @@ return new class extends Migration {
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('last_login')->nullable();
             $table->enum('account_status', ['activated', 'inactive', 'blocked'])->default('inactive');
+            $table->enum('task_occupancy', ['ongoing', 'finished', 'free'])->default('free');
             $table->string('google_id')->nullable();
+            $table->string('google_token')->nullable();
             $table->string('profile_picture')->nullable();
             $table->rememberToken();
             $table->timestamps();

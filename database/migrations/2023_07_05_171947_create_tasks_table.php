@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->bigInteger('task_individual_user')->unsigned()->nullable();
             $table->enum('type', ['individual', 'team']);
             $table->string('task_title');
-            $table->string('task_description');
+            $table->string('task_description', 5000);
             $table->enum('status', ['completed', 'ongoing', 'closed'])->default('ongoing');
             $table->timestamps();
 

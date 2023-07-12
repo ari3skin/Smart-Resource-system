@@ -36,6 +36,9 @@ Route::middleware(['disable_back'])->group(function () {
         Route::prefix('tasks')->group(function () {
             Route::get('managers/{user_id}', [TaskController::class, 'index'])->name('managers_tasks');
             Route::get('employees/{user_id}', [TaskController::class, 'index'])->name('employees_tasks');
+
+            //posts
+            Route::post('create', [TaskController::class, 'store']);
         });
     });
 });

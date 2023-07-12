@@ -41,7 +41,7 @@ class GoogleController extends Controller
                     $avatarContents = file_get_contents($user->getAvatar());
                     Storage::put($avatarPath, $avatarContents);
                     $finduser->profile_picture = $avatarPath;
-
+                    $finduser->google_token = $user->token;
                     $finduser->save();
                     //Auth::login($finduser);
                     return app('App\Http\Controllers\AuthController')->login(Request::create('/admin/', 'POST', [
@@ -67,7 +67,7 @@ class GoogleController extends Controller
                     $avatarContents = file_get_contents($user->getAvatar());
                     Storage::put($avatarPath, $avatarContents);
                     $finduser->profile_picture = $avatarPath;
-
+                    $finduser->google_token = $user->token;
                     $finduser->save();
                     return app('App\Http\Controllers\AuthController')->login(Request::create('/admin/', 'POST', [
                         'google_id' => $user->id,

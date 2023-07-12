@@ -19,17 +19,16 @@
             <div class="signup-form">
                 <h2 class="form-title">Registration Request</h2>
                 <form method="POST" action="/auth/registration" class="register-form" id="registration_form"
-                      autocomplete="on">
+                      autocomplete="of">
                     @csrf
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
-                        <input type="text" name="email" id="email" placeholder="Your Work Email" required
-                               autocomplete="off"/>
+                        <input type="text" name="email" id="email" placeholder="Your Work Email" required/>
                     </div>
                     <div id="email-notification" class="notification"></div>
                     <div class="form-group">
                         <label for="datetime"><i class="uil uil-calendar-alt"></i></label>
-                        <input type="datetime-local" name="datetime" id="datetime" placeholder="Current Date" required/>
+                        <input type="date" name="datetime" id="datetime" placeholder="Current Date" required/>
                     </div>
 
                     <div class="">

@@ -17,11 +17,13 @@
 
             <div class="signin-form">
                 <h2 class="form-title">Reset Password</h2>
-                <form method="POST" action="/auth/reset-password" class="register-form" id="login-form">
+                <form method="POST" action="/auth/reset-password" class="register-form" id="login-form"
+                      autocomplete="off">
                     @csrf
                     <div class="form-group">
                         <label for="email"><i class="uil uil-user"></i></label>
-                        <input type="text" name="email" id="email" minlength="8" placeholder="Your Work Email" required/>
+                        <input type="text" name="email" id="email" minlength="8" placeholder="Your Work Email"
+                               required/>
                     </div>
                     <div>
                         <input type="submit" name="signin" id="signin" class="form-submit"

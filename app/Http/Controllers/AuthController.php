@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
@@ -50,7 +51,7 @@ class AuthController extends Controller
                         $request->session()->put('sys_id', $google_user->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
-                        $request->session()->put('role', $user_role,);
+                        $request->session()->put('role', $user_role);
 
                     } elseif ($identifier == 'EPE_') {
 
@@ -101,7 +102,7 @@ class AuthController extends Controller
             } else {
                 return redirect()->route('login')->withErrors(['error' => 'Invalid credentials. Please try again.']);
             }
-        } else {
+        } elseif ($user_confirmation->account_status == 'inactive') {
             return redirect()->route('login')->withErrors(['error' => 'Your Account has not been activated yet']);
         }
     }
@@ -267,6 +268,22 @@ class AuthController extends Controller
     //5. logout
     public function logout(Request $request)
     {
+        // Revoke Google access token
+        if (Auth::check()) {
+            $user = Auth::user();
+            if ($user->google_token) {
+                $response = Http::withHeaders([
+                    'Content-Type' => 'application/x-www-form-urlencoded',
+                ])->post('https://accounts.google.com/o/oauth2/revoke', [
+                    'token' => $user->google_token,
+                ]);
+
+                if ($response->successful()) {
+                    $user->google_token = null;
+                    $user->save();
+                }
+            }
+        }
         Auth::logout();
 
         $request->session()->invalidate();

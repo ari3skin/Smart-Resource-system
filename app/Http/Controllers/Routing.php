@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\User;
 use App\Models\UserRegistrationRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Routing extends Controller
 {
@@ -89,9 +90,12 @@ class Routing extends Controller
             } elseif ($user->role == 'Manager') {
 
                 $user_id = $user->id;
-                $projects = Project::where('status', 'ongoing')
-                    ->orWhere('project_manager', $user_id)
-                    ->orWhere('sub_project_manager', $user_id);
+                $projects = DB::table('projects')
+                    ->where('status', '=', 'ongoing')
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('project_manager', $user_id)
+                            ->orWhere('sub_project_manager', $user_id);
+                    });
 
                 $projectsCount = $projects->count();
                 return view('users.employers',

@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Employee;
-use App\Models\Employer;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class TaskController extends Controller
 {
@@ -35,6 +34,7 @@ class TaskController extends Controller
                 ->leftJoin('employees as individual_employee', 'individual_user.employee_id', '=', 'individual_employee.id')
                 ->select([
                     'projects.project_title',
+                    'tasks.project_id',
                     'tasks.task_title',
                     'tasks.task_description',
                     'tasks.type as task_type',
@@ -45,9 +45,26 @@ class TaskController extends Controller
                 ]);
 
             $tasks = $query->get();
+            $managers = User::where('task_occupancy', 'free')
+                ->join('employers', 'users.employer_id', '=', 'employers.id')
+                ->where('users.role', 'Manager')
+                ->select('users.*', 'employers.first_name', 'employers.last_name')
+                ->get();
 
-            return response()->json($tasks);
-        }elseif (request()->route()->named('employees_tasks')) {
+            $employees = User::where('task_occupancy', 'free')
+                ->join('employees', 'users.employee_id', '=', 'employees.id')
+                ->where('role', 'Employee')
+                ->select('users.*', 'employees.first_name', 'employees.last_name')
+                ->get();
+            $projects = Project::where('status', 'ongoing')->get();
+            $data = [
+                'tasks' => $tasks,
+                'managers' => $managers,
+                'employees' => $employees,
+                'projects' => $projects,
+            ];
+            return response()->json($data);
+        } elseif (request()->route()->named('employees_tasks')) {
 
         }
     }
@@ -55,9 +72,10 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function create()
+    public function create(Request $request)
     {
         //
     }
@@ -66,12 +84,84 @@ class TaskController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         //
+        $newTask = new Task();
+        $project_id = $request->input('project_id');
+        $task_title = $request->input('task_title');
+        $task_description = $request->input('task_description');
+
+
+        if ($request->filled('type_team')) {
+            $type = "team";
+            $task_team_manager = $request->input('task_team_manager');
+
+            $newTask->project_id = $project_id;
+            $newTask->task_title = $task_title;
+            $newTask->task_description = $task_description;
+            $newTask->task_team_manager = $task_team_manager;
+            $newTask->task_individual_user = null;
+            $newTask->type = $type;
+            $newTask->save();
+
+            return response()->json([
+                'info' => [
+                    'title' => 'Success',
+                    'description' => 'Team Task Created Successfully.',
+                ]
+            ]);
+
+        } elseif ($request->filled('type_individual')) {
+            $type = "individual";
+            $task_manager_individual = $request->input('task_manager_individual');
+            $task_employee_individual = $request->input('task_employee_individual');
+
+            if ($task_manager_individual && $task_employee_individual) {
+                return response()->json([
+                    'info' => [
+                        'title' => 'Warning',
+                        'description' => 'Select one of either Manager or Employee for an Individual task',
+                    ]
+                ],500);
+            } elseif ($task_manager_individual) {
+                $newTask->project_id = $project_id;
+                $newTask->task_title = $task_title;
+                $newTask->task_description = $task_description;
+                $newTask->task_team_manager = null;
+                $newTask->task_individual_user = $task_manager_individual;
+                $newTask->type = $type;
+                $newTask->save();
+
+            } elseif ($task_employee_individual) {
+                $newTask->project_id = $project_id;
+                $newTask->task_title = $task_title;
+                $newTask->task_description = $task_description;
+                $newTask->task_team_manager = null;
+                $newTask->task_individual_user = $task_employee_individual;
+                $newTask->type = $type;
+                $newTask->save();
+            }
+
+            return response()->json([
+                'info' => [
+                    'title' => 'Success',
+                    'description' => 'Individual Task Created Successfully.',
+                ]
+            ]);
+
+        } else {
+            return response()->json([
+                'info' => [
+                    'title' => 'Warning',
+                    'description' => 'The task type has not been selected',
+                ]
+            ],500);
+        }
     }
+
 
     /**
      * Display the specified resource.

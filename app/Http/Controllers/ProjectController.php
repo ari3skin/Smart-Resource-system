@@ -110,19 +110,19 @@ class ProjectController extends Controller
                 $newProject->save();
 
                 return response()->json([
-                    'error' => [
+                    'info' => [
                         'title' => 'Success',
-                        'info' => 'Project Created Successfully.',
+                        'description' => 'Project Created Successfully.',
                     ]
-                ], 200);
+                ]);
             } catch (\Exception $e) {
                 // Handle any other exceptions or errors that may occur
                 return response()->json([
-                    'error' => [
+                    'info' => [
                         'title' => 'Error',
-                        'info' => 'An error occurred while creating the project.',
+                        'description' => 'An error occurred while creating the project.',
                     ]
-                ]);
+                ], 400);
             }
         } else {
             $user_manager = User::all()->where('employer_id', '=', $projectManager)->first();
@@ -135,19 +135,19 @@ class ProjectController extends Controller
                 $newProject->save();
 
                 return response()->json([
-                    'error' => [
+                    'info' => [
                         'title' => 'Success',
-                        'info' => 'Project Created Successfully.',
+                        'description' => 'Project Created Successfully.',
                     ]
-                ], 200);
+                ]);
             } catch (\Exception $e) {
                 // Handle any other exceptions or errors that may occur
                 return response()->json([
-                    'error' => [
+                    'info' => [
                         'title' => 'Error',
-                        'info' => 'An error occurred while creating the project.',
+                        'description' => 'An error occurred while creating the project.',
                     ]
-                ]);
+                ], 400);
             }
         }
     }

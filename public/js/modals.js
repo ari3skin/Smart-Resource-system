@@ -1,19 +1,32 @@
 //dynamic variables for modal types
-var dashboard_modal_content = document.getElementById("dashboard_modal");
-var close = document.getElementsByClassName("project_close")[0];
+let newProject_modal_content = document.getElementById("new_project_modal");
+let newTask_modal_content = document.getElementById("new_task_modal");
+let projectModal_close = document.getElementsByClassName("project_close")[0];
+let taskModal_close = document.getElementsByClassName("task_close")[0];
 
-function selectedInterface() {
-    dashboard_modal_content.style.display = "block";
+function selectedInterface(element) {
 
-    close.onclick = function () {
-        dashboard_modal_content.style.display = "none";
+    let callerId = element.id;  // get the ID of the calling element
+
+    if (callerId === 'new_project') {
+        newProject_modal_content.style.display = "block";
+
+        projectModal_close.onclick = function () {
+            newProject_modal_content.style.display = "none";
+        }
+    } else if (callerId === "new_task") {
+        newTask_modal_content.style.display = "block";
+
+        taskModal_close.onclick = function () {
+            newTask_modal_content.style.display = "none";
+        }
     }
 }
 
 //----------------------------------------------------------------------------------------------------------//
 //dynamic logout modal
-var modal_logout = document.getElementById("confirm_logout");
-var logout_close = document.getElementsByClassName("logout_close")[0];
+let modal_logout = document.getElementById("confirm_logout");
+let logout_close = document.getElementsByClassName("logout_close")[0];
 
 function logoutModal() {
     modal_logout.style.display = "block";
@@ -31,8 +44,8 @@ function logoutModal() {
 
 function noticeModals() {
     //notifications/warning modal scripts
-    var close_span = document.getElementsByClassName("notice_close")[0];
-    var modal_popup = document.getElementById("modal_notice");
+    let close_span = document.getElementsByClassName("notice_close")[0];
+    let modal_popup = document.getElementById("modal_notice");
     close_span.onclick = function () {
         modal_popup.style.display = "none";
     }
@@ -41,4 +54,20 @@ function noticeModals() {
             modal_popup.style.display = "none";
         }
     };
+}
+
+// tab switching
+function switchcommon(evt, mainName) {
+    var i, tabcontent, tablinks;
+    //get all elements under tabcontent and hide them
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(mainName).style.display = "block";
+    evt.currentTarget.className += " active";
 }

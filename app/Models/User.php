@@ -27,7 +27,9 @@ class User extends Authenticatable
         'role',
         'identifier',
         'account_status',
+        'task_occupancy',
         'google_id',
+        'google_token',
         'profile_picture',
     ];
 

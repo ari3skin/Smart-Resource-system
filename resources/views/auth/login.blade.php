@@ -18,16 +18,16 @@
 
             <div class="signin-form">
                 <h2 class="form-title">Log In</h2>
-                <form method="POST" action="/auth/login" class="register-form" id="login-form">
+                <form method="POST" action="/auth/login" class="register-form" id="login-form" autocomplete="off">
                     @csrf
                     <div class="form-group">
                         <label for="username"><i class="uil uil-user"></i></label>
-                        <input type="text" name="username" id="username" placeholder="Your Username" required autocomplete="off"/>
+                        <input type="text" name="username" id="username" placeholder="Your Username" required/>
                     </div>
                     <div class="form-group">
                         <label for="password"><i class="uil uil-padlock"></i></label>
                         <input type="password" name="password" id="password" placeholder="Password" minlength="8"
-                               required autocomplete="off"/>
+                               required/>
                     </div>
                     <div class="form-group">
                         <input type="checkbox" name="remember" id="remember" class="agree-term"

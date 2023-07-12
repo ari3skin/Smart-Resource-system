@@ -1,3 +1,5 @@
+let sys_id = document.getElementById('employers_tasks').dataset.sysId;
+console.log(sys_id);
 //ajax display/view content
 //displaying all projects
 function projectListing(element, user_id) {
@@ -8,10 +10,13 @@ function projectListing(element, user_id) {
         $.ajax({
             url: '/api/projects/' + user_id,
             type: 'GET',
+            cache: false,
             success: function (response) {
                 $('#project-list').empty();
-                $('#project-manager').empty();
-                $('#sub-project-manager').empty();
+                let projectManager = $('#project-manager');
+                let subProjectManager = $('#sub-project-manager');
+                projectManager.empty();
+                subProjectManager.empty();
                 let projects = response.projects; // Retrieve projects data
                 let managers = response.managers; // Retrieve managers data
 
@@ -25,6 +30,7 @@ function projectListing(element, user_id) {
                     $.ajax({
                         url: '/api/projects/user/' + projectManagerId,
                         type: 'GET',
+                        cache: false,
                         success: function (userResponse) {
                             let employerId = userResponse.employer_id;
 
@@ -32,6 +38,7 @@ function projectListing(element, user_id) {
                             $.ajax({
                                 url: '/api/projects/employer/' + employerId,
                                 type: 'GET',
+                                cache: false,
                                 success: function (employerResponse) {
                                     let firstName = employerResponse.first_name;
                                     let lastName = employerResponse.last_name;
@@ -61,13 +68,14 @@ function projectListing(element, user_id) {
                 });
 
 
-                $('#project-manager').append('<option value="0">--Leading Project Manager--</option>');
-                $('#sub-project-manager').append('<option value="0">--Sub Project Manager--</option>');
+                projectManager.append('<option value="0">--Leading Project Manager--</option>');
+                subProjectManager.append('<option value="0">--Sub Project Manager--</option>');
                 managers.forEach(function (manager) {
                     let managerEmployerID = manager.employer_id;
                     $.ajax({
                         url: '/api/projects/employer/' + managerEmployerID,
                         type: 'GET',
+                        cache: false,
                         success: function (employerResponse) {
                             let firstName = employerResponse.first_name;
                             let lastName = employerResponse.last_name;
@@ -103,10 +111,9 @@ function projectListing(element, user_id) {
                 $('#project-list').empty();
                 $('#project-manager').empty();
                 $('#sub-project-manager').empty();
-                let projects = response.projects; // Retrieve projects data
-                let managers = response.managers; // Retrieve managers data
+                let adminProjects = response.projects; // Retrieve projects data
 
-                projects.forEach(function (project) {
+                adminProjects.forEach(function (project) {
                     let projectId = project.id;
                     let projectTitle = project.project_title;
                     let projectDescription = project.project_description;
@@ -165,6 +172,7 @@ function taskListing(user_id) {
         $.ajax({
             url: '/api/tasks/managers/' + user_id,
             type: 'GET',
+            cache: false,
             success: function (response) {
                 resolve(response);
             },
@@ -174,12 +182,15 @@ function taskListing(user_id) {
             }
         });
     }).then(response => {
-
+        //getting the elements by their id
         let tableBody = $('#task_table');
+
+        //emptying the container
         tableBody.empty();
         let projectTitles = [];
 
-        $.each(response, function (i, task) {
+        //beginning the iterations
+        $.each(response.tasks, function (i, task) {
             let row =
                 "<tr style=\"border-bottom: solid var(--title-color) 1px\">"
                 + "<td>" + task.project_title + "</td>"
@@ -189,7 +200,6 @@ function taskListing(user_id) {
                 + "<td>" + task.task_type + "</td>"
                 + "</tr>";
             tableBody.append(row);
-
             // Add the project title to our list if it's not already there
             if (!projectTitles.includes(task.project_title)) {
                 projectTitles.push(task.project_title);
@@ -221,9 +231,49 @@ function taskListing(user_id) {
         projectFilter.on('change', function () {
             dataTable.columns(0).search(this.value).draw();
         });
+
+        taskForm(response);
     });
 }
 
+function taskForm(response) {
+    let projectList = $('#project');
+    let taskTeamManager = $('#task-team-manager');
+    let taskManagerIndividual = $('#task-manager-individual');
+    let taskEmployeeIndividual = $('#task-employee-individual');
+
+    projectList.empty();
+    taskTeamManager.empty();
+    taskManagerIndividual.empty();
+    taskEmployeeIndividual.empty();
+
+    //appending the default values as per their uses
+    projectList.append('<option value=""> -- Select Project -- </option>');
+    taskTeamManager.append('<option value="">Select Team Manager</option>');
+    taskManagerIndividual.append('<option value="">Select Manager Individual</option>');
+    taskEmployeeIndividual.append('<option value="">Select Employee Individual</option>');
+
+    //appending the options for team and individual users who have free status
+    $.each(response.projects, function (i, project) {
+        let projectOptions = "<option value='" + project.id + "'>" + project.project_title + "</option>";
+        projectList.append(projectOptions);
+    });
+
+    $.each(response.managers, function (i, manager) {
+        let managerOptions = "<option value='" + manager.id + "'>"
+            + manager.first_name + " " + manager.last_name
+            + "</option>";
+        taskTeamManager.append(managerOptions);
+        taskManagerIndividual.append(managerOptions);
+    });
+
+    $.each(response.employees, function (i, employee) {
+        let employeeOptions = "<option value='" + employee.id + "'>"
+            + employee.first_name + " " + employee.last_name
+            + "</option>";
+        taskEmployeeIndividual.append(employeeOptions);
+    });
+}
 
 // ----------------------------------------------------------------------------------------------------------------------//
 
@@ -242,17 +292,16 @@ function createProject() {
             if (xhr.status === 200) {
 
                 let response = JSON.parse(xhr.responseText);
-                let title = response.error.title;
-                let message = response.error.info;
+                let title = response.info.title;
+                let message = response.info.description;
                 displaySuccessModal(title, message)
 
                 form.reset();
-            } else {
+            } else if (xhr.status === 400) {
 
-                // console.error('Error:', xhr.status);
                 let errorResponse = JSON.parse(xhr.responseText);
-                let title = errorResponse.error.title;
-                let message = errorResponse.error.info;
+                let title = errorResponse.info.title;
+                let message = errorResponse.info.description;
                 displayErrorModal(title, message);
             }
         }
@@ -262,7 +311,45 @@ function createProject() {
 
 //3. creating a task
 function createTask() {
+    let form = document.getElementById('create-task-form');
+    let formData = new FormData(form);
+
+    // Make AJAX request
+    let task_xhr = new XMLHttpRequest();
+    task_xhr.open('POST', '/api/tasks/create', true);
+    task_xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+
+    task_xhr.onreadystatechange = function () {
+        if (task_xhr.readyState === XMLHttpRequest.DONE) {
+            if (task_xhr.status === 200) {
+
+                let response = JSON.parse(task_xhr.responseText);
+                let title = response.info.title;
+                let message = response.info.description;
+                displaySuccessModal(title, message)
+
+                form.reset();
+
+                // taskListing(sys_id);
+                taskListing(sys_id)
+                    .then(() => {
+                        console.log('Task listing updated');
+                    })
+                    .catch(err => {
+                        console.log('Error updating task listing: ', err);
+                    });
+            } else if (task_xhr.status === 500) {
+
+                let errorResponse = JSON.parse(task_xhr.responseText);
+                let title = errorResponse.info.title;
+                let message = errorResponse.info.description;
+                displayErrorModal(title, message);
+            }
+        }
+    };
+    task_xhr.send(formData);
 }
+
 
 //modal displays
 function displayErrorModal(title, message) {
@@ -279,16 +366,20 @@ function displayErrorModal(title, message) {
             </div>
         </div>
     `;
+    let mainContent = $('#main_content');
+    mainContent.after(modal);
 
-    // Display the error modal within the project-list container
-    let projectList = $('#project-list');
-    if (projectList.length > 0) {
-        projectList.html(modal);
-    } else {
-        // Fallback logic when #project-list element is not present
-        let mainContent = $('#main_content');
-        mainContent.html(modal);
-    }
+    let modalNotice = $('#modal_notice');
+    // Transition effect to slide from top
+    modalNotice.css('top', '-200px').animate({
+        top: '0',
+    }, 500);
+
+    // Display the modal for 5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
+    modalNotice.delay(2500).fadeOut(500, function () {
+        $(this).remove();
+    });
+
     noticeModals()
 }
 
@@ -307,14 +398,19 @@ function displaySuccessModal(title, message) {
         </div>
     `;
 
-    // Display the error modal within the project-list container
-    let projectList = $('#project-list');
-    if (projectList.length > 0) {
-        projectList.html(modal);
-    } else {
-        // Fallback logic when #project-list element is not present
-        let mainContent = $('#main_content');
-        mainContent.html(modal);
-    }
+    let mainContent = $('#main_content');
+    mainContent.after(modal);
+
+    let modalNotice = $('#modal_notice');
+    // Transition effect to slide from top
+    modalNotice.css('top', '-200px').animate({
+        top: '0',
+    }, 500);
+
+    // Display the modal for 5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
+    modalNotice.delay(2500).fadeOut(500, function () {
+        $(this).remove();
+    });
+
     noticeModals()
 }

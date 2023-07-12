@@ -348,6 +348,10 @@ body {
     color: var(--title-color);
 }
 
+#task-team-manager, #task-individual {
+    display: none;
+}
+
 .label-agree-term {
     position: relative;
     top: 0;

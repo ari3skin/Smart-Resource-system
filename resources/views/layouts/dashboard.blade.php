@@ -59,8 +59,11 @@
 
 {{--scripts that load upon opening the document itself--}}
 <script>
-    //password comparison
+    document.getElementById("defaultOpen").click();
+
     $(document).ready(function () {
+
+        //password comparison
         $('#password').on('keyup', function () {
             var newPassword = $('#first_password').val();
             var confirmPassword = $(this).val();
@@ -71,28 +74,47 @@
                 $('#password-error').text('');
             }
         });
+
+        //Initially hide all select fields
+        let taskTM = $('#task-team-manager');
+        let taskMI = $('#task-manager-individual');
+        let taskEI = $('#task-employee-individual');
+        taskTM.hide();
+        taskMI.hide();
+        taskEI.hide();
+
+        // Event listener for checkbox of id 'teamManager'
+        $('#teamManager').click(function () {
+            if ($(this).prop("checked") === true) {
+                // Uncheck other checkbox
+                $('#individual').prop('checked', false);
+
+                // Show related select and hide others
+                taskTM.show();
+                taskMI.hide();
+                taskEI.hide();
+            } else {
+                // Hide all selects if checkbox is unchecked
+                taskTM.hide();
+            }
+        });
+        // Event listener for checkbox of id 'individual'
+        $('#individual').click(function () {
+            if ($(this).prop("checked") === true) {
+                // Uncheck other checkbox
+                $('#teamManager').prop('checked', false);
+
+                // Show related selects and hide others
+                taskMI.show();
+                taskEI.show();
+                taskTM.hide();
+            } else {
+                // Hide related selects if checkbox is unchecked
+                taskMI.hide();
+                taskEI.hide();
+            }
+        });
     });
-</script>
-{{--script for tab switching--}}
-
-<script>
-    // tab switching
-    function switchcommon(evt, mainName) {
-        var i, tabcontent, tablinks;
-        //get all elements under tabcontent and hide them
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(mainName).style.display = "block";
-        evt.currentTarget.className += " active";
-    }
-
-    document.getElementById("defaultOpen").click();
 </script>
 </body>
 </html>

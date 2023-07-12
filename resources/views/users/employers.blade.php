@@ -20,7 +20,7 @@
 
         <li>
             <a class="tablinks" onclick="taskListing({{session('sys_id')}}); switchcommon(event, 'tasks')"
-               style="cursor: pointer" title="tasks">
+               style="cursor: pointer" title="tasks" id="employers_tasks" data-sys-id="{{session('sys_id')}}">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">Tasks</span>
             </a>
@@ -110,7 +110,8 @@
                 </ul>
             </div>
 
-            <button class="btn-download" onclick="selectedInterface()" style="border: none; cursor: pointer;">
+            <button class="btn-download" onclick="selectedInterface(this)" style="border: none; cursor: pointer;"
+                    id="new_project">
                 <i class="uil uil-plus-circle"></i>
                 <span class="text">New Project</span>
             </button>
@@ -136,7 +137,8 @@
                 </ul>
             </div>
 
-            <button class="btn-download" onclick="" style="border: none; cursor: pointer;">
+            <button class="btn-download" onclick="selectedInterface(this)" style="border: none; cursor: pointer;"
+                    id="new_task">
                 <i class="uil uil-plus-circle"></i>
                 <span class="text">New Task</span>
             </button>
@@ -206,12 +208,12 @@
 
 @section('modals')
 
-    <div id="dashboard_modal" class="modal" style="z-index: 1500;">
-        <div class="modal-content" style="margin: 8% 20%;">
+    <div id="new_project_modal" class="modal" style="z-index: 1500;">
+        <div class="modal-content" style="margin: 6% 20%;">
             <span class="close project_close">&times;</span>
             <div class="dashboard-form">
                 <h2 class="form-title">Create New Project</h2>
-                <form method="POST" action="#" class="dashboard-form" id="create-project-form">
+                <form method="POST" action="#" class="dashboard-form" id="create-project-form" autocomplete="off">
                     @csrf
                     <div class="form-group">
                         <label for="project-name"><i class="uil uil-file-plus-alt"></i></label>
@@ -239,6 +241,63 @@
             </div>
         </div>
     </div>
+
+
+    <div id="new_task_modal" class="modal" style="z-index: 1500;">
+        <div class="modal-content" style="margin: 2% 25%; width: 50%;">
+            <span class="close task_close">&times;</span>
+            <div class="dashboard-form">
+                <h2 class="form-title">Create New Task</h2>
+                <form method="POST" class="dashboard-form" id="create-task-form" autocomplete="off">
+                    @csrf
+                    <div class="form-group">
+                        <label for="project"><i class="uil uil-file-plus-alt"></i></label>
+                        <select name="project_id" id="project" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-name"><i class="uil uil-file-plus-alt"></i></label>
+                        <input type="text" name="task_title" id="task-name" placeholder="Task Title" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-description"><i class="uil uil-file-plus-alt"></i></label>
+                        <textarea rows="5" cols="80" name="task_description" id="task-description"
+                                  placeholder="Task Description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <input type="checkbox" name="type_team" id="teamManager" value="team" class="agree-term"
+                                   style="width: 20px; margin-left: 140px;"/>
+                            <label for="teamManager" class="label-agree-term">Team task ?</label>
+                        </div>
+                        <div class="form-group" style="align-items: center;">
+                            <input type="checkbox" name="type_individual" id="individual" value="individual"
+                                   class="agree-term"
+                                   style="width: 20px; margin-left: 140px;"/>
+                            <label for="individual" class="label-agree-term">Individual task ?</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-team-manager"><i class="uil uil-user-plus"></i></label>
+                        <select name="task_team_manager" id="task-team-manager" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-manager-individual"><i class="uil uil-user-plus"></i></label>
+                        <select name="task_manager_individual" id="task-manager-individual" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="task-employee-individual"><i class="uil uil-user-plus"></i></label>
+                        <select name="task_employee_individual" id="task-employee-individual" required></select>
+                    </div>
+                    <div>
+                        <input type="button" onclick="createTask()" name="signin" id="signin" class="form-submit"
+                               value="Create Project"/>
+                        <input type="reset" id="signin" class="form-submit" value="Reset Form">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 
     <div id="confirm_logout" class="modal">
         <div class="modal-content">
