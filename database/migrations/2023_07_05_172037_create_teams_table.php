@@ -14,7 +14,6 @@ return new class extends Migration {
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('task_id')->unsigned()->nullable();
             $table->bigInteger('team_leader')->unsigned();
             $table->bigInteger('member_1')->unsigned();
             $table->bigInteger('member_2')->unsigned()->nullable();
@@ -24,7 +23,6 @@ return new class extends Migration {
             $table->timestamps();
 
             //relationships
-            $table->foreign("task_id")->references("id")->on("tasks");
             $table->foreign('team_leader')->references('id')->on('users');
             $table->foreign("member_1")->references('id')->on('users');
             $table->foreign("member_2")->references('id')->on('users');

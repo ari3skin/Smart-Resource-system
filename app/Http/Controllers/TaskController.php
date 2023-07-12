@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TaskList;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -45,10 +46,31 @@ class TaskController extends Controller
                 ]);
 
             $tasks = $query->get();
-            $managers = User::where('task_occupancy', 'free')
+
+            $main_managers = DB::table('users')
+                ->join('projects', function ($join) {
+                    $join->on('users.id', '=', 'projects.project_manager');
+                })
                 ->join('employers', 'users.employer_id', '=', 'employers.id')
-                ->where('users.role', 'Manager')
-                ->select('users.*', 'employers.first_name', 'employers.last_name')
+                ->where(function ($query) {
+                    $query->where('users.role', '=', 'Manager')
+                        ->where('users.task_occupancy', '=', 'free');
+                })
+                ->select('users.id', 'users.identifier', 'users.role', 'users.username', 'employers.first_name', 'employers.last_name')
+                ->distinct()
+                ->get();
+
+            $sub_manager = DB::table('users')
+                ->join('projects', function ($join) {
+                    $join->on('users.id', '=', 'projects.sub_project_manager');
+                })
+                ->join('employers', 'users.employer_id', '=', 'employers.id')
+                ->where(function ($query) {
+                    $query->where('users.role', '=', 'Manager')
+                        ->where('users.task_occupancy', '=', 'free');
+                })
+                ->select('users.id', 'employers.first_name', 'employers.last_name')
+                ->distinct()
                 ->get();
 
             $employees = User::where('task_occupancy', 'free')
@@ -59,7 +81,10 @@ class TaskController extends Controller
             $projects = Project::where('status', 'ongoing')->get();
             $data = [
                 'tasks' => $tasks,
-                'managers' => $managers,
+                'managers' => [
+                    'project_manager' => $main_managers,
+                    'sub_project_managers' => $sub_manager
+                ],
                 'employees' => $employees,
                 'projects' => $projects,
             ];
@@ -90,6 +115,7 @@ class TaskController extends Controller
     {
         //
         $newTask = new Task();
+        $newTaskList = new TaskList();
         $project_id = $request->input('project_id');
         $task_title = $request->input('task_title');
         $task_description = $request->input('task_description');
@@ -106,6 +132,12 @@ class TaskController extends Controller
             $newTask->task_individual_user = null;
             $newTask->type = $type;
             $newTask->save();
+
+            $lastID = DB::getPdo()->lastInsertId();
+            $newTaskList->task_id = $lastID;
+            $newTaskList->individuals_id = null;
+            $newTaskList->team_id = $task_team_manager;
+            $newTaskList->save();
 
             return response()->json([
                 'info' => [
@@ -125,7 +157,7 @@ class TaskController extends Controller
                         'title' => 'Warning',
                         'description' => 'Select one of either Manager or Employee for an Individual task',
                     ]
-                ],500);
+                ], 500);
             } elseif ($task_manager_individual) {
                 $newTask->project_id = $project_id;
                 $newTask->task_title = $task_title;
@@ -135,6 +167,12 @@ class TaskController extends Controller
                 $newTask->type = $type;
                 $newTask->save();
 
+                $lastID = DB::getPdo()->lastInsertId();
+                $newTaskList->task_id = $lastID;
+                $newTaskList->individuals_id = $task_manager_individual;
+                $newTaskList->team_id = null;
+                $newTaskList->save();
+
             } elseif ($task_employee_individual) {
                 $newTask->project_id = $project_id;
                 $newTask->task_title = $task_title;
@@ -143,6 +181,12 @@ class TaskController extends Controller
                 $newTask->task_individual_user = $task_employee_individual;
                 $newTask->type = $type;
                 $newTask->save();
+
+                $lastID = DB::getPdo()->lastInsertId();
+                $newTaskList->task_id = $lastID;
+                $newTaskList->individuals_id = $task_employee_individual;
+                $newTaskList->team_id = null;
+                $newTaskList->save();
             }
 
             return response()->json([
@@ -158,7 +202,7 @@ class TaskController extends Controller
                     'title' => 'Warning',
                     'description' => 'The task type has not been selected',
                 ]
-            ],500);
+            ], 500);
         }
     }
 

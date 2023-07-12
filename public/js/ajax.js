@@ -259,13 +259,25 @@ function taskForm(response) {
         projectList.append(projectOptions);
     });
 
-    $.each(response.managers, function (i, manager) {
-        let managerOptions = "<option value='" + manager.id + "'>"
-            + manager.first_name + " " + manager.last_name
-            + "</option>";
+    let addedManagers = []; // Array to store added manager IDs
+
+    $.each(response.managers, function (type, managers) {
+        let managerOptions = '';
+
+        $.each(managers, function (i, manager) {
+            if (!addedManagers.includes(manager.id)) { // Check if manager is already added
+                managerOptions += "<option value='" + manager.id + "'>"
+                    + manager.first_name + " " + manager.last_name
+                    + "</option>";
+
+                addedManagers.push(manager.id); // Add manager ID to the array
+            }
+        });
+
         taskTeamManager.append(managerOptions);
         taskManagerIndividual.append(managerOptions);
     });
+
 
     $.each(response.employees, function (i, employee) {
         let employeeOptions = "<option value='" + employee.id + "'>"

@@ -15,14 +15,14 @@ return new class extends Migration {
     {
         Schema::create('task_lists', function (Blueprint $table) {
             $table->bigInteger('task_id')->unsigned();
-            $table->bigInteger('team_member')->unsigned()->nullable();
+            $table->bigInteger('individuals_id')->unsigned()->nullable();
             $table->bigInteger('team_id')->unsigned()->nullable();
             $table->enum('task_status', ['completed', 'ongoing', 'closed'])->default('ongoing');
             $table->timestamps();
 
             //relationships
             $table->foreign("task_id")->references("id")->on("tasks");
-            $table->foreign('team_member')->references('id')->on('users');
+            $table->foreign('individuals_id')->references('id')->on('users');
             $table->foreign('team_id')->references('id')->on('teams');
         });
 
