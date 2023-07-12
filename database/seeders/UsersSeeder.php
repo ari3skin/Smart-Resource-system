@@ -67,7 +67,7 @@ class UsersSeeder extends Seeder
             'reece.elroy@arcadianbank.com'
         ])->inRandomOrder()->get();
 
-        $totalUsers = 63;
+        $totalUsers = 67;
         $managerCount = 0;
         $employeeCount = 0;
 
