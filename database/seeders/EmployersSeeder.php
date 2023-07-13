@@ -34,7 +34,7 @@ class EmployersSeeder extends Seeder
                 ],
                 [
                     'department_id' => 103,
-                    'designation_id' => 102,
+                    'designation_id' => 103,
                     'first_name' => 'Megan',
                     'last_name' => 'Mwago',
                     'email' => 'megan.mwago@strathmore.edu',

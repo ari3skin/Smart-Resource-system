@@ -7,6 +7,7 @@ use App\Models\Employer;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SqlStorage extends Controller
@@ -59,5 +60,20 @@ class SqlStorage extends Controller
             return $project;
         });
         return response()->json($projects);
+    }
+
+    public function randomQueries()
+    {
+        $user_info = DB::table('employers')
+            ->select('id', 'first_name', 'last_name', 'identifier','department_id')
+            ->where('id', 111)
+            ->first();
+        $department = User::with('employer.department')
+            ->where('id', '=', $user_info->department_id)->first();
+
+        $departmentName = $department->employer->department->department_name;
+
+//        return response()->json($departmentName);
+        return $departmentName;
     }
 }

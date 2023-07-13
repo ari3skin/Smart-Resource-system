@@ -269,6 +269,20 @@ body {
     overflow: hidden;
 }
 
+#team_notice {
+    margin: 5px 20px;
+    color: var(--first-color); /* assuming --first-color is defined somewhere in your css as a valid color */
+    background-color: #f2f2f2; /* light grey background */
+    padding: 10px; /* padding around the text */
+    border-radius: 5px; /* rounded corners */
+    display: inline-block; /* so that padding and border-radius are applied */
+    transition: background-color 0.3s ease; /* smooth transition for background color */
+}
+
+#team_notice:empty {
+    background-color: transparent; /* no background color when span is empty */
+}
+
 .form-group:last-child {
     margin-bottom: 0;
 }

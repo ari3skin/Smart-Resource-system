@@ -14,12 +14,14 @@ return new class extends Migration {
     {
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
+            $table->string('team_name');
             $table->bigInteger('team_leader')->unsigned();
             $table->bigInteger('member_1')->unsigned();
             $table->bigInteger('member_2')->unsigned()->nullable();
             $table->bigInteger('member_3')->unsigned()->nullable();
             $table->bigInteger('member_4')->unsigned()->nullable();
             $table->bigInteger('member_5')->unsigned()->nullable();
+            $table->enum('team_status', ['active', 'disbanded'])->nullable();
             $table->timestamps();
 
             //relationships

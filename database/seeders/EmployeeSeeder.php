@@ -20,8 +20,8 @@ class EmployeeSeeder extends Seeder
         DB::table('employees')
             ->insert([
                 [
-                    'department_id' => 104,
-                    'designation_id' => 102,
+                    'department_id' => 103,
+                    'designation_id' => 104,
                     'first_name' => 'Reece',
                     'last_name' => 'Elroy',
                     'email' => 'reece.elroy@arcadianbank.com',

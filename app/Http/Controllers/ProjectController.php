@@ -44,6 +44,7 @@ class ProjectController extends Controller
                 return response()->json($data);
 
             } elseif ($user_info->identifier == 'MNGR_') {
+
                 $projects = Project::where('status', 'ongoing')
                     ->where(function ($query) use ($user_id) {
                         $query->where('project_manager', $user_id)

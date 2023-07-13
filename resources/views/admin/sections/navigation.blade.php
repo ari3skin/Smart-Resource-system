@@ -1,5 +1,5 @@
 <section id="sidebar">
-    <a href="/" class="brand">
+    <a href="/admin" class="brand">
         @if (!Auth::user()->profile_picture)
             <i class="uil uil-user-square"></i>
         @else

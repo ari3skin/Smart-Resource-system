@@ -1,5 +1,4 @@
 let sys_id = document.getElementById('employers_tasks').dataset.sysId;
-console.log(sys_id);
 //ajax display/view content
 //displaying all projects
 function projectListing(element, user_id) {
@@ -84,8 +83,8 @@ function projectListing(element, user_id) {
                     let projectDescription = project.project_description;
 
                     // Extract project manager's user record, employer record and department record from the response
-                    let projectManagerFirstName = project.manager.first_name;
-                    let projectManagerLastName = project.manager.last_name;
+                    let projectManagerFirstName = project.manager.employer.first_name;
+                    let projectManagerLastName = project.manager.employer.last_name;
                     let departmentName = project.manager.employer.department.department_name;
 
                     let listItem = `
@@ -112,64 +111,127 @@ function projectListing(element, user_id) {
 }
 
 //displaying all tasks
-function taskListing(user_id) {
-    return new Promise((resolve, reject) => {
-        $.ajax({
-            url: '/api/tasks/managers/' + user_id,
-            type: 'GET',
-            cache: false,
-            success: function (response) {
-                resolve(response);
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(textStatus, errorThrown);
-                reject(errorThrown);
+function taskListing(element, user_id) {
+    let callerId = element.id;
+
+    if (callerId === 'employers_tasks') {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/api/tasks/managers/' + user_id,
+                type: 'GET',
+                cache: false,
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                    reject(errorThrown);
+                }
+            });
+        }).then(response => {
+            let tableBody = $('#task_table');
+            tableBody.empty();
+            let projectTitles = [];
+
+            $.each(response.tasks, function (i, task) {
+                let row =
+                    "<tr style=\"border-bottom: solid var(--title-color) 1px\">"
+                    + "<td>" + task.project.project_title + "</td>"
+                    + "<td>" + task.task_title + "</td>"
+                    + "<td>" + task.task_description + "</td>"
+                    + "<td>" + (task.assigned_to.first_name + " " + task.assigned_to.last_name || 'Not Assigned') + "</td>"
+                    + "<td>" + task.type + "</td>"
+                    + "</tr>";
+                tableBody.append(row);
+                if (!projectTitles.includes(task.project.project_title)) {
+                    projectTitles.push(task.project.project_title);
+                }
+            });
+
+            let projectFilter = $('#projectFilter');
+            projectFilter.empty();
+            projectFilter.append('<option value="">All Projects</option>');
+            $.each(projectTitles, function (i, title) {
+                projectFilter.append('<option value="' + title + '">' + title + '</option>');
+            });
+
+            if ($.fn.DataTable.isDataTable("#tableData")) {
+                $('#tableData').DataTable().destroy();
             }
-        });
-    }).then(response => {
-        let tableBody = $('#task_table');
-        tableBody.empty();
-        let projectTitles = [];
 
-        $.each(response.tasks, function (i, task) {
-            let row =
-                "<tr style=\"border-bottom: solid var(--title-color) 1px\">"
-                + "<td>" + task.project.project_title + "</td>"
-                + "<td>" + task.task_title + "</td>"
-                + "<td>" + task.task_description + "</td>"
-                + "<td>" + (task.assigned_to.first_name + " " + task.assigned_to.last_name || 'Not Assigned') + "</td>"
-                + "<td>" + task.type + "</td>"
-                + "</tr>";
-            tableBody.append(row);
-            if (!projectTitles.includes(task.project.project_title)) {
-                projectTitles.push(task.project.project_title);
+            let dataTable = $('#tableData').DataTable(
+                {
+                    "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
+                    "iDisplayLength": 5
+                }
+            );
+
+            projectFilter.on('change', function () {
+                dataTable.columns(0).search(this.value).draw();
+            });
+
+            taskForm(response);
+        });
+    } else if (callerId === "employees_tasks") {
+
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: '/api/tasks/employees/' + user_id,
+                type: 'GET',
+                cache: false,
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(textStatus, errorThrown);
+                    reject(errorThrown);
+                }
+            });
+        }).then(response => {
+            let tableBody = $('#task_table');
+            tableBody.empty();
+            let projectTitles = [];
+
+            $.each(response.tasks, function (projectTitle, tasks) {
+                $.each(tasks, function (i, task) {
+                    let row =
+                        "<tr style=\"border-bottom: solid var(--title-color) 1px\">"
+                        + "<td>" + projectTitle + "</td>"
+                        + "<td>" + task.task_title + "</td>"
+                        + "<td>" + task.task_description + "</td>"
+                        + "<td>" + (task.first_name + " " + task.last_name || 'Not Assigned') + "</td>"
+                        + "</tr>";
+                    tableBody.append(row);
+                });
+                if (!projectTitles.includes(projectTitle)) {
+                    projectTitles.push(projectTitle);
+                }
+            });
+
+            let projectFilter = $('#projectFilter');
+            projectFilter.empty();
+            projectFilter.append('<option value="">All Projects</option>');
+            $.each(projectTitles, function (i, title) {
+                projectFilter.append('<option value="' + title + '">' + title + '</option>');
+            });
+
+            if ($.fn.DataTable.isDataTable("#tableData")) {
+                $('#tableData').DataTable().destroy();
             }
+
+            let dataTable = $('#tableData').DataTable(
+                {
+                    "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
+                    "iDisplayLength": 5
+                }
+            );
+
+            projectFilter.on('change', function () {
+                dataTable.columns(0).search(this.value).draw();
+            });
+
         });
-
-        let projectFilter = $('#projectFilter');
-        projectFilter.empty();
-        projectFilter.append('<option value="">All Projects</option>');
-        $.each(projectTitles, function (i, title) {
-            projectFilter.append('<option value="' + title + '">' + title + '</option>');
-        });
-
-        if ($.fn.DataTable.isDataTable("#tableData")) {
-            $('#tableData').DataTable().destroy();
-        }
-
-        let dataTable = $('#tableData').DataTable(
-            {
-                "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
-                "iDisplayLength": 5
-            }
-        );
-
-        projectFilter.on('change', function () {
-            dataTable.columns(0).search(this.value).draw();
-        });
-
-        taskForm(response);
-    });
+    }
 }
 
 function taskForm(response) {
@@ -222,87 +284,234 @@ function taskForm(response) {
 
 //displaying all teams
 function teamListing(element, user_id) {
+    let callerId = element.id;
 
+    if (callerId === "employers_team") {
+
+        $.ajax({
+            url: '/api/teams/managers/' + user_id,
+            type: 'GET',
+            success: function (response) {
+                $('#team-list').empty();
+                let teams = response.teams;
+
+                teams.forEach(function (team) {
+                    let teamName = team.team_name;
+                    let teamLeaderFirstName = team.team_leader.employer.first_name;
+                    let teamLeaderLastName = team.team_leader.employer.last_name;
+                    let teamMembers = '';
+
+                    for (let i = 1; i <= 5; i++) {
+                        let member = team['member' + i];
+                        if (member) {
+                            let memberFirstName = member.employee.first_name;
+                            let memberLastName = member.employee.last_name;
+                            teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
+                        }
+                    }
+
+                    let listItem = `
+                <li>
+                    <div class="text">
+                        <h3 style="margin: 0 10px;">${teamName}</h3>
+                        <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
+                        ${teamMembers}
+                    </div>
+                </li>`;
+                    $('#team-list').append(listItem);
+                });
+
+                teamForm(response);
+            },
+            error: function (xhr, status, error) {
+                let title = "Team Error"
+                displayErrorModal(title, error);
+            }
+        });
+    } else if (callerId === "employees_teams") {
+
+        $.ajax({
+            url: '/api/teams/employees/' + user_id,
+            type: 'GET',
+            success: function (response) {
+                $('#team-list').empty();
+                let teams = response.teams;
+
+                teams.forEach(function (team) {
+                    let teamName = team.team_name;
+                    let teamLeaderFirstName = team.team_leader.employer.first_name;
+                    let teamLeaderLastName = team.team_leader.employer.last_name;
+                    let teamMembers = '';
+
+                    for (let i = 1; i <= 5; i++) {
+                        let member = team['member' + i];
+                        if (member) {
+                            let memberFirstName = member.employee.first_name;
+                            let memberLastName = member.employee.last_name;
+                            teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
+                        }
+                    }
+
+                    let listItem = `
+                <li>
+                    <div class="text">
+                        <h3 style="margin: 0 10px;">${teamName}</h3>
+                        <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
+                        ${teamMembers}
+                    </div>
+                </li>`;
+                    $('#team-list').append(listItem);
+                });
+            },
+            error: function (xhr, status, error) {
+                let title = "Team Error"
+                displayErrorModal(title, error);
+            }
+        });
+
+    }
+}
+
+//adding the items in the team creation form
+function teamForm(response) {
+    let managerFormItem = $('#team_leader');
+    let employeeFormItem = $('.member');
+    managerFormItem.empty();
+    employeeFormItem.empty();
+
+    let addedManagers = [];
+
+    managerFormItem.append('<option value="">Select Team Manager</option>');
+    employeeFormItem.append('<option value="">Select Employee</option>');
+    $.each(response.managers, function (type, managers) {
+        let managerOptions = '';
+
+        $.each(managers, function (i, manager) {
+            if (!addedManagers.includes(manager.id)) {
+
+                managerOptions += "<option value='" + manager.id + "'>"
+                    + manager.employer.first_name + " " + manager.employer.last_name
+                    + "</option>";
+
+                addedManagers.push(manager.id);
+            }
+        });
+        managerFormItem.append(managerOptions);
+    });
+
+    $.each(response.employees, function (i, employee) {
+        let employeeOptions = "<option value='" + employee.id + "'>"
+            + employee.employee.first_name + " " + employee.employee.last_name
+            + "</option>";
+        employeeFormItem.append(employeeOptions);
+    });
 }
 
 // ----------------------------------------------------------------------------------------------------------------------//
 
 //ajax create/post functions
-//2. creating a project
-function createProject() {
-    let form = document.getElementById('create-project-form');
-    let formData = new FormData(form);
+//2. creation of Projects, Tasks, Teams
 
-    // Make AJAX request
-    let xhr = new XMLHttpRequest();
-    xhr.open('POST', '/api/projects/create', true);
-    xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
+function createItem(element) {
+    let callerId = element.id;
 
-                let response = JSON.parse(xhr.responseText);
-                let title = response.info.title;
-                let message = response.info.description;
-                displaySuccessModal(title, message)
+    if (callerId === "create_project") {
+        let form = document.getElementById('create-project-form');
+        let formData = new FormData(form);
 
-                form.reset();
-            } else if (xhr.status === 400) {
+        // Make AJAX request
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/projects/create', true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
 
-                let errorResponse = JSON.parse(xhr.responseText);
-                let title = errorResponse.info.title;
-                let message = errorResponse.info.description;
-                displayErrorModal(title, message);
+                    let response = JSON.parse(xhr.responseText);
+                    let title = response.info.title;
+                    let message = response.info.description;
+                    displaySuccessModal(title, message)
+
+                    form.reset();
+                } else if (xhr.status === 400) {
+
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    let title = errorResponse.info.title;
+                    let message = errorResponse.info.description;
+                    displayErrorModal(title, message);
+                }
             }
-        }
-    };
-    xhr.send(formData);
-}
+        };
+        xhr.send(formData);
+    } else if (callerId === "create_task") {
 
-//3. creating a task
-function createTask() {
-    let form = document.getElementById('create-task-form');
-    let formData = new FormData(form);
+        let form = document.getElementById('create-task-form');
+        let formData = new FormData(form);
 
-    // Make AJAX request
-    let task_xhr = new XMLHttpRequest();
-    task_xhr.open('POST', '/api/tasks/create', true);
-    task_xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        // Make AJAX request
+        let task_xhr = new XMLHttpRequest();
+        task_xhr.open('POST', '/api/tasks/create', true);
+        task_xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
-    task_xhr.onreadystatechange = function () {
-        if (task_xhr.readyState === XMLHttpRequest.DONE) {
-            if (task_xhr.status === 200) {
+        task_xhr.onreadystatechange = function () {
+            if (task_xhr.readyState === XMLHttpRequest.DONE) {
+                if (task_xhr.status === 200) {
 
-                let response = JSON.parse(task_xhr.responseText);
-                let title = response.info.title;
-                let message = response.info.description;
-                displaySuccessModal(title, message)
+                    let response = JSON.parse(task_xhr.responseText);
+                    let title = response.info.title;
+                    let message = response.info.description;
+                    displaySuccessModal(title, message)
 
-                form.reset();
+                    form.reset();
 
-                // taskListing(sys_id);
-                taskListing(sys_id)
-                    .then(() => {
-                        console.log('Task listing updated');
-                    })
-                    .catch(err => {
-                        console.log('Error updating task listing: ', err);
-                    });
-            } else if (task_xhr.status === 500) {
+                    // taskListing(sys_id);
+                    taskListing(sys_id)
+                        .then(() => {
+                            console.log('Task listing updated');
+                        })
+                        .catch(err => {
+                            console.log('Error updating task listing: ', err);
+                        });
+                } else if (task_xhr.status === 500) {
 
-                let errorResponse = JSON.parse(task_xhr.responseText);
-                let title = errorResponse.info.title;
-                let message = errorResponse.info.description;
-                displayErrorModal(title, message);
+                    let errorResponse = JSON.parse(task_xhr.responseText);
+                    let title = errorResponse.info.title;
+                    let message = errorResponse.info.description;
+                    displayErrorModal(title, message);
+                }
             }
-        }
-    };
-    task_xhr.send(formData);
-}
+        };
+        task_xhr.send(formData);
+    } else if (callerId === "create_team") {
 
-//4.creating a team
-function createTeam() {
+        let form = document.getElementById('create-team-form');
+        let formData = new FormData(form);
 
+        // Make AJAX request
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/teams/create', true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+
+                    let response = JSON.parse(xhr.responseText);
+                    let title = response.info.title;
+                    let message = response.info.description;
+                    displaySuccessModal(title, message)
+
+                    form.reset();
+                } else if (xhr.status === 400) {
+
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    let title = errorResponse.info.title;
+                    let message = errorResponse.info.description;
+                    displayErrorModal(title, message);
+                }
+            }
+        };
+        xhr.send(formData);
+    }
 }
 
 //modal displays

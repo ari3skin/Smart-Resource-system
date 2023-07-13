@@ -15,6 +15,9 @@
             <a href="#" class="nav-link">Actions</a>
         </div>
 
+        <div class="user_info">
+            <span>My department: {{session('department_name')}} Department</span>
+        </div>
         <form action="#" style="display: none">
             <div class="form-input">
                 <input type="search" placeholder="Search...">
@@ -27,7 +30,7 @@
         {{--top left navigation icons--}}
         <i class="uil uil-moon change-theme" id="dashboard-theme"></i>
 
-        <a href="#" class="profile notification" title="Chat Box">
+        <a style="cursor: pointer;" class="profile notification" onclick="selectedInterface(this)" id="admin_chats" title="Chat Box">
             <i class="uil uil-comments-alt"></i>
             <span class="num">--</span>
         </a>

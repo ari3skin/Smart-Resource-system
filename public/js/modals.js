@@ -1,8 +1,14 @@
 //dynamic variables for modal types
 let newProject_modal_content = document.getElementById("new_project_modal");
 let newTask_modal_content = document.getElementById("new_task_modal");
+let newTeam_modal_content = document.getElementById("new_team_modal");
+let newTaskReport_modal_content = document.getElementById("new_task_report_modal");
+
+//the closes
 let projectModal_close = document.getElementsByClassName("project_close")[0];
 let taskModal_close = document.getElementsByClassName("task_close")[0];
+let teamModal_close = document.getElementsByClassName("team_close")[0];
+let taskReportModal_close = document.getElementsByClassName("task_report_close")[0];
 
 function selectedInterface(element) {
 
@@ -19,6 +25,18 @@ function selectedInterface(element) {
 
         taskModal_close.onclick = function () {
             newTask_modal_content.style.display = "none";
+        }
+    } else if (callerId === "new_team") {
+        newTeam_modal_content.style.display = "block";
+
+        teamModal_close.onclick = function () {
+            newTeam_modal_content.style.display = "none";
+        }
+    } else if (callerId === "new_task_report") {
+        newTaskReport_modal_content.style.display = "block";
+
+        taskReportModal_close.onclick = function () {
+            newTaskReport_modal_content.style.display = "none";
         }
     }
 }

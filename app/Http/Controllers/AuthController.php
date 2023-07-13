@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\ResetPasswordMail;
+use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Employer;
 use App\Models\PasswordReset;
@@ -47,11 +48,17 @@ class AuthController extends Controller
                             ->select('id', 'first_name', 'last_name', 'identifier')
                             ->where('id', $google_user->employer_id)
                             ->first();
+                        $employee = Employer::where('id', $google_user->employer_id)->first();
+                        $department = Department::find($employee->department_id);
+                        $departmentName = $department->department_name;
+
                         $request->setLaravelSession(app('session.store'));
+                        $request->session()->put('department_name', $departmentName);
                         $request->session()->put('sys_id', $google_user->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
                         $request->session()->put('role', $user_role);
+                        $request->session()->put('chat_box_id', 'employer_chat');
 
                     } elseif ($identifier == 'EPE_') {
 
@@ -59,11 +66,17 @@ class AuthController extends Controller
                             ->select('id', 'first_name', 'last_name', 'identifier')
                             ->where('id', $google_user->employee_id)
                             ->first();
+                        $employee = Employee::where('id', $google_user->employer_id)->first();
+                        $department = Department::find($employee->department_id);
+                        $departmentName = $department->department_name;
+
                         $request->setLaravelSession(app('session.store'));
+                        $request->session()->put('department_name', $departmentName);
                         $request->session()->put('sys_id', $google_user->id);
                         $request->session()->put('first_name', $user_info->first_name);
                         $request->session()->put('last_name', $user_info->last_name);
                         $request->session()->put('role', $user_role,);
+                        $request->session()->put('chat_box_id', 'employee_chat');
                     }
                     return redirect()->intended('/admin/');
                 }
@@ -81,21 +94,33 @@ class AuthController extends Controller
                         ->select('id', 'first_name', 'last_name', 'identifier')
                         ->where('id', $user->employer_id)
                         ->first();
+                    $employee = Employer::where('id', $user->employer_id)->first();
+                    $department = Department::find($employee->department_id);
+                    $departmentName = $department->department_name;
+
+                    $request->session()->put('department_name', $departmentName);
                     $request->session()->put('sys_id', $user->id);
                     $request->session()->put('first_name', $user_info->first_name);
                     $request->session()->put('last_name', $user_info->last_name);
                     $request->session()->put('role', $user_role,);
+                    $request->session()->put('chat_box_id', 'employer_chat');
 
                 } elseif ($identifier == 'EPE_') {
 
                     $user_info = DB::table('employees')
-                        ->select('id', 'first_name', 'last_name', 'identifier')
+                        ->select('id', 'first_name', 'last_name', 'identifier', 'department_id')
                         ->where('id', $user->employee_id)
                         ->first();
+                    $employee = Employee::where('id', $user->employee_id)->first();
+                    $department = Department::find($employee->department_id);
+                    $departmentName = $department->department_name;
+
+                    $request->session()->put('department_name', $departmentName);
                     $request->session()->put('sys_id', $user->id);
                     $request->session()->put('first_name', $user_info->first_name);
                     $request->session()->put('last_name', $user_info->last_name);
                     $request->session()->put('role', $user_role,);
+                    $request->session()->put('chat_box_id', 'employee_chat');
                 }
                 return redirect()->intended('/admin/');
 

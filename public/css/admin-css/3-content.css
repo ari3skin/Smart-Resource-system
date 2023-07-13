@@ -25,6 +25,13 @@
     z-index: 1000;
 }
 
+#main_content .user_info span {
+    color: var(--title-color);
+    background: var(--first-color);
+    padding: 10px;
+    border-radius: 10px;
+}
+
 #main_content nav a {
     color: var(--title-color);
 }

@@ -19,7 +19,7 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="taskListing({{session('sys_id')}}); switchcommon(event, 'tasks')"
+            <a class="tablinks" onclick="taskListing(this,{{session('sys_id')}}); switchcommon(event, 'tasks')"
                style="cursor: pointer" title="tasks" id="employers_tasks" data-sys-id="{{session('sys_id')}}">
                 <i class="uil uil-clipboard-notes"></i>
                 <span class="text">Tasks</span>
@@ -27,10 +27,18 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'teams')"
-               style="cursor: pointer" title="teams">
+            <a class="tablinks" onclick="teamListing(this, {{session('sys_id')}}); switchcommon(event, 'teams')"
+               style="cursor: pointer" title="teams" id="employers_team">
                 <i class="uil uil-users-alt"></i>
                 <span class="text">Teams</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="tablinks" onclick="switchcommon(event, 'reports')"
+               style="cursor: pointer" title="teams">
+                <i class="uil uil-file-graph"></i>
+                <span class="text">Reports</span>
             </a>
         </li>
 
@@ -87,7 +95,7 @@
                     <i class="uil uil-constructor"></i>
                 </a>
                 <div class="text">
-                    <h3>--</h3>
+                    <h3>{{$teamsCount}}</h3>
                     <p>Assigned Teams</p>
                 </div>
             </li>
@@ -115,6 +123,12 @@
                 <i class="uil uil-plus-circle"></i>
                 <span class="text">New Project</span>
             </button>
+
+            <button class="btn-download" onclick="" style="border: none; cursor: pointer;"
+                    id="new_project_report">
+                <i class="uil uil-plus-circle"></i>
+                <span class="text">New Project Documentation</span>
+            </button>
         </div>
 
         <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="project-list"></ul>
@@ -141,6 +155,12 @@
                     id="new_task">
                 <i class="uil uil-plus-circle"></i>
                 <span class="text">New Task</span>
+            </button>
+
+            <button class="btn-download" onclick="selectedInterface(this)" style="border: none; cursor: pointer;"
+                    id="new_task_report">
+                <i class="uil uil-plus-circle"></i>
+                <span class="text">New Task Report</span>
             </button>
         </div>
 
@@ -180,7 +200,33 @@
                     </li>
                     <li><i class="uil uil-angle-right-b"></i></li>
                     <li>
-                        <a class="active" href="#">Active Task Teams</a>
+                        <a class="active" href="#">Active Project/Task Teams</a>
+                    </li>
+                </ul>
+            </div>
+
+            <button class="btn-download" onclick="selectedInterface(this)" style="border: none; cursor: pointer;"
+                    id="new_team">
+                <i class="uil uil-plus-circle"></i>
+                <span class="text">New Team</span>
+            </button>
+        </div>
+
+        <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="team-list"></ul>
+    </main>
+
+    <main class="tabcontent" id="reports">
+        <div class="head-title">
+            <div class="left">
+                <h1>Project Documentations</h1>
+
+                <ul class="breadcrumb">
+                    <li>
+                        <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                    </li>
+                    <li><i class="uil uil-angle-right-b"></i></li>
+                    <li>
+                        <a class="active" href="#">Submitted Documentations and Reports</a>
                     </li>
                 </ul>
             </div>
@@ -206,7 +252,7 @@
     </main>
 @endsection
 
-@section('modals')
+@section('create_form_modals')
 
     <div id="new_project_modal" class="modal" style="z-index: 1500;">
         <div class="modal-content" style="margin: 6% 20%;">
@@ -233,15 +279,14 @@
                         <select name="sub_project_manager" id="sub-project-manager" required></select>
                     </div>
                     <div>
-                        <input type="button" onclick="createProject()" name="signin" id="signin" class="form-submit"
-                               value="Create Project"/>
+                        <input type="button" onclick="createItem(this)" name="signin" id="create_project"
+                               class="form-submit" value="Create Project"/>
                         <input type="reset" id="signin" class="form-submit" value="Reset Form">
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
 
     <div id="new_task_modal" class="modal" style="z-index: 1500;">
         <div class="modal-content" style="margin: 2% 25%; width: 50%;">
@@ -269,6 +314,7 @@
                                    style="width: 20px; margin-left: 140px;"/>
                             <label for="teamManager" class="label-agree-term">Team task ?</label>
                         </div>
+                        <span id="team_notice" style="margin: 5px 20px; color: var(--first-color);"></span>
                         <div class="form-group" style="align-items: center;">
                             <input type="checkbox" name="type_individual" id="individual" value="individual"
                                    class="agree-term"
@@ -289,8 +335,9 @@
                         <select name="task_employee_individual" id="task-employee-individual" required></select>
                     </div>
                     <div>
-                        <input type="button" onclick="createTask()" name="signin" id="signin" class="form-submit"
-                               value="Create Project"/>
+                        <input type="button" onclick="createItem(this)" name="signin" id="create_task"
+                               class="form-submit"
+                               value="Create Task"/>
                         <input type="reset" id="signin" class="form-submit" value="Reset Form">
                     </div>
                 </form>
@@ -298,7 +345,70 @@
         </div>
     </div>
 
+    <div id="new_team_modal" class="modal" style="z-index: 1500;">
+        <div class="modal-content" style="margin: 2% 25%; width: 50%;">
+            <span class="close team_close">&times;</span>
+            <div class="dashboard-form">
+                <h2 class="form-title">Create New Team</h2>
+                <form method="POST" class="dashboard-form" id="create-team-form" autocomplete="off">
+                    @csrf
+                    <div class="form-group">
+                        <label for="team-name"><i class="uil uil-file-plus-alt"></i></label>
+                        <input type="text" name="team_name" id="team-name" placeholder="Team Name" required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="team_leader"><i class="uil uil-user-plus"></i></label>
+                        <select name="team_leader" id="team_leader" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="member1"><i class="uil uil-user-plus"></i></label>
+                        <select name="member_1" id="member1" class="member" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="member2"><i class="uil uil-user-plus"></i></label>
+                        <select name="member_2" id="member2" class="member" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="member3"><i class="uil uil-user-plus"></i></label>
+                        <select name="member_3" id="member3" class="member" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="member4"><i class="uil uil-user-plus"></i></label>
+                        <select name="member_4" id="member4" class="member" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="member5"><i class="uil uil-user-plus"></i></label>
+                        <select name="member_5" id="member5" class="member" required></select>
+                    </div>
+                    <div>
+                        <input type="button" onclick="createItem(this)" name="signin" id="create_team"
+                               class="form-submit"
+                               value="Create Team"/>
+                        <input type="reset" id="signin" class="form-submit" value="Reset Form">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
+    <div id="new_task_report_modal" class="modal" style="z-index: 1500;">
+        <div class="modal-content" style="margin: 2% 25%; width: 50%;">
+            <span class="close task_report_close">&times;</span>
+            <div class="dashboard-form">
+                <h2 class="form-title">New Task Report</h2>
+                <form method="POST" class="dashboard-form" id="create-team-form" autocomplete="off">
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('other_form_modals')
+
+@endsection
+
+@section('logout')
     <div id="confirm_logout" class="modal">
         <div class="modal-content">
             <span class="close logout_close">&times;</span>
