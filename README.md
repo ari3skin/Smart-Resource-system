@@ -6,63 +6,61 @@
     A web-based resource bank system that empowers efficient work force allocation and management
 </h2>
 
-The Banking Resource Management System is an innovative platform developed to optimize the allocation of work force
-resources in the banking sector. In the current banking landscape, employee resource management stands as a paramount
-aspect of operational efficiency. However, traditional systems face significant challenges leading to reduced task
-completion rates and overall operational efficiency.
+The Banking Resource Management System is an innovative platform designed to streamline the allocation of workforce
+resources within the banking sector. In light of the current banking landscape, effective employee resource management
+is crucial for operational efficiency. Traditional systems, however, are laden with significant challenges leading to a
+decline in task completion rates and overall operational efficiency.
 
-The Banking Resource Management System aims to address these issues by offering an optimized, comprehensive solution
-that can independently manage employee resources across various dimensions. Furthermore, the system provides a
+The Banking Resource Management System intends to overcome these challenges, providing an optimized, all-encompassing
+solution capable of managing employee resources across various facets autonomously. Additionally, the system boasts a
 user-friendly interface accessible to all stakeholders, including employees and management.
 
-## Functionalities
+## Key Features
 
 ### 1. Authentication:
 
-- [x] Employers and employees whose information is sourced from the main bank portal are able to register
-- [x] Registration is completed through email verification and password creations
-- [x] Login procedures can be carried out
-- [x] Google Login feature can be carried out
-- [x] Access to exclusive dashboards depending on the current logged-in user type
-- [x] Should users login using Google, their Google profile is used
+- Employers and employees can register using information from the main bank portal
+- Registration is facilitated through email verification and password creation
+- Users can log in using the regular process or Google Login feature
+- Depending on the user type, access to specific dashboards is granted
+- If users log in using Google, their Google profile information is utilized
 
 ### 2. Employee Functionalities:
 
-- [x] Able to log in appropriately and access their own dashboard
-- [x] Data viewing and compilation done as per their department
-- [x] Under Tasks Module: <br>
-    - Employees are able to view all tasks they have been assigned to individually
-    - Employees are able to view tasks within their department
-- [x] Under Teams Module: <br>
-    - Employees are able to view their assigned active teams, as well as their other team members
+- Employees can log in and access their dedicated dashboard
+- Viewing and compilation of data according to their department
+- **Tasks Module**:
+    - Employees can view all tasks individually assigned to them
+    - Tasks within their department are viewable
+- **Teams Module**:
+    - Employees can view their active teams along with other team members
 
-### 3. Employer as Manager Functionalities:
+### 3. Employer-as-Manager Functionalities:
 
-- [x] Able to log in appropriately and access their own dashboard
-- [x] Able to view all tasks assigned to them either individually or through a team
-- [x] Under Projects Module: <br>
-    - Managers are able to view all projects they are a project manager and or a subproject manager
-    - Managers are able to create a project within their department and assign either a new project manager or be one
-      themselves and or be a subproject manager themselves
-- [x] Under Tasks Module: <br>
-    - Managers are able to view all tasks assigned either individually or to a team leader who is responsible for their
-      team
-    - Managers are able to create a new task and assign either individually or to a team leader
-- [x] Under Teams Module
-    - Managers are able to view all teams they are part of alongside the respective members
-    - Managers are able to create a new team solely within their departments
+- Managers can log in and access their dedicated dashboard
+- All tasks assigned to them individually or through a team are viewable
+- **Projects Module**:
+    - Managers can view all projects for which they are a project manager or a subproject manager
+    - They can create a project within their department and assign either a new project manager, assign themselves as a
+      project manager, or a subproject manager
+- **Tasks Module**:
+    - Managers can view all tasks assigned either individually or to a team leader who is responsible for their team
+    - They can create a new task and assign it either individually or to a team leader
+- **Teams Module**:
+    - Managers can view all teams they are a part of, along with the respective members
+    - They can create a new team solely within their departments
 
-### 4. Installation Sources and Guide
+## 4. Installation Guide and Sources
 
-#### 4.1 - Guide
+### 4.1 - Guide
 
-1. Clone the repository through the GitHub desktop
-    - Click [here](https://desktop.github.com/) to go to GitHub's desktop site to download the application, install and
-      login using your GitHub account in order to clone
-<br><br>
-2. Open the project from where you have cloned it in your pc's terminal
-<br><br>
-3. Once inside the root structure within your terminal, run the following commands
+1. Clone the repository via GitHub desktop
+    - Go to [GitHub's desktop site](https://desktop.github.com/), download the application, install, and login using
+      your GitHub account to clone
+      <br><br>
+2. Open the project from the location where you cloned it in your PC's terminal
+   <br><br>
+3. Once inside the root structure within your terminal, execute the following commands separately:
    ```shell
         composer install
       ```
@@ -84,3 +82,13 @@ user-friendly interface accessible to all stakeholders, including employees and 
    ```shell
         php artisan serve
    ```
+
+### 4.2 - Sources
+
+The following open-source libraries and resources were instrumental in the development of this project:
+
+- [Composer](https://getcomposer.org/): A tool for dependency management in PHP
+- [Laravel](https://laravel.com/): A web application framework with expressive, elegant syntax
+- [Laravel Socialite](https://laravel.com/docs/socialite): An official Laravel package which provides a streamlined
+  OAuth authentication with various providers, in this case, Google.
+- [GitHub Desktop](https://desktop.github.com/): An open-source GitHub app
