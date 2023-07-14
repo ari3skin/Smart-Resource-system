@@ -18,7 +18,7 @@ This guide will help you set up the Smart Resource System on your local machine.
    - [PHP](https://windows.php.net/download#php-8.0) version 8.0
    - [Composer](https://getcomposer.org/download/)
 <br><br>
-2. Download the [setup](./setup.sh) script file and run it
+2. Download the <a href="./setup.sh" download>sShell Script</a> file and run it
 <br><br>
 3. Once inside the root structure within your terminal, execute the following commands separately:
    ```shell
