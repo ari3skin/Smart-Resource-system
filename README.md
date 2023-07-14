@@ -20,29 +20,6 @@ This guide will help you set up the Smart Resource System on your local machine.
 <br><br>
 2. Download the [setup](./setup.sh) script file and run it
 <br><br>
-3. Once inside the root structure within your terminal, execute the following commands separately:
-   ```shell
-        composer install
-      ```
-   ```shell
-        composer update
-   ```
-   ```shell
-        composer require laravel/socialite
-   ```
-   ```shell
-        copy .env.example .env
-   ```
-   ```shell
-        php artisan key:generate
-   ```
-   ```shell
-        php artisan migrate --seed
-   ```
-   ```shell
-        php artisan serve
-   ```
-
 
 ### 4.2 - Dependencies
 
