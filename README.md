@@ -43,7 +43,6 @@ This guide will help you set up the Smart Resource System on your local machine.
         php artisan serve
    ```
 
-4. Alternatively, for Mac and Linux users you can execute the following ba
 
 ### 4.2 - Dependencies
 
