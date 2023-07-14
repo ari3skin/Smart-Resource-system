@@ -18,7 +18,7 @@ This guide will help you set up the Smart Resource System on your local machine.
    - [PHP](https://windows.php.net/download#php-8.0) version 8.0
    - [Composer](https://getcomposer.org/download/)
 <br><br>
-2. Download the [setup](./setup.sh) script file and run it
+2. Download the <a href="https://github.com/ari3skin/Smart-Resource-system/blob/master/setup.sh" download>Shell Script</a> file and run it
 <br><br>
 
 ### 4.2 - Dependencies
