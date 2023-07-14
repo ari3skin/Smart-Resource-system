@@ -50,7 +50,7 @@ user-friendly interface accessible to all stakeholders, including employees and 
     - Managers can view all teams they are a part of, along with the respective members
     - They can create a new team solely within their departments
 
-## 4. Installation Guide and Sources
+## 4. Installation Guide and Dependencies
 
 ### 4.1 - Guide
 
@@ -83,7 +83,7 @@ user-friendly interface accessible to all stakeholders, including employees and 
         php artisan serve
    ```
 
-### 4.2 - Sources
+### 4.2 - Dependencies
 
 The following open-source libraries and resources were instrumental in the development of this project:
 
