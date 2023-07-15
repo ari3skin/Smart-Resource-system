@@ -21,7 +21,7 @@ This guide will help you set up the Smart Resource System on your local machine.
 2. Download the <a href="https://github.com/ari3skin/Smart-Resource-system/blob/master/setup.sh" download>Shell Script</a> file and run it
 <br><br>
 
-### 4.2 - Dependencies
+## Dependencies
 
 The following open-source libraries and resources were instrumental in the development of this project:
 
@@ -29,4 +29,5 @@ The following open-source libraries and resources were instrumental in the devel
 - [Laravel](https://laravel.com/): A web application framework with expressive, elegant syntax
 - [Laravel Socialite](https://laravel.com/docs/socialite): An official Laravel package which provides a streamlined
   OAuth authentication with various providers, in this case, Google.
-- [Git CLI](https://git-scm.com/): An open-source GitHub app
+- [Git CLI](https://git-scm.com/): A free and open source distributed version control system designed to handle
+  everything from small to very large projects with speed and efficiency.
