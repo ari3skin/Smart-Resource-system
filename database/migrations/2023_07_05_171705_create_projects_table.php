@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->bigInteger('sub_project_manager')->unsigned()->nullable();
             $table->string('project_title');
             $table->string('project_description', 500);
-            $table->enum('status', ['completed', 'ongoing', 'closed'])->default('ongoing');
+            $table->enum('status', ['under_review', 'rejected', 'completed', 'ongoing'])->default('under_review');
             $table->timestamps();
 
             //relationships

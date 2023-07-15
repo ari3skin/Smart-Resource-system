@@ -83,6 +83,7 @@ function projectListing(element, user_id) {
                     let projectDescription = project.project_description;
 
                     // Extract project manager's user record, employer record and department record from the response
+                    let projectManagerID = project.manager.employer.id;
                     let projectManagerFirstName = project.manager.employer.first_name;
                     let projectManagerLastName = project.manager.employer.last_name;
                     let departmentName = project.manager.employer.department.department_name;
@@ -94,6 +95,16 @@ function projectListing(element, user_id) {
                                                 <h4>Manager ${projectManagerFirstName} ${projectManagerLastName}</h4>
                                                 <h5>Department: ${departmentName}</h5>
                                                 <p style="margin: 10px 20px;">${projectDescription}</p>
+                                                <div>
+                                                    <button class="form-submit" id="approve_project"
+                                                            onclick="updateItem(this, ${projectId},${projectManagerID})">
+                                                        Approve
+                                                    </button>
+                                                    <button class="form-submit" id="reject_project"
+                                                            onclick="updateItem(this, ${projectId},${projectManagerID})">
+                                                        Reject
+                                                    </button>
+                                                </div>
                                             </div>
                                         </li>`;
 
@@ -410,8 +421,7 @@ function teamForm(response) {
 // ----------------------------------------------------------------------------------------------------------------------//
 
 //ajax create/post functions
-//2. creation of Projects, Tasks, Teams
-
+//2. creation of content from forms
 function createItem(element) {
     let callerId = element.id;
 
@@ -514,6 +524,77 @@ function createItem(element) {
     }
 }
 
+//update of items from fellow ajax requests
+function updateItem(element, item_id, user_id) {
+    let callerId = element.id;
+
+    if (callerId === "approve_project") {
+        $.ajax({
+            url: '/api/projects/status',
+            type: 'POST',
+            data: {
+                id: item_id,
+                action: 'approve_project',
+                project_manager: user_id,
+            },
+            success: function (data) {
+                let title = data.info.title;
+                let message = data.info.description;
+
+                // Check the title of the response
+                if (title === 'Success') {
+                    // Handle a success scenario
+                    displayNoticeModal(title, message);
+                } else if (title === 'Warning') {
+                    // Handle an error scenario
+                    displayErrorModal(title, message);
+                }
+            },
+            error: function (jqXHR) {
+
+                let errorData = JSON.parse(jqXHR.responseText);
+                console.log(errorData);
+                let title = 'HTTP Error: ' + jqXHR.status;
+                let message = errorData.message;
+                displayErrorModal(title, message);
+            }
+        });
+    } else if (callerId === "reject_project") {
+        $.ajax({
+            url: '/api/projects/status',
+            type: 'POST',
+            data: {
+                id: item_id,
+                action: 'reject_project',
+                project_manager: user_id,
+            },
+            success: function (data) {
+                let title = data.info.title;
+                let message = data.info.description;
+
+                // Check the title of the response
+                if (title === 'Success') {
+                    // Handle a success scenario
+                    displayNoticeModal(title, message);
+                } else if (title === 'Warning') {
+                    // Handle an error scenario
+                    displayErrorModal(title, message);
+                }
+            },
+            error: function (jqXHR) {
+
+                let errorData = JSON.parse(jqXHR.responseText);
+                console.log(errorData);
+                let title = 'HTTP Error: ' + jqXHR.status;
+                let message = errorData.message;
+                displayErrorModal(title, message);
+            }
+        });
+    } else if (callerId === "approve_task") {
+    } else if (callerId === "approve_team") {
+    }
+}
+
 //modal displays
 function displayErrorModal(title, message) {
     let modal = `
@@ -533,12 +614,12 @@ function displayErrorModal(title, message) {
     mainContent.after(modal);
 
     let modalNotice = $('#modal_notice');
-    // Transition effect to slide from top
+    // Transition effect to slide from the top
     modalNotice.css('top', '-200px').animate({
         top: '0',
     }, 500);
 
-    // Display the modal for 5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
+    // Display the modal for 2.5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
     modalNotice.delay(2500).fadeOut(500, function () {
         $(this).remove();
     });
@@ -570,7 +651,39 @@ function displaySuccessModal(title, message) {
         top: '0',
     }, 500);
 
-    // Display the modal for 5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
+    // Display the modal for 2.5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
+    modalNotice.delay(2500).fadeOut(500, function () {
+        $(this).remove();
+    });
+
+    noticeModals()
+}
+
+function displayNoticeModal(title, message) {
+    let modal = `
+        <div id="modal_notice" class="modal" style="display: block;">
+            <div class="modal-content">
+                <span class="close notice_close">&times;</span>
+                <p class="modal__text__notice">
+                    <img src="icons/notice-logo.svg" alt="sucess">
+                    ${title}
+                    <img src="icons/notice-logo.svg" alt="sucess">
+                </p>
+                <p class="modal__text">${message}</p>
+            </div>
+        </div>
+    `;
+
+    let mainContent = $('#main_content');
+    mainContent.after(modal);
+
+    let modalNotice = $('#modal_notice');
+    // Transition effect to slide from the top
+    modalNotice.css('top', '-200px').animate({
+        top: '0',
+    }, 500);
+
+    // Display the modal for 2.5 seconds, then fade out of this element over the course of 500 milliseconds (or 0.5 seconds)
     modalNotice.delay(2500).fadeOut(500, function () {
         $(this).remove();
     });

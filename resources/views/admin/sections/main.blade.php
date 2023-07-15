@@ -173,7 +173,7 @@
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
                 <li>
-                    <a class="active" href="#">Ongoing Projects</a>
+                    <a class="active" href="#">Projects Under Review</a>
                 </li>
             </ul>
         </div>

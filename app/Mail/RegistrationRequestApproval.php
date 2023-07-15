@@ -58,7 +58,7 @@ class RegistrationRequestApproval extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Registration Request Approval',
+            subject: $this->getSubject(),
         );
     }
 
@@ -72,6 +72,17 @@ class RegistrationRequestApproval extends Mailable
         return new Content(
             markdown: 'emails.registration_request',
         );
+    }
+
+    protected function getSubject()
+    {
+        if ($this->type == 'Manager') {
+            return 'Registration Request Approval for Manager';
+        } elseif ($this->type == 'Employee') {
+            return 'Registration Request Approval for Employee';
+        }
+
+        return 'Registration Request Approval';
     }
 
     /**

@@ -13,7 +13,7 @@ class Employee extends Model
 
     public function user(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->hasOne('App\Models\User', 'employee_id');
+        return $this->hasOne(User::class, 'employee_id');
     }
 
     public function department(): \Illuminate\Database\Eloquent\Relations\BelongsTo

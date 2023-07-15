@@ -13,7 +13,7 @@ class Task extends Model
 
     public function project(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsTo(Project::class, 'project_id');
     }
 
     public function taskTeamManager(): \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -26,8 +26,18 @@ class Task extends Model
         return $this->belongsTo(User::class, 'task_individual_user', 'id');
     }
 
+    public function taskList(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(TaskList::class, 'task_id');
+    }
 
-    // Get the department of the task via project
+    public function reports(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Report::class, 'task_id');
+    }
+
+
+    // Get the department of the task via a project
     public function department()
     {
         return $this->project->department;

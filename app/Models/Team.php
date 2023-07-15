@@ -45,7 +45,4 @@ class Team extends Model
     {
         return $this->belongsTo('App\Models\User', 'member_5');
     }
-
-// Repeat this for each team member
-
 }

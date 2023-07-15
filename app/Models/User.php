@@ -59,12 +59,12 @@ class User extends Authenticatable
 
     public function employer(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Employer::class);
+        return $this->belongsTo(Employer::class, 'employer_id');
     }
 
     public function employee(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     public function projectsAsManager(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -75,6 +75,11 @@ class User extends Authenticatable
     public function projectsAsSubManager(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Project::class, 'sub_project_manager');
+    }
+
+    public function team(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Team::class, 'team_leader');
     }
 
 }
