@@ -1,4 +1,5 @@
-let sys_id = document.getElementById('employers_tasks').dataset.sysId;
+// let sys_id = document.getElementById('employers_tasks').dataset.sysId;
+
 //ajax display/view content
 //displaying all projects
 function projectListing(element, user_id) {
@@ -10,29 +11,40 @@ function projectListing(element, user_id) {
             url: '/api/projects/' + user_id,
             type: 'GET',
             success: function (response) {
-                $('#project-list').empty();
+                let projectList = $('#project-list');
+                projectList.empty();
                 let projectManager = $('#project-manager');
                 let subProjectManager = $('#sub-project-manager');
                 projectManager.empty();
                 subProjectManager.empty();
-                let projects = response.projects; // Retrieve projects data
+                let projects = response.projects;
                 let managers = response.managers;
 
                 projectManager.append('<option value="0">--Leading Project Manager--</option>');
                 subProjectManager.append('<option value="0">--Sub Project Manager--</option>');
 
-                projects.forEach(function (project) {
-                    let projectId = project.id;
-                    let projectTitle = project.project_title;
-                    let projectDescription = project.project_description;
+                if (projects.length === 0) { // Check if the project array is empty
+                    let emptyContent = `
+                    <div class="empty">
+                        <h1>There is nothing here. Start by creating a project!</h1>
+                    </div>
+                    `;
+                    projectList.css("grid-template-columns", "none");
+                    projectList.append(emptyContent); // Append a different HTML element
+                } else {
+                    projectList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    projects.forEach(function (project) {
+                        let projectId = project.id;
+                        let projectTitle = project.project_title;
+                        let projectDescription = project.project_description;
 
-                    // Extract project manager's user record, employer record and department record from the response
-                    let projectManagerFirstName = project.manager.employer.first_name;
-                    let projectManagerLastName = project.manager.employer.last_name;
-                    let departmentName = project.manager.employer.department.department_name;
-                    let managerEmployerID = project.manager.id;
+                        // Extract project manager's user record, employer record and department record from the response
+                        let projectManagerFirstName = project.manager.employer.first_name;
+                        let projectManagerLastName = project.manager.employer.last_name;
+                        let departmentName = project.manager.employer.department.department_name;
+                        let managerEmployerID = project.manager.id;
 
-                    let listItem = `
+                        let listItem = `
                                         <li>
                                             <div class="text">
                                                 <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
@@ -41,8 +53,9 @@ function projectListing(element, user_id) {
                                                 <p style="margin: 10px 20px;">${projectDescription}</p>
                                             </div>
                                         </li>`;
-                    $('#project-list').append(listItem);
-                });
+                        $('#project-list').append(listItem);
+                    });
+                }
 
                 managers.forEach(function (manager) {
                     let sub_managerID = manager.id;
@@ -74,21 +87,33 @@ function projectListing(element, user_id) {
             url: '/api/projects/' + user_id,
             type: 'GET',
             success: function (response) {
-                $('#project-list').empty();
+                let projectList = $('#project-list');
+                projectList.empty();
                 let projects = response.projects; // Retrieve projects data
 
-                projects.forEach(function (project) {
-                    let projectId = project.id;
-                    let projectTitle = project.project_title;
-                    let projectDescription = project.project_description;
+                if (projects.length === 0) { // Check if the project array is empty
+                    let emptyContent = `
+                    <div class="empty">
+                        <h1>There is nothing here. You're all caught up with project approvals</h1>
+                    </div>
+                    `;
+                    projectList.css("grid-template-columns", "none");
+                    projectList.append(emptyContent); // Append a different HTML element
+                } else {
 
-                    // Extract project manager's user record, employer record and department record from the response
-                    let projectManagerID = project.manager.employer.id;
-                    let projectManagerFirstName = project.manager.employer.first_name;
-                    let projectManagerLastName = project.manager.employer.last_name;
-                    let departmentName = project.manager.employer.department.department_name;
+                    projectList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    projects.forEach(function (project) {
+                        let projectId = project.id;
+                        let projectTitle = project.project_title;
+                        let projectDescription = project.project_description;
 
-                    let listItem = `
+                        // Extract project manager's user record, employer record and department record from the response
+                        let projectManagerID = project.manager.employer.id;
+                        let projectManagerFirstName = project.manager.employer.first_name;
+                        let projectManagerLastName = project.manager.employer.last_name;
+                        let departmentName = project.manager.employer.department.department_name;
+
+                        let listItem = `
                                         <li>
                                             <div class="text">
                                                 <h3 style="margin: 0 10px;">${projectTitle}<sub>PID.${projectId}</sub></h3>
@@ -108,8 +133,10 @@ function projectListing(element, user_id) {
                                             </div>
                                         </li>`;
 
-                    $('#project-list').append(listItem);
-                });
+                        $('#project-list').append(listItem);
+                    });
+
+                }
             },
             error: function (xhr, status, error) {
                 // console.log(error);
@@ -126,6 +153,7 @@ function taskListing(element, user_id) {
     let callerId = element.id;
 
     if (callerId === 'employers_tasks') {
+
         return new Promise((resolve, reject) => {
             $.ajax({
                 url: '/api/tasks/managers/' + user_id,
@@ -173,7 +201,10 @@ function taskListing(element, user_id) {
             let dataTable = $('#tableData').DataTable(
                 {
                     "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
-                    "iDisplayLength": 5
+                    "iDisplayLength": 5,
+                    "language": {
+                        "emptyTable": "There is nothing here. Start by creating a task!"
+                    }
                 }
             );
 
@@ -233,7 +264,10 @@ function taskListing(element, user_id) {
             let dataTable = $('#tableData').DataTable(
                 {
                     "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
-                    "iDisplayLength": 5
+                    "iDisplayLength": 5,
+                    "language": {
+                        "emptyTable": "There is nothing here. You are yet to be assigned a task!"
+                    }
                 }
             );
 
@@ -303,34 +337,46 @@ function teamListing(element, user_id) {
             url: '/api/teams/managers/' + user_id,
             type: 'GET',
             success: function (response) {
-                $('#team-list').empty();
+                let teamlList = $('#team-list');
+                teamlList.empty();
                 let teams = response.teams;
 
-                teams.forEach(function (team) {
-                    let teamName = team.team_name;
-                    let teamLeaderFirstName = team.team_leader.employer.first_name;
-                    let teamLeaderLastName = team.team_leader.employer.last_name;
-                    let teamMembers = '';
-
-                    for (let i = 1; i <= 5; i++) {
-                        let member = team['member' + i];
-                        if (member) {
-                            let memberFirstName = member.employee.first_name;
-                            let memberLastName = member.employee.last_name;
-                            teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
-                        }
-                    }
-
-                    let listItem = `
-                <li>
-                    <div class="text">
-                        <h3 style="margin: 0 10px;">${teamName}</h3>
-                        <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
-                        ${teamMembers}
+                if (teams.length === 0) { // Check if the project array is empty
+                    let emptyContent = `
+                    <div class="empty">
+                        <h1>There is nothing here. Start by creating a team!</h1>
                     </div>
-                </li>`;
-                    $('#team-list').append(listItem);
-                });
+                    `;
+                    teamlList.css("grid-template-columns", "none");
+                    teamlList.append(emptyContent); // Append a different HTML element
+                } else {
+                    teamlList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    teams.forEach(function (team) {
+                        let teamName = team.team_name;
+                        let teamLeaderFirstName = team.team_leader.employer.first_name;
+                        let teamLeaderLastName = team.team_leader.employer.last_name;
+                        let teamMembers = '';
+
+                        for (let i = 1; i <= 5; i++) {
+                            let member = team['member' + i];
+                            if (member) {
+                                let memberFirstName = member.employee.first_name;
+                                let memberLastName = member.employee.last_name;
+                                teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
+                            }
+                        }
+
+                        let listItem = `
+                    <li>
+                        <div class="text">
+                            <h3 style="margin: 0 10px;">${teamName}</h3>
+                            <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
+                            ${teamMembers}
+                        </div>
+                    </li>`;
+                        $('#team-list').append(listItem);
+                    });
+                }
 
                 teamForm(response);
             },
@@ -345,25 +391,36 @@ function teamListing(element, user_id) {
             url: '/api/teams/employees/' + user_id,
             type: 'GET',
             success: function (response) {
-                $('#team-list').empty();
+                let teamlList = $('#team-list');
+                teamlList.empty();
                 let teams = response.teams;
 
-                teams.forEach(function (team) {
-                    let teamName = team.team_name;
-                    let teamLeaderFirstName = team.team_leader.employer.first_name;
-                    let teamLeaderLastName = team.team_leader.employer.last_name;
-                    let teamMembers = '';
+                if (teams.length === 0) { // Check if the project array is empty
+                    let emptyContent = `
+                    <div class="empty">
+                        <h1>There is nothing here. You are yet to be added into a team!</h1>
+                    </div>
+                    `;
+                    teamlList.css("grid-template-columns", "none");
+                    teamlList.append(emptyContent); // Append a different HTML element
+                } else {
+                    teamlList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    teams.forEach(function (team) {
+                        let teamName = team.team_name;
+                        let teamLeaderFirstName = team.team_leader.employer.first_name;
+                        let teamLeaderLastName = team.team_leader.employer.last_name;
+                        let teamMembers = '';
 
-                    for (let i = 1; i <= 5; i++) {
-                        let member = team['member' + i];
-                        if (member) {
-                            let memberFirstName = member.employee.first_name;
-                            let memberLastName = member.employee.last_name;
-                            teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
+                        for (let i = 1; i <= 5; i++) {
+                            let member = team['member' + i];
+                            if (member) {
+                                let memberFirstName = member.employee.first_name;
+                                let memberLastName = member.employee.last_name;
+                                teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
+                            }
                         }
-                    }
 
-                    let listItem = `
+                        let listItem = `
                 <li>
                     <div class="text">
                         <h3 style="margin: 0 10px;">${teamName}</h3>
@@ -371,8 +428,9 @@ function teamListing(element, user_id) {
                         ${teamMembers}
                     </div>
                 </li>`;
-                    $('#team-list').append(listItem);
-                });
+                        $('#team-list').append(listItem);
+                    });
+                }
             },
             error: function (xhr, status, error) {
                 let title = "Team Error"
@@ -473,15 +531,6 @@ function createItem(element) {
                     displaySuccessModal(title, message)
 
                     form.reset();
-
-                    // taskListing(sys_id);
-                    taskListing(sys_id)
-                        .then(() => {
-                            console.log('Task listing updated');
-                        })
-                        .catch(err => {
-                            console.log('Error updating task listing: ', err);
-                        });
                 } else if (task_xhr.status === 500) {
 
                     let errorResponse = JSON.parse(task_xhr.responseText);

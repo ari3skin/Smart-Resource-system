@@ -65,7 +65,7 @@ function onReady() {
                 // Checkbox is checked, add the information
                 $('#team_notice').text('Kindly make sure the selected individual has a team before proceeding.');
             } else {
-                // Checkbox is unchecked, clear the information
+                // Checkbox is unchecked, clears the information
                 $('#team_notice').text('');
             }
         });
@@ -86,4 +86,49 @@ function onReady() {
             }
         });
     });
+}
+
+function adminOnReady() {
+
+    document.getElementById("defaultOpen").click();
+    var modal_logout = document.getElementById("confirm_logout");
+    var btn = document.getElementById("logout_btn");
+    var close_span = document.getElementsByClassName("close")[0];
+    setupModalEvents(modal_logout, btn, close_span);
+
+    //password comparison
+    $(document).ready(function () {
+        $('#password').on('keyup', function () {
+            var newPassword = $('#first_password').val();
+            var confirmPassword = $(this).val();
+
+            if (newPassword !== confirmPassword) {
+                $('#password-error').text('Passwords do not match');
+            } else {
+                $('#password-error').text('');
+            }
+        });
+
+        //configuring my datatable
+        $('#tableData').DataTable(
+            {
+                "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
+                "iDisplayLength": 5
+            }
+        );
+    });
+}
+
+function setupModalEvents(modal, button, closeSpan) {
+    button.onclick = function () {
+        modal.style.display = "block";
+    }
+    closeSpan.onclick = function () {
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
 }

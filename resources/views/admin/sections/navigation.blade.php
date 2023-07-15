@@ -36,6 +36,14 @@
         </li>
 
         <li>
+            <a class="tablinks" onclick=" switchcommon(event, 'reports')"
+               style="cursor: pointer" title="Registration Requests" id="admin_projects">
+                <i class="uil uil-file-check-alt"></i>
+                <span class="text">View Reports</span>
+            </a>
+        </li>
+
+        <li>
             <a class="tablinks" onclick="switchcommon(event, 'settings')"
                style="cursor: pointer" title="Settings">
                 <i class="uil uil-setting"></i>
