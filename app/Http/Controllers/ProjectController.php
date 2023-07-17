@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ProjectMails;
 use App\Models\Employee;
 use App\Models\Employer;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use function PHPUnit\Framework\isNull;
 
 class ProjectController extends Controller
@@ -25,15 +27,9 @@ class ProjectController extends Controller
         if (request()->route()->named('projectInfo')) {
 
             if ($user_info->identifier == 'ADM_') {
-                $projects = Project::where('status', 'ongoing')
+                $projects = Project::where('status', 'under_review')
                     ->with([
-                        'manager' => function ($query) {
-                            $query->with([
-                                'employer' => function ($query) {
-                                    $query->with('department');
-                                }
-                            ]);
-                        }
+                        'manager.employer.department'
                     ])
                     ->get();
 
@@ -148,7 +144,9 @@ class ProjectController extends Controller
             return response()->json([
                 'info' => [
                     'title' => 'Success',
-                    'description' => 'Project Created Successfully.',
+                    'description' => 'Project Created Successfully.
+                                      The Selected Project Manager will receive further instructions
+                                      concerning the created project',
                 ]
             ]);
         } catch (\Exception $e) {
@@ -189,11 +187,62 @@ class ProjectController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Project $project
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request)
     {
         //
+        $project_id = $request->input('id');
+        $update_type = $request->input('action');
+        $project_manager = $request->input('project_manager');
+
+        try {
+            if ($update_type == "approve_project") {
+                $project = Project::find($project_id);
+                $project->status = 'ongoing';
+                $project->save();
+
+                $employer = Employer::findOrFail($project_manager);
+                $type = "approve_project";
+                Mail::to($employer->email)->send(new ProjectMails($employer, $type, $project));
+
+                return response()->json([
+                    'info' => [
+                        'title' => 'Success',
+                        'description' => 'Project Status Approved Successfully. Notification email sent successfully',
+                    ]
+                ]);
+            } elseif ($update_type == "reject_project") {
+                $project = Project::find($project_id);
+                $project->status = 'rejected';
+                $project->save();
+
+                $employer = Employer::findOrFail($project_manager);
+                $type = "reject_project";
+                Mail::to($employer->email)->send(new ProjectMails($employer, $type, $project));
+
+                return response()->json([
+                    'info' => [
+                        'title' => 'Success',
+                        'description' => 'Project Status Rejected Successfully.Notification email sent successfully',
+                    ]
+                ]);
+            } else {
+                return response()->json([
+                    'info' => [
+                        'title' => 'Warning',
+                        'description' => 'Invalid update type.',
+                    ]
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'info' => [
+                    'title' => 'Error',
+                    'description' => 'Database error: ' . $e->getMessage(),
+                ]
+            ], 500);
+        }
     }
 
     /**

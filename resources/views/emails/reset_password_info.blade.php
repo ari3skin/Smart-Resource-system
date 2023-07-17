@@ -1,4 +1,4 @@
-<x-mail::message>
+@component('mail::message')
 # Dear {{$first_name}} {{$last_name}},
 <br>
 You are receiving this email because you have requested for a password reset.
@@ -12,4 +12,4 @@ Reset Password
 
 Best regards,<br>
 {{ config('app.name') }}
-</x-mail::message>
+@endcomponent

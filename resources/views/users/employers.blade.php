@@ -131,7 +131,7 @@
             </button>
         </div>
 
-        <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="project-list"></ul>
+        <ul class="box-info empty-project" id="project-list"></ul>
 
     </main>
 
@@ -212,7 +212,7 @@
             </button>
         </div>
 
-        <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="team-list"></ul>
+        <ul class="box-info" id="team-list"></ul>
     </main>
 
     <main class="tabcontent" id="reports">

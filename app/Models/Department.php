@@ -13,6 +13,6 @@ class Department extends Model
 
     public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        return $this->hasMany(Project::class);
+        return $this->hasMany(Project::class, 'department_id');
     }
 }

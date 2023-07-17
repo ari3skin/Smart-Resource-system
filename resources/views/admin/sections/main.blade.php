@@ -69,6 +69,13 @@
             </div>
         </li>
     </ul>
+
+    {{--<div class="data_visuals">--}}
+    {{--<div class="chart-container">--}}
+    {{--<canvas id="open-projects-chart"></canvas>--}}
+    {{--</div>--}}
+    {{--</div>--}}
+
 </main>
 
 <main class="tabcontent" id="registration-request">
@@ -173,14 +180,32 @@
                 </li>
                 <li><i class="uil uil-angle-right-b"></i></li>
                 <li>
-                    <a class="active" href="#">Ongoing Projects</a>
+                    <a class="active" href="#">Projects Under Review</a>
                 </li>
             </ul>
         </div>
     </div>
 
-    <ul class="box-info" style="grid-template-columns: repeat(3, minmax(240px, 1fr));" id="project-list"></ul>
+    <ul class="box-info empty-project" id="project-list"></ul>
 
+</main>
+
+<main class="tabcontent" id="reports">
+    <div class="head-title">
+        <div class="left">
+            <h1>Reports</h1>
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                </li>
+                <li><i class="uil uil-angle-right-b"></i></li>
+                <li>
+                    <a class="active" href="#">Submitted reports</a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </main>
 
 <main class="tabcontent" id="settings">

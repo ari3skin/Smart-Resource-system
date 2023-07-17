@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->bigInteger('member_3')->unsigned()->nullable();
             $table->bigInteger('member_4')->unsigned()->nullable();
             $table->bigInteger('member_5')->unsigned()->nullable();
-            $table->enum('team_status', ['active', 'disbanded'])->nullable();
+            $table->enum('team_status', ['active', 'disbanded', 'under_review'])->nullable()->default('under_review');
             $table->timestamps();
 
             //relationships

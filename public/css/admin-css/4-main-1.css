@@ -66,6 +66,11 @@
     margin-top: 36px;
 }
 
+#main_content main .box-info .empty {
+    width: fit-content;
+    margin: 10% 17%;
+}
+
 #main_content main .box-info li {
     padding: 24px;
     background: var(--body-color);
@@ -95,7 +100,7 @@
 
 #main_content main .box-info li .text h4 {
     font-size: 15px;
-    margin: 10px 70px;
+    margin: 10px 58px;
 }
 
 #main_content main .box-info li .text h3 sub {

@@ -21,7 +21,7 @@ return new class extends Migration {
             $table->enum('type', ['individual', 'team']);
             $table->string('task_title');
             $table->string('task_description', 5000);
-            $table->enum('status', ['completed', 'ongoing', 'closed'])->default('ongoing');
+            $table->enum('status', ['completed', 'ongoing', 'closed','under_review'])->default('under_review');
             $table->timestamps();
 
             //relationships
