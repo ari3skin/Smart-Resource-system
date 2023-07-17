@@ -24,7 +24,7 @@
 
     <div class="word2_container">
         <h2>WORK WITH THE BEST</h2>
-        <p>SmartResource has the knowledge, experience and commitment <br> to serve all our clientele when you are looking for a job. Our expert team <br> members will offer you their full attention and guidance so that you can make <br> the most out of our services.Contact us to learn more </p>
+        <p>SmartResource has the knowledge, experience and commitment <br> to serve all our clientele when you are looking for a job allocation. Our expert team <br> members will offer you their full attention and guidance so that you can make <br> the most out of our services.Contact us to learn more </p>
     </div>
 
     <div class="word3_container">
@@ -42,8 +42,8 @@
 
 
     <div class="word4_container">
-        <h4>RETAIL</h4>
-        <p>Recruiting top-notch candidates for leading employers is what we stand for. we specialize in short-term, long term and temporary hires withing the banking industry.Whatever your needs may be, we are here for you.</p>
+        <h4>TASKS</h4>
+        <p>Assigning tasks to employees is what we major on. <br> For effective task assignment we have careful planning, employee selection and feedback to drive successful task execution and overall organizational perfomance.</p>
     </div>
 
     <div class="img5_container">
@@ -51,13 +51,13 @@
     </div>
 
     <div class="word5_container">
-        <h5>CUSTOMER CARE</h5>
-        <p>Let our team of experts do everything possible <br> to take the pressure off. we specialize in sourcing and  <br> recruiting in the banking industry. Contact us to jumpstart <br> your career and make the process as straightforward <br> as it could be.</p> 
+        <h5>PROJECTS</h5>
+        <p>Focused and coordinated efforts to achieve  <br> strategic objectives, address business needs, and  <br> drive organizational growth. Careful planning, <br> communication, resource allocation, monitoring <br> and performance evaluation to ensure <br> successful project execution.</p> 
     </div>
 
     <div class="word6_container">
-    <h6>HOSPITALITY</h6>
-        <p>We are very hospitable.Let us know what you are looking <br> for so our experts can make the match</p>
+    <h6>REPORTS</h6>
+        <p>Collecting, analyzing, formatting and distributing <br> relevant information to support informed decision <br> making process across various levels and <br> functions within the bank.</p>
     </div>
 
     <div class="word7_container">

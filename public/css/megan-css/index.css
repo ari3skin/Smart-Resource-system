@@ -83,6 +83,16 @@ h6{
     line-height: 30px;
 }
 
+.word5_container{
+    font-weight: 100;
+    line-height: 30px;
+}
+
+.word6_container{
+    font-weight: 100;
+    line-height: 30px;
+}
+
 .word7_container p{
     text-align: center;
     font-size: 60px;
