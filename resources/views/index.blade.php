@@ -29,7 +29,7 @@
 
     <div class="word3_container">
         <h3>THE RIGHT BANKING JOB ALLOCATION SITE FOR YOU</h3>
-        <p>Excellence and Success</p>
+        <p>Excellence and success</p>
     </div>
 
     <div class="img3_container">
