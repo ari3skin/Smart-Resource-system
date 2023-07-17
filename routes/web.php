@@ -7,6 +7,11 @@ use App\Http\Controllers\Routing;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [Routing::class, 'showIndex'])->name('/');
+Route::get('/about', [Routing::class, 'showabout'])->name('about');
+Route::get('/employers', [Routing::class, 'showemployers'])->name('employers');
+Route::get('/job_seekers', [Routing::class, 'showjobseekers'])->name('job_seekers');
+Route::get('/book_online', [Routing::class, 'showbookonline'])->name('book_online');
+Route::get('/program_list', [Routing::class, 'showprogramlist'])->name('program_list');
 
 Route::middleware(['disable_back'])->group(function () {
 
