@@ -7,7 +7,7 @@
 <body>
 <x-header></x-header>
 
-<main class="main" id="megan_css">
+<main class="main" id="megan-css">
 
     <div class="img1_container">
     <img src="{{asset('icons/hp_img1.png')}}">
@@ -24,18 +24,22 @@
 
     <div class="word2_container">
         <h2>WORK WITH THE BEST</h2>
-        <p>SmartResource has the knowledge, experience and commitment to serve all our clientele when you are looking for a job. Our expert team members will offer you their full attention and guidance so that you can make the most out of our services.Contact us to learn more </p>
+        <p>SmartResource has the knowledge, experience and commitment <br> to serve all our clientele when you are looking for a job. Our expert team <br> members will offer you their full attention and guidance so that you can make <br> the most out of our services.Contact us to learn more </p>
     </div>
 
     <div class="word3_container">
-        <h3>THE RIGHT BANKING EMPLOYMENT AGENCY FOR YOU</h3>
+        <h3>THE RIGHT BANKING JOB ALLOCATION SITE FOR YOU</h3>
         <p>Excellence and Success</p>
     </div>
 
-    <div class="img34_container">
+    <div class="img3_container">
     <img src="{{asset('icons/hp_img3.png')}}">
+    </div>
+
+    <div class="img4_container">
     <img src="{{asset('icons/hp_img4.png')}}">
     </div>
+
 
     <div class="word4_container">
         <h4>RETAIL</h4>
@@ -48,9 +52,16 @@
 
     <div class="word5_container">
         <h5>CUSTOMER CARE</h5>
-        <p>Let our team of experts do everything possible to take the pressure off. we specialize in sourcing and recruiting in the banking industry.Contact us to jumpstart your career and make the process as straightforward as it could be.</p>
-        <h6>HOSPITALITY</h6>
-        <p>We are very hospitable.Let us know what you arelooking for so our experts can make the match</p>
+        <p>Let our team of experts do everything possible <br> to take the pressure off. we specialize in sourcing and  <br> recruiting in the banking industry. Contact us to jumpstart <br> your career and make the process as straightforward <br> as it could be.</p> 
+    </div>
+
+    <div class="word6_container">
+    <h6>HOSPITALITY</h6>
+        <p>We are very hospitable.Let us know what you are looking <br> for so our experts can make the match</p>
+    </div>
+
+    <div class="word7_container">
+        <p>CONTACT US TODAY</p>
     </div>
 
 
