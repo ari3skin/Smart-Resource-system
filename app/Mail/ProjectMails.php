@@ -56,7 +56,7 @@ class ProjectMails extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Project Mails',
+            subject: $this->getSubject(),
         );
     }
 
@@ -82,14 +82,25 @@ class ProjectMails extends Mailable
         return [];
     }
 
+    protected function getSubject()
+    {
+        if ($this->type == 'approve_project') {
+            return 'Project Update Status: Approved';
+        } elseif ($this->type == 'reject_project') {
+            return 'Project Update Status: Rejected';
+        }
+
+        return 'Registration Request Approval';
+    }
+
     protected function getMarkdown()
     {
         if ($this->type == 'approve_project') {
             return 'emails.project_approved';
         } elseif ($this->type == 'reject_project') {
             return 'emails.project_rejected';
+        } else {
+            abort(404);
         }
-
-        return 'emails.registration_request';
     }
 }

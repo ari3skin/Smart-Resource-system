@@ -36,8 +36,16 @@
         </li>
 
         <li>
+            <a class="tablinks" onclick="teamListing(this,{{session('sys_id')}}); switchcommon(event, 'teams')"
+               style="cursor: pointer" title="Registration Requests" id="admin_teams">
+                <i class="uil uil-users-alt"></i>
+                <span class="text">View Teams</span>
+            </a>
+        </li>
+
+        <li>
             <a class="tablinks" onclick=" switchcommon(event, 'reports')"
-               style="cursor: pointer" title="Registration Requests" id="admin_projects">
+               style="cursor: pointer" title="Registration Requests" id="admin_teams">
                 <i class="uil uil-file-check-alt"></i>
                 <span class="text">View Reports</span>
             </a>

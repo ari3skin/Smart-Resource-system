@@ -119,12 +119,14 @@
 
         <div class="table-data">
             <div class="order">
-                <label style="margin: 0 210px;">
-                    Project Filter:
-                    <select id="projectFilter">
-                        <option value="">All Projects</option>
-                    </select>
-                </label>
+                <div class="filter-wrapper">
+                    <label>
+                        Project Filter:
+                        <select id="projectFilter">
+                            <option value="">All Reports</option>
+                        </select>
+                    </label>
+                </div>
                 <table id="tableData">
                     <thead>
                     <tr>

@@ -14,6 +14,7 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('task_lists', function (Blueprint $table) {
+            $table->id();
             $table->bigInteger('task_id')->unsigned();
             $table->bigInteger('individuals_id')->unsigned()->nullable();
             $table->bigInteger('team_id')->unsigned()->nullable();

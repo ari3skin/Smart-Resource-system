@@ -30,7 +30,7 @@ Route::middleware(['disable_back'])->group(function () {
             Route::get('/{user_id}', [ProjectController::class, 'index'])->name('projectInfo');
             //posts
             Route::post('create', [ProjectController::class, 'store']);
-            Route::post('status', [ProjectController::class, 'update'])->name('approve_project');
+            Route::post('status', [ProjectController::class, 'update']);
         });
 
         Route::prefix('tasks')->group(function () {
@@ -47,6 +47,7 @@ Route::middleware(['disable_back'])->group(function () {
 
             //posts
             Route::post('create', [TeamController::class, 'store']);
+            Route::post('status', [TeamController::class, 'update']);
         });
 
         Route::get('sqlTests', [SqlStorage::class, 'randomQueries']);

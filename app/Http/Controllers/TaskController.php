@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\TeamMails;
+use App\Models\Employer;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskList;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class TaskController extends Controller
 {
@@ -24,7 +28,7 @@ class TaskController extends Controller
 
         if (request()->route()->named('managers_tasks')) {
 
-            //tasks info extraction while doing the necessary joins
+//tasks queries
             $tasks = Task::with([
                 'project',
                 'taskTeamManager.employer.department',
@@ -33,7 +37,8 @@ class TaskController extends Controller
             ])->whereHas('project', function ($query) use ($user_id) {
                 $query->where('project_manager', $user_id)
                     ->orWhere('sub_project_manager', $user_id);
-            })->get();
+            })
+                ->get();
 
             $tasks->each(function ($task) {
                 $assigned_to = $task->taskTeamManager ?? $task->taskIndividualUser;
@@ -49,21 +54,33 @@ class TaskController extends Controller
                 }
             });
 
-            //manager and sub manager info extraction with the necessary joins
-            $main_managers = User::with('employer')
-                ->whereHas('projectsAsManager')
-                ->where('role', 'Manager')
-                ->where('task_occupancy', 'free')
-                ->distinct()
+            $task_info = Task::with([
+                'taskIndividualUser.employer',
+                'taskTeamManager.employer',
+            ])->where('task_individual_user', '=', $user_id)
+                ->orWhere('task_team_manager', '=', $user_id)
                 ->get();
-            $sub_managers = User::with('employer')
-                ->whereHas('projectsAsSubManager')
-                ->where('role', 'Manager')
-                ->where('task_occupancy', 'free')
-                ->distinct()
-                ->get();
+//end of tasks queries
 
-            //fetching all employees of the same department based on the currently logged in manager
+//loading the project managers and sub managers for the team and individual task assignment
+            $gptUserDetails = User::with('employer.department')->find($user_id);
+            $departmentID = $gptUserDetails->employer->department->id;
+            $gptManagers = User::query()
+                ->where('role', 'Manager')
+                ->where('task_occupancy', 'free')
+                ->get();
+            $projectManagers = Project::query()
+                ->where(function ($query) use ($gptManagers) {
+                    $query->whereIn('project_manager', $gptManagers->pluck('id'))
+                        ->orWhereIn('sub_project_manager', $gptManagers->pluck('id'));
+                })
+                ->where('status', 'ongoing')
+                ->where('department_id', '=', $departmentID)
+                ->get();
+            $projectManagers->load(['manager.employer.department', 'subManager.employer.department']);
+//end of queries
+
+//fetching all employees of the same department based on the currently logged in manager
             $department_id = User::find($user_id)->employer->department_id;
             $employees = User::where('task_occupancy', 'free')
                 ->where('role', 'Employee')
@@ -76,13 +93,12 @@ class TaskController extends Controller
                 ])
                 ->get();
 
-            //getting all projects where one is a manager or sub manager of a project and projects per department
+//getting all projects where one is a manager or sub manager of a project and projects per department
             $projects = Project::where('status', 'ongoing')
                 ->where(function ($query) use ($user_id) {
                     $query->where('project_manager', $user_id)
                         ->orWhere('sub_project_manager', $user_id);
-                })
-                ->with([
+                })->with([
                     'manager' => function ($query) {
                         $query->with([
                             'employer' => function ($query) {
@@ -93,21 +109,37 @@ class TaskController extends Controller
                 ])
                 ->get();
 
-            //making an associative array to hold all the data and sending the response
             $data = [
                 'tasks' => $tasks,
-                'managers' => [
-                    'project_manager' => $main_managers,
-                    'sub_project_managers' => $sub_managers,
-                ],
+                'task_info' => $task_info,
+                //data to be filled in forms
+                'managers' => $projectManagers,
                 'employees' => $employees,
+                //projects related to the currently logged-in user manager
                 'projects' => $projects,
+
             ];
             return response()->json($data);
 
         } elseif (request()->route()->named('employees_tasks')) {
 
             //getting individual tasks as per project assigned to an employee
+            $teams = Team::where(function ($query) use ($user_id) {
+                $query->where('member_1', $user_id)
+                    ->orWhere('member_2', $user_id)
+                    ->orWhere('member_3', $user_id)
+                    ->orWhere('member_4', $user_id)
+                    ->orWhere('member_5', $user_id);
+            })->where('team_status', 'active')->pluck('id');
+
+            $teamTasks = Task::with(['taskList.team', 'project'])
+                ->whereIn('id', function ($query) use ($teams) {
+                    $query->select('task_id')
+                        ->from('task_lists')
+                        ->whereIn('team_id', $teams);
+                })
+                ->get();
+
             $tasks = Task::with(['taskIndividualUser.employee', 'project'])
                 ->where('task_individual_user', $user_id)
                 ->get();
@@ -122,8 +154,11 @@ class TaskController extends Controller
             });
             $grouped = $output->groupBy('project_title');
 
+            //$tasksInfo = $grouped->concat($teamTasks);
+
             $data = [
-                'tasks' => $grouped
+                'tasks' => $grouped,
+                'teamTasksInfo' => $teamTasks,
             ];
             return response()->json($data);
 
@@ -153,44 +188,71 @@ class TaskController extends Controller
     {
         //
         $newTask = new Task();
-        $newTaskList = new TaskList();
         $project_id = $request->input('project_id');
         $task_title = $request->input('task_title');
         $task_description = $request->input('task_description');
 
 
         if ($request->filled('type_team')) {
-            $type = "team";
-            $task_team_manager = $request->input('task_team_manager');
+            try {
+                $type = "team";
+                $task_team_manager = $request->input('task_team_manager');
 
-            $newTask->project_id = $project_id;
-            $newTask->task_title = $task_title;
-            $newTask->task_description = $task_description;
-            $newTask->task_team_manager = $task_team_manager;
-            $newTask->task_individual_user = null;
-            $newTask->type = $type;
-            $newTask->save();
+                $newTask->project_id = $project_id;
+                $newTask->task_title = $task_title;
+                $newTask->task_description = $task_description;
+                $newTask->task_team_manager = $task_team_manager;
+                $newTask->task_individual_user = null;
+                $newTask->type = $type;
+                $newTask->save();
+                $lastTaskID = DB::getPdo()->lastInsertId();
 
-            $lastID = DB::getPdo()->lastInsertId();
-            $newTaskList->task_id = $lastID;
-            $newTaskList->individuals_id = null;
+                $selectTeam = Team::all()->where('team_leader', '=', $task_team_manager)
+                    ->where('team_status', '=', 'active')
+                    ->first();
 
-            $selectTeam = Team::all()->where('team_leader', '=', $task_team_manager)->first();
+                if ($selectTeam) {
+                    $newTaskList = new TaskList();
+                    $newTaskList->task_id = $lastTaskID;
+                    $newTaskList->individuals_id = null;
+                    $newTaskList->team_id = $selectTeam->id;
+                    $newTaskList->save();
 
-            $newTaskList->team_id = $selectTeam->id;
-            $newTaskList->save();
+                    $lastTaskListID = DB::getPdo()->lastInsertId();
+                    $this->teamTaskNotification($lastTaskListID);
 
-            return response()->json([
-                'info' => [
-                    'title' => 'Success',
-                    'description' => 'Team Task Created Successfully.',
-                ]
-            ]);
+                    return response()->json([
+                        'info' => [
+                            'title' => 'Success',
+                            'description' => 'Team Task Created Successfully.',
+                        ]
+                    ]);
+                } else {
+                    return response()->json([
+                        'info' => [
+                            'title' => 'Warning',
+                            'description' => 'The selected team manager has no team active team',
+                        ]
+                    ], 400);
+                }
+
+
+            } catch (\Exception $e) {
+                // Handle any other exceptions or errors that may occur
+                return response()->json([
+                    'info' => [
+                        'title' => 'Error',
+                        'description' => 'Database error: ' . $e->getMessage(),
+                    ]
+                ], 400);
+            }
+
 
         } elseif ($request->filled('type_individual')) {
             $type = "individual";
             $task_manager_individual = $request->input('task_manager_individual');
             $task_employee_individual = $request->input('task_employee_individual');
+            $newTaskList = new TaskList();
 
             if ($task_manager_individual && $task_employee_individual) {
                 return response()->json([
@@ -198,7 +260,7 @@ class TaskController extends Controller
                         'title' => 'Warning',
                         'description' => 'Select one of either Manager or Employee for an Individual task',
                     ]
-                ], 500);
+                ], 400);
             } elseif ($task_manager_individual) {
                 $newTask->project_id = $project_id;
                 $newTask->task_title = $task_title;
@@ -243,7 +305,7 @@ class TaskController extends Controller
                     'title' => 'Warning',
                     'description' => 'The task type has not been selected',
                 ]
-            ], 500);
+            ], 400);
         }
     }
 
@@ -291,5 +353,40 @@ class TaskController extends Controller
     public function destroy(Task $task)
     {
         //
+    }
+
+    private function teamTaskNotification($lastTaskListID): void
+    {
+        $taskList = TaskList::findOrFail($lastTaskListID);
+        $teamInfo = Team::findOrFail($taskList->team_id);
+        $taskInfo = Task::findOrFail($taskList->task_id);
+
+        $names = new Collection();
+        $emails = new Collection();
+        $type = "team_task_creation";
+
+        $userEmployer = User::findOrFail($teamInfo->team_leader);
+        $employer = Employer::findOrFail($userEmployer->employer_id);
+
+        for ($i = 1; $i <= 5; $i++) {
+            $memberColumn = 'member_' . $i;
+            $memberId = $teamInfo->$memberColumn;
+            if ($memberId) {
+                $employee = User::join('employees', 'users.employee_id', '=', 'employees.id')
+                    ->where('users.id', '=', $memberId)
+                    ->select('employees.email', 'employees.first_name', 'employees.last_name')
+                    ->first();
+
+                if ($employee) {
+                    $emails->push($employee->email);
+                    $names->push($employee->first_name . ' ' . $employee->last_name);
+                }
+            }
+        }
+        $emails->push($employer->email);
+
+        foreach ($emails as $email) {
+            Mail::to($email)->send(new TeamMails($employer, $teamInfo, $taskInfo, $type));
+        }
     }
 }

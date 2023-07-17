@@ -19,18 +19,18 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="taskListing(this,{{session('sys_id')}}); switchcommon(event, 'tasks')"
-               style="cursor: pointer" title="tasks" id="employers_tasks" data-sys-id="{{session('sys_id')}}">
-                <i class="uil uil-clipboard-notes"></i>
-                <span class="text">Tasks</span>
-            </a>
-        </li>
-
-        <li>
             <a class="tablinks" onclick="teamListing(this, {{session('sys_id')}}); switchcommon(event, 'teams')"
                style="cursor: pointer" title="teams" id="employers_team">
                 <i class="uil uil-users-alt"></i>
                 <span class="text">Teams</span>
+            </a>
+        </li>
+
+        <li>
+            <a class="tablinks" onclick="taskListing(this,{{session('sys_id')}}); switchcommon(event, 'tasks')"
+               style="cursor: pointer" title="tasks" id="employers_tasks" data-sys-id="{{session('sys_id')}}">
+                <i class="uil uil-clipboard-notes"></i>
+                <span class="text">Tasks</span>
             </a>
         </li>
 
@@ -124,7 +124,7 @@
                 <span class="text">New Project</span>
             </button>
 
-            <button class="btn-download" onclick="" style="border: none; cursor: pointer;"
+            <button class="btn-download" onclick="selectedInterface(this)" style="border: none; cursor: pointer;"
                     id="new_project_report">
                 <i class="uil uil-plus-circle"></i>
                 <span class="text">New Project Documentation</span>
@@ -166,12 +166,14 @@
 
         <div class="table-data">
             <div class="order">
-                <label style="margin: 0 210px;">
-                    Project Filter:
-                    <select id="projectFilter">
-                        <option value="">All Projects</option>
-                    </select>
-                </label>
+                <div class="filter-wrapper">
+                    <label>
+                        Project Filter:
+                        <select id="projectFilter">
+                            <option value="">All Reports</option>
+                        </select>
+                    </label>
+                </div>
                 <table id="tableData">
                     <thead>
                     <tr>
@@ -229,6 +231,38 @@
                         <a class="active" href="#">Submitted Documentations and Reports</a>
                     </li>
                 </ul>
+            </div>
+        </div>
+
+        <div class="table-data">
+            <div class="order">
+                <div class="filter-wrapper">
+                    <label>
+                        Project Filter:
+                        <select id="projectFilter">
+                            <option value="">All Reports</option>
+                        </select>
+                    </label>
+                    <label>
+                        Task Filter:
+                        <select id="taskFilter">
+                            <option value="">All Tasks</option>
+                        </select>
+                    </label>
+                </div>
+                <table id="tableData">
+                    <thead>
+                    <tr>
+                        <th>Project Title</th>
+                        <th>Task Title</th>
+                        <th>Task Description</th>
+                        <th>Assigned To</th>
+                        <th>Task Type</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="task_table"></tbody>
+                </table>
             </div>
         </div>
     </main>
@@ -308,20 +342,18 @@
                         <textarea rows="5" cols="80" name="task_description" id="task-description"
                                   placeholder="Task Description" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <div class="form-group">
-                            <input type="checkbox" name="type_team" id="teamManager" value="team" class="agree-term"
-                                   style="width: 20px; margin-left: 140px;"/>
-                            <label for="teamManager" class="label-agree-term">Team task ?</label>
+                    <div class="select_options">
+                        <div>
+                            <label for="teamManager">Team task ?</label>
+                            <input type="checkbox" name="type_team" id="teamManager" value="team" class="agree-term"/>
                         </div>
-                        <span id="team_notice" style="margin: 5px 20px; color: var(--first-color);"></span>
-                        <div class="form-group" style="align-items: center;">
+                        <div>
+                            <label for="individual">Individual task ?</label>
                             <input type="checkbox" name="type_individual" id="individual" value="individual"
-                                   class="agree-term"
-                                   style="width: 20px; margin-left: 140px;"/>
-                            <label for="individual" class="label-agree-term">Individual task ?</label>
+                                   class="agree-term"/>
                         </div>
                     </div>
+                    <span id="team_notice"></span>
                     <div class="form-group">
                         <label for="task-team-manager"><i class="uil uil-user-plus"></i></label>
                         <select name="task_team_manager" id="task-team-manager" required></select>
@@ -391,13 +423,46 @@
         </div>
     </div>
 
+    <div id="new_project_report_modal" class="modal" style="z-index: 1500;">
+        <div class="modal-content" style="margin: 2% 25%; width: 50%;">
+            <span class="close project_report_close">&times;</span>
+            <div class="dashboard-form">
+                <h2 class="form-title">New Project Documentation</h2>
+                <form method="POST" class="dashboard-form" id="create-team-form" autocomplete="off"
+                      enctype="multipart/form-data">
+                    @csrf
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div id="new_task_report_modal" class="modal" style="z-index: 1500;">
         <div class="modal-content" style="margin: 2% 25%; width: 50%;">
             <span class="close task_report_close">&times;</span>
             <div class="dashboard-form">
                 <h2 class="form-title">New Task Report</h2>
-                <form method="POST" class="dashboard-form" id="create-team-form" autocomplete="off">
+                <form method="POST" class="dashboard-form" id="create-team-form" autocomplete="off"
+                      enctype="multipart/form-data">
                     @csrf
+                    <div class="form-group">
+                        <label for="my_tasks"><i class="uil uil-file-plus-alt"></i></label>
+                        <select name="my_task" id="my_tasks" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="team-name"><i class="uil uil-file-plus-alt"></i></label>
+                        <input type="text" name="team_name" id="team-name" placeholder="Task Report title"
+                               required/>
+                    </div>
+                    <div class="form-group">
+                        <label for="report_summary"><i class="uil uil-file-plus-alt"></i></label>
+                        <textarea rows="5" cols="80" name="report_summary" id="report_summary"
+                                  placeholder="Task Report Summary" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="report_file"><i class="uil uil-file-plus-alt"></i></label>
+                        <input type="file" name="report_file" accept="application/pdf" id="report_file"
+                               placeholder="Select PDF file">
+                    </div>
                 </form>
             </div>
         </div>

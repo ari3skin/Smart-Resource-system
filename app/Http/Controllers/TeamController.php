@@ -2,9 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ProjectMails;
+use App\Mail\TeamMails;
+use App\Models\Employer;
+use App\Models\Project;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class TeamController extends Controller
 {
@@ -35,6 +43,17 @@ class TeamController extends Controller
                 },
             ], $memberRelationships))
                 ->where('team_leader', $user_id)
+                ->where('team_status', '=', 'active')
+                ->get();
+
+            $teamInfo = Team::with(array_merge([
+                'teamLeader' => function ($query) {
+                    $query->with(['employer' => function ($query) {
+                        $query->select('id', 'first_name', 'last_name');
+                    }]);
+                },
+            ], $memberRelationships))
+                ->where('team_status', '=', 'under_review')
                 ->get();
 
 
@@ -66,6 +85,7 @@ class TeamController extends Controller
             //making an associative array to hold all the data and sending the response
             $data = [
                 'teams' => $teams,
+                'teamInfo' => $teamInfo,
                 'managers' => [
                     'project_manager' => $main_managers,
                     'sub_project_managers' => $sub_managers,
@@ -130,25 +150,84 @@ class TeamController extends Controller
 
         if ($teamLeaderCheck && ($member1 || $member2 || $member3 || $member4 || $member5)) {
             try {
-                $team = new Team();
-                $team->team_name = $request->input('team_name');
-                $team->team_leader = $request->input('team_leader');
-                $team->member_1 = $request->input('member_1');
-                $team->member_2 = $request->input('member_2');
-                $team->member_3 = $request->input('member_3');
-                $team->member_4 = $request->input('member_4');
-                $team->member_5 = $request->input('member_5');
-                $team->save();
+                $selectTeam = Team::where('team_leader', $request->input('team_leader'))
+                    ->where(function ($query) {
+                        $query->where('team_status', 'under_review')
+                            ->orWhere('team_status', 'active');
+                    })
+                    ->first();
 
-                return response()->json([
-                    'info' => [
-                        'title' => 'Success',
-                        'description' => 'Team Created Successfully.',
-                    ]
-                ]);
+
+                $employer_name = User::join('employers', 'users.employer_id', '=', 'employers.id')
+                    ->where('users.id', '=', $request->input('team_leader'))
+                    ->select('employers.first_name', 'employers.last_name', 'employers.email')
+                    ->first();
+
+                if (!$selectTeam) {
+                    $team = new Team();
+                    $team->team_name = $request->input('team_name');
+                    $team->team_leader = $request->input('team_leader');
+                    $team->member_1 = $request->input('member_1');
+                    $team->member_2 = $request->input('member_2');
+                    $team->member_3 = $request->input('member_3');
+                    $team->member_4 = $request->input('member_4');
+                    $team->member_5 = $request->input('member_5');
+                    $team->save();
+
+                    $lastID = DB::getPdo()->lastInsertId();
+                    $teamInfo = Team::all()->where('id', '=', $lastID)->first();
+
+                    $emails = new Collection();
+                    $names = new Collection();
+
+                    for ($i = 1; $i <= 5; $i++) {
+                        $memberId = $request->input('member_' . $i);
+                        if ($memberId) {
+                            $employee = User::join('employees', 'users.employee_id', '=', 'employees.id')
+                                ->where('users.id', '=', $memberId)
+                                ->select('employees.email', 'employees.first_name', 'employees.last_name')
+                                ->first();
+
+                            if ($employee) {
+                                $emails->push($employee->email);
+                                $names->push($employee->first_name . ' ' . $employee->last_name);
+                            }
+                        }
+                    }
+                    $emails->push($employer_name->email);
+                    $type = "create_team";
+                    try {
+                        foreach ($emails as $email) {
+                            Mail::to($email)->send(new TeamMails($employer_name, $names, $teamInfo, $type));
+                        }
+
+                        return response()->json([
+                            'info' => [
+                                'title' => 'Success',
+                                'description' => 'Your team has been created successfully and all members have been notified via email
+                                 The team is currently under review thus kindly check your email after 1 working day for further instructions ',
+                            ]
+                        ]);
+                    } catch (\Exception $e) {
+                        return response()->json([
+                            'info' => [
+                                'title' => 'Error',
+                                'description' => 'An error occurred while sending emails.',
+                            ]
+                        ], 400);
+                    }
+                } else {
+                    return response()->json([
+                        'info' => [
+                            'title' => 'Error',
+                            'description' =>
+                                'The selected Team Leader ' . $employer_name->first_name . " " . $employer_name->last_name .
+                                ' already has been assigned a team',
+                        ]
+                    ], 400);
+                }
 
             } catch (\Exception $e) {
-                // Handle any other exceptions or errors that may occur
                 return response()->json([
                     'info' => [
                         'title' => 'Error',
@@ -194,11 +273,43 @@ class TeamController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         //
+        $team_id = $request->input('id');
+        $update_type = $request->input('action');
+        $team_leader = $request->input('team_leader');
+        try {
+            if ($update_type == "approve_team") {
+                $status_type = "active";
+                $type = "approve_team";
+                $this->updateTeamStatusCommon($team_id, $team_leader, $status_type, $type);
+                $info = [
+                    'title' => 'Success',
+                    'description' => 'Team Status Approved Successfully. Notification emails sent successfully',
+                ];
+                return response()->json($info);
+
+            } elseif ($update_type == "reject_team") {
+                $status_type = "disbanded";
+                $type = "reject_team";
+                $this->updateTeamStatusCommon($team_id, $team_leader, $status_type, $type);
+                $info = [
+                    'title' => 'Success',
+                    'description' => 'Team Status Rejected Successfully. Notification emails sent successfully',
+                ];
+                return response()->json($info);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'info' => [
+                    'title' => 'Warning',
+                    'description' => 'Database error: ' . $e->getMessage(),
+                ]
+            ], 500);
+        }
     }
 
     /**
@@ -210,5 +321,38 @@ class TeamController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateTeamStatusCommon($team_id, $team_leader, $status_type, $type): void
+    {
+        $team = Team::find($team_id);
+        $team->team_status = $status_type;
+        $team->save();
+
+        $user_info = User::findOrFail($team_leader);
+        $employer = Employer::findOrFail($user_info->employer_id);
+        $names = new Collection();
+        $emails = new Collection();
+
+        for ($i = 1; $i <= 5; $i++) {
+            $memberColumn = 'member_' . $i;
+            $memberId = $team->$memberColumn;
+            if ($memberId) {
+                $employee = User::join('employees', 'users.employee_id', '=', 'employees.id')
+                    ->where('users.id', '=', $memberId)
+                    ->select('employees.email', 'employees.first_name', 'employees.last_name')
+                    ->first();
+
+                if ($employee) {
+                    $emails->push($employee->email);
+                    $names->push($employee->first_name . ' ' . $employee->last_name);
+                }
+            }
+        }
+        $emails->push($employer->email);
+
+        foreach ($emails as $email) {
+            Mail::to($email)->send(new TeamMails($employer, $names, $team, $type));
+        }
     }
 }

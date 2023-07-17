@@ -1,48 +1,45 @@
 // let sys_id = document.getElementById('employers_tasks').dataset.sysId;
-
-//ajax display/view content
-//displaying all projects
 function projectListing(element, user_id) {
-    let callerId = element.id;  // get the ID of the calling element
+    let callerId = element.id;
 
     if (callerId === 'employers_projects') {
 
         $.ajax({
+
             url: '/api/projects/' + user_id,
             type: 'GET',
             success: function (response) {
-                let projectList = $('#project-list');
-                projectList.empty();
-                let projectManager = $('#project-manager');
-                let subProjectManager = $('#sub-project-manager');
-                projectManager.empty();
-                subProjectManager.empty();
                 let projects = response.projects;
                 let managers = response.managers;
-
+                let projectList = $('#project-list');
+                let projectManager = $('#project-manager');
+                let subProjectManager = $('#sub-project-manager');
+                projectList.empty();
+                projectManager.empty();
+                subProjectManager.empty();
                 projectManager.append('<option value="0">--Leading Project Manager--</option>');
                 subProjectManager.append('<option value="0">--Sub Project Manager--</option>');
 
-                if (projects.length === 0) { // Check if the project array is empty
+                if (projects.length === 0) {
+
                     let emptyContent = `
                     <div class="empty">
                         <h1>There is nothing here. Start by creating a project!</h1>
                     </div>
                     `;
                     projectList.css("grid-template-columns", "none");
-                    projectList.append(emptyContent); // Append a different HTML element
+                    projectList.append(emptyContent);
+
                 } else {
+
                     projectList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
                     projects.forEach(function (project) {
                         let projectId = project.id;
                         let projectTitle = project.project_title;
                         let projectDescription = project.project_description;
-
-                        // Extract project manager's user record, employer record and department record from the response
                         let projectManagerFirstName = project.manager.employer.first_name;
                         let projectManagerLastName = project.manager.employer.last_name;
                         let departmentName = project.manager.employer.department.department_name;
-                        let managerEmployerID = project.manager.id;
 
                         let listItem = `
                                         <li>
@@ -84,21 +81,24 @@ function projectListing(element, user_id) {
     } else if (callerId === 'admin_projects') {
 
         $.ajax({
+
             url: '/api/projects/' + user_id,
             type: 'GET',
             success: function (response) {
+                let projects = response.projects;
                 let projectList = $('#project-list');
                 projectList.empty();
-                let projects = response.projects; // Retrieve projects data
 
-                if (projects.length === 0) { // Check if the project array is empty
+                if (projects.length === 0) {
+
                     let emptyContent = `
                     <div class="empty">
                         <h1>There is nothing here. You're all caught up with project approvals</h1>
                     </div>
                     `;
                     projectList.css("grid-template-columns", "none");
-                    projectList.append(emptyContent); // Append a different HTML element
+                    projectList.append(emptyContent);
+
                 } else {
 
                     projectList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
@@ -106,8 +106,6 @@ function projectListing(element, user_id) {
                         let projectId = project.id;
                         let projectTitle = project.project_title;
                         let projectDescription = project.project_description;
-
-                        // Extract project manager's user record, employer record and department record from the response
                         let projectManagerID = project.manager.employer.id;
                         let projectManagerFirstName = project.manager.employer.first_name;
                         let projectManagerLastName = project.manager.employer.last_name;
@@ -132,11 +130,10 @@ function projectListing(element, user_id) {
                                                 </div>
                                             </div>
                                         </li>`;
-
                         $('#project-list').append(listItem);
                     });
-
                 }
+                // taskListing(yourElement, userId);
             },
             error: function (xhr, status, error) {
                 // console.log(error);
@@ -144,18 +141,21 @@ function projectListing(element, user_id) {
                 displayErrorModal(title, error);
             }
         });
-
     }
 }
 
 //displaying all tasks
 function taskListing(element, user_id) {
     let callerId = element.id;
+    let employer_tasks = document.getElementById("employers_projects");
+    let userId = user_id;
 
     if (callerId === 'employers_tasks') {
 
         return new Promise((resolve, reject) => {
+
             $.ajax({
+
                 url: '/api/tasks/managers/' + user_id,
                 type: 'GET',
                 cache: false,
@@ -168,9 +168,11 @@ function taskListing(element, user_id) {
                 }
             });
         }).then(response => {
+
             let tableBody = $('#task_table');
-            tableBody.empty();
+            let tableData = $('#tableData');
             let projectTitles = [];
+            tableBody.empty();
 
             $.each(response.tasks, function (i, task) {
                 let row =
@@ -182,6 +184,7 @@ function taskListing(element, user_id) {
                     + "<td>" + task.type + "</td>"
                     + "</tr>";
                 tableBody.append(row);
+
                 if (!projectTitles.includes(task.project.project_title)) {
                     projectTitles.push(task.project.project_title);
                 }
@@ -195,10 +198,10 @@ function taskListing(element, user_id) {
             });
 
             if ($.fn.DataTable.isDataTable("#tableData")) {
-                $('#tableData').DataTable().destroy();
+                tableData.DataTable().destroy();
             }
 
-            let dataTable = $('#tableData').DataTable(
+            let dataTable = tableData.DataTable(
                 {
                     "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
                     "iDisplayLength": 5,
@@ -213,11 +216,15 @@ function taskListing(element, user_id) {
             });
 
             taskForm(response);
+            taskListing(employer_tasks, userId);
         });
+
     } else if (callerId === "employees_tasks") {
 
         return new Promise((resolve, reject) => {
+
             $.ajax({
+
                 url: '/api/tasks/employees/' + user_id,
                 type: 'GET',
                 cache: false,
@@ -230,19 +237,27 @@ function taskListing(element, user_id) {
                 }
             });
         }).then(response => {
+
             let tableBody = $('#task_table');
-            tableBody.empty();
+            let tableData = $('#tableData');
             let projectTitles = [];
+            let projectFilter = $('#projectFilter');
+            let teamTasks = response.teamTasksInfo;
+            projectFilter.empty();
+            tableBody.empty();
 
             $.each(response.tasks, function (projectTitle, tasks) {
+
                 $.each(tasks, function (i, task) {
-                    let row =
-                        "<tr style=\"border-bottom: solid var(--title-color) 1px\">"
-                        + "<td>" + projectTitle + "</td>"
-                        + "<td>" + task.task_title + "</td>"
-                        + "<td>" + task.task_description + "</td>"
-                        + "<td>" + (task.first_name + " " + task.last_name || 'Not Assigned') + "</td>"
-                        + "</tr>";
+                    let name = task.first_name + " " + task.last_name;
+                    let row = `
+                        <tr style="border-bottom: solid var(--title-color) 1px">
+                            <td>${projectTitle}</td>
+                            <td>${task.task_title}</td>
+                            <td>${task.task_description}</td>
+                            <td>${name || 'Not Assigned'}</td>
+                        </tr>`;
+
                     tableBody.append(row);
                 });
                 if (!projectTitles.includes(projectTitle)) {
@@ -250,18 +265,29 @@ function taskListing(element, user_id) {
                 }
             });
 
-            let projectFilter = $('#projectFilter');
-            projectFilter.empty();
+            teamTasks.forEach(function (teamTask) {
+                let name = teamTask.task_list.team.team_name;
+                let row = `
+                        <tr style="border-bottom: solid var(--title-color) 1px">
+                            <td>${teamTask.project.project_title}</td>
+                            <td>${teamTask.task_title}</td>
+                            <td>${teamTask.task_description}</td>
+                            <td>Team ${name}</td>
+                        </tr>`;
+
+                tableBody.append(row);
+            });
+
             projectFilter.append('<option value="">All Projects</option>');
             $.each(projectTitles, function (i, title) {
                 projectFilter.append('<option value="' + title + '">' + title + '</option>');
             });
 
             if ($.fn.DataTable.isDataTable("#tableData")) {
-                $('#tableData').DataTable().destroy();
+                tableData.DataTable().destroy();
             }
 
-            let dataTable = $('#tableData').DataTable(
+            let dataTable = tableData.DataTable(
                 {
                     "aLengthMenu": [[5, 10, 25, 50, 75, -1], [5, 10, 25, 50, 75, "All"]],
                     "iDisplayLength": 5,
@@ -284,6 +310,7 @@ function taskForm(response) {
     let taskTeamManager = $('#task-team-manager');
     let taskManagerIndividual = $('#task-manager-individual');
     let taskEmployeeIndividual = $('#task-employee-individual');
+    let my_tasks = $('#my_tasks');
 
     projectList.empty();
     taskTeamManager.empty();
@@ -291,32 +318,48 @@ function taskForm(response) {
     taskEmployeeIndividual.empty();
 
     projectList.append('<option value=""> -- Select Project -- </option>');
-    taskTeamManager.append('<option value="">Select Team Manager</option>');
-    taskManagerIndividual.append('<option value="">Select Manager Individual</option>');
+    taskTeamManager.append('<option value="">Select Team Manager of the above Project</option>');
+    taskManagerIndividual.append('<option value="">Select Manager Individual of the above Project</option>');
     taskEmployeeIndividual.append('<option value="">Select Employee Individual</option>');
+    my_tasks.append('<option value="">Select my assigned task</option>');
 
     $.each(response.projects, function (i, project) {
         let projectOptions = "<option value='" + project.id + "'>" + project.project_title + "</option>";
         projectList.append(projectOptions);
     });
 
-    let addedManagers = [];
+    $.each(response.managers, function (type, manager) {
+        let managerOptions = `
+                    <option value=" ${manager.manager.id}">
+                            ${manager.project_title} - Project Manager
+                            ${manager.manager.employer.first_name} ${manager.manager.employer.last_name}
+                    </option>`;
 
-    $.each(response.managers, function (type, managers) {
-        let managerOptions = '';
+        if (!manager.sub_manager) {
 
-        $.each(managers, function (i, manager) {
-            if (!addedManagers.includes(manager.id)) {
-                managerOptions += "<option value='" + manager.id + "'>"
-                    + manager.employer.first_name + " " + manager.employer.last_name
-                    + "</option>";
+            let subManagerOptions = `
+                    <option value="">No Sub-Project Manager for ${manager.project_title}</option>`;
+            taskTeamManager.append(managerOptions).append(subManagerOptions);
+            taskManagerIndividual.append(managerOptions).append(subManagerOptions);
 
-                addedManagers.push(manager.id);
-            }
-        });
+        } else {
 
-        taskTeamManager.append(managerOptions);
-        taskManagerIndividual.append(managerOptions);
+            let subManagerOptions = `
+                    <option value=" ${manager.sub_manager.id}">
+                            ${manager.project_title} - Sub-Project Manager
+                            ${manager.sub_manager.employer.first_name} ${manager.sub_manager.employer.last_name}
+                    </option>`;
+            taskTeamManager.append(managerOptions).append(subManagerOptions);
+            taskManagerIndividual.append(managerOptions).append(subManagerOptions);
+        }
+    });
+
+    $.each(response.task_info, function (i, task_info) {
+        let my_tasks_options = `
+                <option value="${task_info.id}">
+                        ${task_info.type} - ${task_info.task_title}
+                </option>`;
+        my_tasks.append(my_tasks_options);
     });
 
     $.each(response.employees, function (i, employee) {
@@ -334,22 +377,26 @@ function teamListing(element, user_id) {
     if (callerId === "employers_team") {
 
         $.ajax({
+
             url: '/api/teams/managers/' + user_id,
             type: 'GET',
             success: function (response) {
+
                 let teamlList = $('#team-list');
                 teamlList.empty();
                 let teams = response.teams;
 
-                if (teams.length === 0) { // Check if the project array is empty
+                if (teams.length === 0) {
                     let emptyContent = `
                     <div class="empty">
                         <h1>There is nothing here. Start by creating a team!</h1>
                     </div>
                     `;
                     teamlList.css("grid-template-columns", "none");
-                    teamlList.append(emptyContent); // Append a different HTML element
+                    teamlList.append(emptyContent);
+
                 } else {
+
                     teamlList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
                     teams.forEach(function (team) {
                         let teamName = team.team_name;
@@ -367,17 +414,16 @@ function teamListing(element, user_id) {
                         }
 
                         let listItem = `
-                    <li>
-                        <div class="text">
-                            <h3 style="margin: 0 10px;">${teamName}</h3>
-                            <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
-                            ${teamMembers}
-                        </div>
-                    </li>`;
+                            <li>
+                                <div class="text">
+                                    <h3 style="margin: 0 10px;">${teamName}</h3>
+                                    <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
+                                    ${teamMembers}
+                                </div>
+                            </li>`;
                         $('#team-list').append(listItem);
                     });
                 }
-
                 teamForm(response);
             },
             error: function (xhr, status, error) {
@@ -388,22 +434,27 @@ function teamListing(element, user_id) {
     } else if (callerId === "employees_teams") {
 
         $.ajax({
+
             url: '/api/teams/employees/' + user_id,
             type: 'GET',
             success: function (response) {
+
+                let teams = response.teams;
                 let teamlList = $('#team-list');
                 teamlList.empty();
-                let teams = response.teams;
 
-                if (teams.length === 0) { // Check if the project array is empty
+                if (teams.length === 0) {
+
                     let emptyContent = `
                     <div class="empty">
                         <h1>There is nothing here. You are yet to be added into a team!</h1>
                     </div>
                     `;
                     teamlList.css("grid-template-columns", "none");
-                    teamlList.append(emptyContent); // Append a different HTML element
+                    teamlList.append(emptyContent);
+
                 } else {
+
                     teamlList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
                     teams.forEach(function (team) {
                         let teamName = team.team_name;
@@ -421,13 +472,13 @@ function teamListing(element, user_id) {
                         }
 
                         let listItem = `
-                <li>
-                    <div class="text">
-                        <h3 style="margin: 0 10px;">${teamName}</h3>
-                        <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
-                        ${teamMembers}
-                    </div>
-                </li>`;
+                            <li>
+                                <div class="text">
+                                    <h3 style="margin: 0 10px;">${teamName}</h3>
+                                    <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
+                                    ${teamMembers}
+                                </div>
+                            </li>`;
                         $('#team-list').append(listItem);
                     });
                 }
@@ -438,6 +489,75 @@ function teamListing(element, user_id) {
             }
         });
 
+    } else if (callerId === 'admin_teams') {
+
+        $.ajax({
+
+            url: '/api/teams/managers/' + user_id,
+            type: 'GET',
+            success: function (response) {
+
+                let teamlList = $('#team-list');
+                let teams = response.teamInfo;
+                teamlList.empty();
+
+                if (teams.length === 0) {
+                    let emptyContent = `
+                    <div class="empty">
+                        <h1>There is nothing here. You're all caught up with team approvals</h1>
+                    </div>
+                    `;
+                    teamlList.css("grid-template-columns", "none");
+                    teamlList.append(emptyContent);
+
+                } else {
+
+                    teamlList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    teams.forEach(function (team) {
+                        let teamName = team.team_name;
+                        let teamLeaderFirstName = team.team_leader.employer.first_name;
+                        let teamLeaderLastName = team.team_leader.employer.last_name;
+                        let teamID = team.id;
+                        let teamLeaderId = team.team_leader.id;
+                        let teamMembers = '';
+
+                        for (let i = 1; i <= 5; i++) {
+                            let member = team['member' + i];
+                            if (member) {
+                                let memberFirstName = member.employee.first_name;
+                                let memberLastName = member.employee.last_name;
+                                teamMembers += '<p>Member ' + i + ': ' + memberFirstName + ' ' + memberLastName + '</p>';
+                            }
+                        }
+
+                        let listItem = `
+                            <li>
+                                <div class="text">
+                                    <h3 style="margin: 0 10px;">${teamName}</h3>
+                                    <h4 style="margin: 10px 47px;">Team Leader: ${teamLeaderFirstName} ${teamLeaderLastName}</h4>
+                                    ${teamMembers}
+                                    <div>
+                                         <button class="form-submit" id="approve_team"
+                                            onclick="updateItem(this, ${teamID},${teamLeaderId})">
+                                                Approve
+                                        </button>
+                                        <button class="form-submit" id="reject_team"
+                                            onclick="updateItem(this, ${teamID},${teamLeaderId})">
+                                                Reject
+                                        </button>
+                                    </div>
+                                </div>
+                            </li>`;
+                        $('#team-list').append(listItem);
+                    });
+                }
+                teamForm(response);
+            },
+            error: function (xhr, status, error) {
+                let title = "Team Error"
+                displayErrorModal(title, error);
+            }
+        });
     }
 }
 
@@ -501,6 +621,7 @@ function createItem(element) {
                     displaySuccessModal(title, message)
 
                     form.reset();
+                    hideForm();
                 } else if (xhr.status === 400) {
 
                     let errorResponse = JSON.parse(xhr.responseText);
@@ -531,7 +652,11 @@ function createItem(element) {
                     displaySuccessModal(title, message)
 
                     form.reset();
-                } else if (task_xhr.status === 500) {
+                    hideForm();
+                    setTimeout(function () {
+                        window.location.href = 'http://127.0.0.1:8000/admin';
+                    }, 3000);
+                } else if (task_xhr.status === 400) {
 
                     let errorResponse = JSON.parse(task_xhr.responseText);
                     let title = errorResponse.info.title;
@@ -560,6 +685,7 @@ function createItem(element) {
                     displaySuccessModal(title, message)
 
                     form.reset();
+                    hideForm();
                 } else if (xhr.status === 400) {
 
                     let errorResponse = JSON.parse(xhr.responseText);
@@ -578,6 +704,7 @@ function updateItem(element, item_id, user_id) {
     let callerId = element.id;
 
     if (callerId === "approve_project") {
+
         $.ajax({
             url: '/api/projects/status',
             type: 'POST',
@@ -608,7 +735,9 @@ function updateItem(element, item_id, user_id) {
                 displayErrorModal(title, message);
             }
         });
+
     } else if (callerId === "reject_project") {
+
         $.ajax({
             url: '/api/projects/status',
             type: 'POST',
@@ -639,8 +768,74 @@ function updateItem(element, item_id, user_id) {
                 displayErrorModal(title, message);
             }
         });
+
     } else if (callerId === "approve_task") {
     } else if (callerId === "approve_team") {
+
+        $.ajax({
+            url: '/api/teams/status',
+            type: 'POST',
+            data: {
+                id: item_id,
+                action: 'approve_team',
+                team_leader: user_id,
+            },
+            success: function (data) {
+                let title = data.title;
+                let message = data.description;
+
+                // Check the title of the response
+                if (title === 'Success') {
+                    // Handle a success scenario
+                    displayNoticeModal(title, message);
+                } else if (title === 'Warning') {
+                    // Handle an error scenario
+                    displayErrorModal(title, message);
+                }
+            },
+            error: function (jqXHR) {
+
+                let errorData = JSON.parse(jqXHR.responseText);
+                console.log(errorData);
+                let title = 'HTTP Error: ' + jqXHR.status;
+                let message = errorData.message;
+                displayErrorModal(title, message);
+            }
+        });
+
+    } else if (callerId === "reject_team") {
+
+        $.ajax({
+            url: '/api/teams/status',
+            type: 'POST',
+            data: {
+                id: item_id,
+                action: 'reject_team',
+                team_leader: user_id,
+            },
+            success: function (data) {
+                let title = data.title;
+                let message = data.description;
+
+                // Check the title of the response
+                if (title === 'Success') {
+                    // Handle a success scenario
+                    displayNoticeModal(title, message);
+                } else if (title === 'Warning') {
+                    // Handle an error scenario
+                    displayErrorModal(title, message);
+                }
+            },
+            error: function (jqXHR) {
+
+                let errorData = JSON.parse(jqXHR.responseText);
+                console.log(errorData);
+                let title = 'HTTP Error: ' + jqXHR.status;
+                let message = errorData.message;
+                displayErrorModal(title, message);
+            }
+        });
+
     }
 }
 
@@ -695,7 +890,7 @@ function displaySuccessModal(title, message) {
     mainContent.after(modal);
 
     let modalNotice = $('#modal_notice');
-    // Transition effect to slide from top
+    // Transition effect to slide from the top
     modalNotice.css('top', '-200px').animate({
         top: '0',
     }, 500);
@@ -738,4 +933,14 @@ function displayNoticeModal(title, message) {
     });
 
     noticeModals()
+}
+
+function hideForm() {
+    let newProject_modal_content = document.getElementById("new_project_modal");
+    let newTask_modal_content = document.getElementById("new_task_modal");
+    let newTeam_modal_content = document.getElementById("new_team_modal");
+
+    newProject_modal_content.style.display = "none";
+    newTask_modal_content.style.display = "none";
+    newTeam_modal_content.style.display = "none";
 }

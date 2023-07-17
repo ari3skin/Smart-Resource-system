@@ -10,4 +10,9 @@ class TaskList extends Model
     use HasFactory;
 
     protected $table = 'task_lists';
+
+    public function team(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Team::class,'team_id');
+    }
 }

@@ -15,7 +15,7 @@ return new class extends Migration {
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('project_id')->unsigned();
+            $table->bigInteger('project_id')->unsigned()->nullable();
             $table->bigInteger('task_id')->unsigned()->nullable();
             $table->string('report_title');
             $table->string('report_summary');

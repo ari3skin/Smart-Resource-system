@@ -190,6 +190,27 @@
 
 </main>
 
+<main class="tabcontent" id="teams">
+    <div class="head-title">
+        <div class="left">
+            <h1>Teams</h1>
+
+            <ul class="breadcrumb">
+                <li>
+                    <a href="#">{{session('first_name')}} {{session('last_name')}}</a>
+                </li>
+                <li><i class="uil uil-angle-right-b"></i></li>
+                <li>
+                    <a class="active" href="#">Teams Under Review</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <ul class="box-info empty-project" id="team-list"></ul>
+
+</main>
+
 <main class="tabcontent" id="reports">
     <div class="head-title">
         <div class="left">

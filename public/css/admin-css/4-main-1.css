@@ -118,6 +118,30 @@
     width: 90%;
 }
 
+.filter-wrapper {
+    display: flex;
+    justify-content: space-around; /* equally distribute filter items */
+    width: 60%; /* adjust this value as per your requirement */
+    margin-bottom: 20px; /* space before table starts */
+    align-items: center;
+}
+
+.filter-wrapper label {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.filter-wrapper select {
+    margin-left: 25px;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
 /*css for home dashboard page (end) */
 
 /*css for contact me tables*/
