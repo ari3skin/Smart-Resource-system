@@ -114,7 +114,8 @@ class TeamController extends Controller
                 for ($i = 1; $i <= 5; $i++) {
                     $query->orWhere("member_$i", $user_id);
                 }
-            })->get();
+            })->where('team_status', '=', 'active')
+                ->get();
 
             $data = [
                 'teams' => $teams,

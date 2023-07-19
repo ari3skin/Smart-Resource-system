@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SqlStorage;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TeamController;
@@ -48,6 +49,14 @@ Route::middleware(['disable_back'])->group(function () {
             //posts
             Route::post('create', [TeamController::class, 'store']);
             Route::post('status', [TeamController::class, 'update']);
+        });
+
+        Route::prefix('reports')->group(function () {
+            Route::get('managers/{user_id}', [ReportController::class, 'index'])->name('managers_reports');
+            Route::get('employees/{user_id}',[ReportController::class,'index'])->name('employee_reports');
+
+            //posts
+            Route::post('create', [ReportController::class, 'store']);
         });
 
         Route::get('sqlTests', [SqlStorage::class, 'randomQueries']);

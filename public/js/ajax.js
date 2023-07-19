@@ -14,9 +14,12 @@ function projectListing(element, user_id) {
                 let projectList = $('#project-list');
                 let projectManager = $('#project-manager');
                 let subProjectManager = $('#sub-project-manager');
+                let my_projects = $('#my_projects');
                 projectList.empty();
                 projectManager.empty();
                 subProjectManager.empty();
+                my_projects.empty();
+                my_projects.append('<option value="0">--Select a project--</option>');
                 projectManager.append('<option value="0">--Leading Project Manager--</option>');
                 subProjectManager.append('<option value="0">--Sub Project Manager--</option>');
 
@@ -50,7 +53,12 @@ function projectListing(element, user_id) {
                                                 <p style="margin: 10px 20px;">${projectDescription}</p>
                                             </div>
                                         </li>`;
+                        let projectOptions = `
+                                                <option value="${projectId}">
+                                                    ${projectTitle}
+                                                </option>`;
                         $('#project-list').append(listItem);
+                        my_projects.append(projectOptions);
                     });
                 }
 
@@ -301,6 +309,7 @@ function taskListing(element, user_id) {
                 dataTable.columns(0).search(this.value).draw();
             });
 
+            taskForm(response);
         });
     }
 }
@@ -316,6 +325,7 @@ function taskForm(response) {
     taskTeamManager.empty();
     taskManagerIndividual.empty();
     taskEmployeeIndividual.empty();
+    my_tasks.empty();
 
     projectList.append('<option value=""> -- Select Project -- </option>');
     taskTeamManager.append('<option value="">Select Team Manager of the above Project</option>');
@@ -596,6 +606,117 @@ function teamForm(response) {
     });
 }
 
+function reportListing(element, user_id) {
+    let callerId = element.id;
+
+    if (callerId === 'employer_reports') {
+
+        $.ajax({
+            url: '/api/reports/managers/' + user_id,
+            type: 'GET',
+            success: function (response) {
+                let reports = response.reports;
+                let reportList = $('#report-list');
+                reportList.empty();
+
+                if (reports.length === 0) {
+                    let emptyContent = `
+                                    <div class="empty">
+                                        <h1>You are yet to create any report type</h1>
+                                    </div>`;
+                    reportList.css("grid-template-columns", "none");
+                    reportList.append(emptyContent);
+                } else {
+                    reportList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    reports.forEach(function (report) {
+                        let reportId = report.report.id;
+                        let reportTitle = report.report.report_title;
+                        let reportSummary = report.report.report_summary;
+                        let reportSubmitterFirstName = report.report.submitter.employer.first_name;
+                        let reportSubmitterLastName = report.report.submitter.employer.last_name;
+                        let reportProject = report.report.project ? report.report.project.project_title : null;
+                        let reportTask = report.report.task ? report.report.task.task_title : null;
+                        let reportFile = report.file_url;
+
+
+                        let listItem = `
+                                <li>
+                                    <div class="text">
+                                        <h3 style="margin: 0 10px;">${reportTitle}<sub>PID.${reportId}</sub></h3>
+                                        <h4>User ${reportSubmitterFirstName} ${reportSubmitterLastName}</h4>
+                                        ${reportProject ? `<h5>Project: ${reportProject}</h5>` : ''}
+                                        ${reportTask ? `<h5>Task: ${reportTask}</h5>` : ''}
+                                        <p style="margin: 10px 20px;">${reportSummary}</p>
+                                        ${reportFile ? `
+                                        <a href="${reportFile}" class="form-submit" download id="download_project">Download Report</a>` : ''}
+                                    </div>
+                                </li>`;
+
+                        reportList.append(listItem);
+                    });
+                }
+            }
+        });
+
+    } else if (callerId === "employee_reports") {
+
+        $.ajax({
+            url: '/api/reports/employees/' + user_id,
+            type: 'GET',
+            success: function (response) {
+                let reports = response.reports;
+                let reportList = $('#report-list');
+                reportList.empty();
+
+                if (reports.length === 0) {
+                    let emptyContent = `
+                                    <div class="empty">
+                                        <h1>You are yet to create any report type</h1>
+                                    </div>`;
+                    reportList.css("grid-template-columns", "none");
+                    reportList.append(emptyContent);
+                } else {
+                    reportList.css("grid-template-columns", "repeat(3, minmax(240px, 1fr))");
+                    reports.forEach(function (report) {
+                        let reportId = report.report.id;
+                        let reportTitle = report.report.report_title;
+                        let reportSummary = report.report.report_summary;
+                        let reportSubmitterFirstName, reportSubmitterLastName;
+                        if (report.report.submitter) {
+                            if (report.report.submitter.employer) {
+                                reportSubmitterFirstName = report.report.submitter.employer.first_name;
+                                reportSubmitterLastName = report.report.submitter.employer.last_name;
+                            } else if (report.report.submitter.employee) {
+                                reportSubmitterFirstName = report.report.submitter.employee.first_name;
+                                reportSubmitterLastName = report.report.submitter.employee.last_name;
+                            }
+                        }
+                        let reportProject = report.report.project ? report.report.project.project_title : null;
+                        let reportTask = report.report.task ? report.report.task.task_title : null;
+                        let reportFile = report.file_url;
+
+
+                        let listItem = `
+                                <li>
+                                    <div class="text">
+                                        <h3 style="margin: 0 10px;">${reportTitle}<sub>PID.${reportId}</sub></h3>
+                                        <h4>User ${reportSubmitterFirstName} ${reportSubmitterLastName}</h4>
+                                        ${reportProject ? `<h5>Project: ${reportProject}</h5>` : ''}
+                                        ${reportTask ? `<h5>Task: ${reportTask}</h5>` : ''}
+                                        <p style="margin: 10px 20px;">${reportSummary}</p>
+                                        ${reportFile ? `
+                                        <a href="${reportFile}" class="form-submit" download id="download_project">Download Report</a>` : ''}
+                                    </div>
+                                </li>`;
+
+                        reportList.append(listItem);
+                    });
+                }
+            }
+        });
+    }
+}
+
 // ----------------------------------------------------------------------------------------------------------------------//
 
 //ajax create/post functions
@@ -674,6 +795,66 @@ function createItem(element) {
         // Make AJAX request
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '/api/teams/create', true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+
+                    let response = JSON.parse(xhr.responseText);
+                    let title = response.info.title;
+                    let message = response.info.description;
+                    displaySuccessModal(title, message)
+
+                    form.reset();
+                    hideForm();
+                } else if (xhr.status === 400) {
+
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    let title = errorResponse.info.title;
+                    let message = errorResponse.info.description;
+                    displayErrorModal(title, message);
+                }
+            }
+        };
+        xhr.send(formData);
+    } else if (callerId === "create_project_report") {
+
+        let form = document.getElementById('create-project-report-form');
+        let formData = new FormData(form);
+
+        // Make AJAX request
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/reports/create', true);
+        xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+
+                    let response = JSON.parse(xhr.responseText);
+                    let title = response.info.title;
+                    let message = response.info.description;
+                    displaySuccessModal(title, message)
+
+                    form.reset();
+                    hideForm();
+                } else if (xhr.status === 400) {
+
+                    let errorResponse = JSON.parse(xhr.responseText);
+                    let title = errorResponse.info.title;
+                    let message = errorResponse.info.description;
+                    displayErrorModal(title, message);
+                }
+            }
+        };
+        xhr.send(formData);
+    } else if (callerId === "create_task_report") {
+
+        let form = document.getElementById('create-task-report-form');
+        let formData = new FormData(form);
+
+        // Make AJAX request
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/api/reports/create', true);
         xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
         xhr.onreadystatechange = function () {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -939,8 +1120,16 @@ function hideForm() {
     let newProject_modal_content = document.getElementById("new_project_modal");
     let newTask_modal_content = document.getElementById("new_task_modal");
     let newTeam_modal_content = document.getElementById("new_team_modal");
+    let newProjectReport_modal_content = document.getElementById("new_project_report_modal");
+    let newTaskReport_modal_content = document.getElementById("new_task_report_modal");
 
     newProject_modal_content.style.display = "none";
     newTask_modal_content.style.display = "none";
     newTeam_modal_content.style.display = "none";
+
+    if (newProjectReport_modal_content) {
+        newProjectReport_modal_content.style.display = "none";
+    }
+
+    newTaskReport_modal_content.style.display = "none";
 }

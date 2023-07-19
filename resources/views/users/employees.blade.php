@@ -27,14 +27,14 @@
         </li>
 
         <li>
-            <a class="tablinks" onclick="switchcommon(event, 'reports')"
-               style="cursor: pointer" title="teams">
+            <a class="tablinks" onclick="reportListing(this,{{session('sys_id')}}); switchcommon(event, 'reports')"
+               style="cursor: pointer" title="teams" id="employee_reports">
                 <i class="uil uil-file-graph"></i>
                 <span class="text">Reports</span>
             </a>
         </li>
 
-        <li>
+        <li style="display: none">
             <a class="tablinks" onclick="switchcommon(event, 'settings')"
                style="cursor: pointer" title="Settings">
                 <i class="uil uil-setting"></i>
@@ -78,7 +78,7 @@
                 </a>
                 <div class="text">
                     <h3>{{$tasksCount}}</h3>
-                    <p>Ongoing Designated Tasks</p>
+                    <p>Ongoing Individual Tasks</p>
                 </div>
             </li>
 
@@ -179,6 +179,8 @@
                 </ul>
             </div>
         </div>
+
+        <ul class="box-info" id="report-list"></ul>
     </main>
 
     <main class="tabcontent" id="settings">
@@ -206,8 +208,35 @@
             <span class="close task_report_close">&times;</span>
             <div class="dashboard-form">
                 <h2 class="form-title">New Task Report</h2>
-                <form method="POST" class="dashboard-form" id="create-team-form" autocomplete="off">
+                <form method="POST" class="dashboard-form" id="create-task-report-form" autocomplete="off"
+                      enctype="multipart/form-data">
                     @csrf
+                    <div class="form-group">
+                        <label for="my_tasks"><i class="uil uil-file-plus-alt"></i></label>
+                        <select name="my_task" id="my_tasks" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="team-name"><i class="uil uil-file-plus-alt"></i></label>
+                        <input type="text" name="report_title" id="team-name" placeholder="Task Report title"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="report_summary"><i class="uil uil-file-plus-alt"></i></label>
+                        <textarea rows="5" cols="80" name="report_summary" id="report_summary"
+                                  placeholder="Task Report Summary"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="report_file"><i class="uil uil-file-plus-alt"></i></label>
+                        <input type="file" name="report_file" accept="application/pdf" id="report_file"
+                               placeholder="Select PDF file">
+                    </div>
+                    <div style="display: flex; justify-content: space-evenly;">
+                        <input type="hidden" name="account_type" value="employees">
+                        <input type="hidden" name="report_type" value="task_report">
+                        <input type="hidden" name="submitter" value="{{session('sys_id')}}">
+                        <input type="button" onclick="createItem(this)" name="signin" id="create_task_report"
+                               class="form-submit" value="Create Report" style="margin: 0 20px;"/>
+                        <input type="reset" id="signin" class="form-submit" value="Reset Form" style="margin: 0 20px;">
+                    </div>
                 </form>
             </div>
         </div>

@@ -14,7 +14,7 @@
 .word3_container{
     text-align: center;
     margin-top: 650px;
-} 
+}
 
 .word4_container{
     text-align: center;
@@ -32,28 +32,28 @@
     float: right;
 }
 
-h2{
+#megan-css h2{
     align-items: center;
     margin-left: 120px;
     font-weight: 100;
 }
 
-h3{
+#megan-css h3{
     font-size: 50px;
 }
 
-h4{
+#megan-css h4{
     font-size: 30px;
     color: black;
 }
 
-h5{
+#megan-css h5{
     font-size: 30px;
     color: black;
     top: 100px;
 }
 
-h6{
+#megan-css h6{
     font-size: 30px;
     color: black;
     top: 100px;
@@ -63,7 +63,7 @@ h6{
     font-style: italic;
     font-size: x-large;
     color: black;
-} 
+}
 
 .word2_container p{
     margin-left: 20px;

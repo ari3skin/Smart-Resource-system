@@ -82,4 +82,14 @@ class User extends Authenticatable
         return $this->hasOne(Team::class, 'team_leader');
     }
 
+    public function teams(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Team::class, 'teams', 'member_1', 'id')
+            ->orWhere('member_2', $this->id)
+            ->orWhere('member_3', $this->id)
+            ->orWhere('member_4', $this->id)
+            ->orWhere('member_5', $this->id);
+    }
+
+
 }

@@ -20,4 +20,10 @@ class Report extends Model
     {
         return $this->belongsTo(Task::class, 'task_id');
     }
+
+    public function submitter(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class, 'submitter_id');
+    }
+
 }

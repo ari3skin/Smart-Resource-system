@@ -44,7 +44,7 @@
 
         <i class="uil uil-moon change-theme" id="dashboard-theme"></i>
 
-        <a style="cursor: pointer;" class="profile notification" onclick="selectedInterface(this)"
+        <a style="cursor: pointer;display: none;" class="profile notification" onclick="selectedInterface(this)"
            title="Chat Box" id="{{session('chat_box_id')}}">
             <i class="uil uil-comments-alt"></i>
             <span class="num">--</span>

@@ -1,6 +1,6 @@
 @component('mail::message')
 # Greetings
-You are receiving this email to notify you that your team {{$teamInfo->team_name}}, created by:
+You are receiving this email to notify you that your team named: {{$teamInfo->team_name}}, created by:
 @component('mail::panel')
 **Team Leader:** {{$employer->first_name}} {{$employer->last_name}}
 @endcomponent

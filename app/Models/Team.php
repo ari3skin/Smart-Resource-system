@@ -16,6 +16,16 @@ class Team extends Model
         return $this->belongsTo('App\Models\User', 'team_leader');
     }
 
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'teams', 'id', 'member_1')
+            ->orWhere('member_2', $this->id)
+            ->orWhere('member_3', $this->id)
+            ->orWhere('member_4', $this->id)
+            ->orWhere('member_5', $this->id);
+    }
+
+
     public function members()
     {
         return $this->hasMany(User::class, 'team_id');

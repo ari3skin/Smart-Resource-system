@@ -140,6 +140,12 @@ class TaskController extends Controller
                 })
                 ->get();
 
+            $task_info = Task::with([
+                'taskIndividualUser.employee',
+            ])->where('task_individual_user', '=', $user_id)
+                ->orWhere('task_team_manager', '=', $user_id)
+                ->get();
+
             $tasks = Task::with(['taskIndividualUser.employee', 'project'])
                 ->where('task_individual_user', $user_id)
                 ->get();
@@ -158,6 +164,7 @@ class TaskController extends Controller
 
             $data = [
                 'tasks' => $grouped,
+                'task_info' => $task_info,
                 'teamTasksInfo' => $teamTasks,
             ];
             return response()->json($data);
@@ -197,21 +204,21 @@ class TaskController extends Controller
             try {
                 $type = "team";
                 $task_team_manager = $request->input('task_team_manager');
-
-                $newTask->project_id = $project_id;
-                $newTask->task_title = $task_title;
-                $newTask->task_description = $task_description;
-                $newTask->task_team_manager = $task_team_manager;
-                $newTask->task_individual_user = null;
-                $newTask->type = $type;
-                $newTask->save();
-                $lastTaskID = DB::getPdo()->lastInsertId();
-
                 $selectTeam = Team::all()->where('team_leader', '=', $task_team_manager)
                     ->where('team_status', '=', 'active')
                     ->first();
 
                 if ($selectTeam) {
+
+                    $newTask->project_id = $project_id;
+                    $newTask->task_title = $task_title;
+                    $newTask->task_description = $task_description;
+                    $newTask->task_team_manager = $task_team_manager;
+                    $newTask->task_individual_user = null;
+                    $newTask->type = $type;
+                    $newTask->save();
+
+                    $lastTaskID = DB::getPdo()->lastInsertId();
                     $newTaskList = new TaskList();
                     $newTaskList->task_id = $lastTaskID;
                     $newTaskList->individuals_id = null;

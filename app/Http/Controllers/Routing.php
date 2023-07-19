@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\User;
 use App\Models\UserRegistrationRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Routing extends Controller
 {
@@ -113,11 +114,47 @@ class Routing extends Controller
 
             } elseif ($user->role == 'Manager') {
 
-                return view('users.employers');
+                $user_id = $user->id;
+                $projects = DB::table('projects')
+                    ->where('status', '=', 'ongoing')
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('project_manager', $user_id)
+                            ->orWhere('sub_project_manager', $user_id);
+                    })->count();
+
+                $teams = DB::table('teams')
+                    ->where('team_leader', $user_id)
+                    ->count();
+
+                return view('users.employers',
+                    [
+                        'projectsCount' => $projects,
+                        'teamsCount' => $teams,
+                    ]);
 
             } elseif ($user->role == 'Employee') {
 
-                return view('users.employees');
+                $user_id = $user->id;
+                $tasks = DB::table('tasks')
+                    ->where('status', '=', 'ongoing')
+                    ->where(function ($query) use ($user_id) {
+                        $query->where('task_individual_user', $user_id);
+                    })->count();
+
+                $teamsQuery = DB::table('teams');
+
+                for ($i = 1; $i <= 5; $i++) {
+                    $teamsQuery->orWhere('member_' . $i, $user_id);
+                }
+
+                $teamsCount = $teamsQuery->count();
+
+
+                return view('users.employees',
+                    [
+                        'tasksCount' => $tasks,
+                        'teamsCount' => $teamsCount,
+                    ]);
 
             } else {
                 return redirect("/")->withErrors(['error' => "Unauthorized access denied."]);

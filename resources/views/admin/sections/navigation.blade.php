@@ -51,7 +51,7 @@
             </a>
         </li>
 
-        <li>
+        <li style="display: none">
             <a class="tablinks" onclick="switchcommon(event, 'settings')"
                style="cursor: pointer" title="Settings">
                 <i class="uil uil-setting"></i>

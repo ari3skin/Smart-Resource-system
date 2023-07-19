@@ -30,7 +30,7 @@
         {{--top left navigation icons--}}
         <i class="uil uil-moon change-theme" id="dashboard-theme"></i>
 
-        <a style="cursor: pointer;" class="profile notification" onclick="selectedInterface(this)" id="admin_chats"
+        <a style="cursor: pointer;display: none;" class="profile notification" onclick="selectedInterface(this)" id="admin_chats"
            title="Chat Box">
             <i class="uil uil-comments-alt"></i>
             <span class="num">--</span>

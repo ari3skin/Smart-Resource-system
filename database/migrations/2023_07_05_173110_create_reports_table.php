@@ -15,14 +15,17 @@ return new class extends Migration {
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('submitter_id')->unsigned();
             $table->bigInteger('project_id')->unsigned()->nullable();
             $table->bigInteger('task_id')->unsigned()->nullable();
+            $table->enum('report_type', ['project_documentation', 'task_report']);
             $table->string('report_title');
             $table->string('report_summary');
-            $table->binary('report_file')->nullable();
+            $table->string('report_file')->nullable();
             $table->timestamps();
 
             //relationships
+            $table->foreign('submitter_id')->references('id')->on('users');
             $table->foreign("project_id")->references("id")->on("projects");
             $table->foreign('task_id')->references('id')->on('tasks');
         });
