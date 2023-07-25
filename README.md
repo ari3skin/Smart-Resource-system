@@ -25,7 +25,7 @@ This guide will help you set up the Smart Resource System on your local machine.
 
 The following open-source libraries and resources were instrumental in the development of this project:
 
-- [Composer](https://getcomposer.org/): A tool for dependency management in PHP
+- [Composer](https://getcomposer.org/): A dependency tool used in management in PHP
 - [Laravel](https://laravel.com/): A web application framework with expressive, elegant syntax
 - [Laravel Socialite](https://laravel.com/docs/socialite): An official Laravel package which provides a streamlined
   OAuth authentication with various providers, in this case, Google.
