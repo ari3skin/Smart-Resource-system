@@ -15,7 +15,7 @@ This guide provides detailed instructions on how to install the Smart Resource S
    - [PHP](https://windows.php.net/download#php-8.0) (Version 8.0)
    - [Composer](https://getcomposer.org/download/)
 <br><br>
-2. Download and run the [Shell Script](https://github.com/ari3skin/Smart-Resource-system/blob/master/setup.sh)
+2. Download and run the [Shell Script](https://github.com/ari3skin/Smart-Resource-system/blob/master/setup.sh) file from the github project online.
 <br><br>
 
 ## Required Libraries
