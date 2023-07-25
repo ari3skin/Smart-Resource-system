@@ -1,33 +1,28 @@
-# Smart Resource
+# Smart Resource System
 
-A web-based resource bank system for efficient workforce allocation and management
+This web-based resource allocation and management platform is specifically tailored for the banking sector, enhancing operational efficiency by streamlining workforce management.
 
-The Banking Resource Management System is an innovative platform designed to streamline the allocation of workforce
-resources within the banking sector. In light of the current banking landscape, effective employee resource management
-is crucial for operational efficiency. Traditional systems, however, are laden with significant challenges leading to a
-decline in task completion rates and overall operational efficiency.
+The contemporary banking environment necessitates effective employee resource management for optimal operational productivity. However, existing traditional systems are often cumbersome and inefficient, leading to reduced task fulfillment and overall productivity. Our Smart Resource System aims to address these challenges and improve workforce management in the banking sector.
 
-# Installation Guide and Dependencies
+# Setup Guide and Required Libraries
 
-This guide will help you set up the Smart Resource System on your local machine.
+This guide provides detailed instructions on how to install the Smart Resource System on your local machine.
 
-## Installation Procedure
+## Setup Instructions
 
-1. Before you start, make sure you have these installed:
-   - [Git](https://git-scm.com/downloads) CLI
-   - [PHP](https://windows.php.net/download#php-8.0) version 8.0
+1. Ensure the following are installed on your machine before proceeding:
+   - [Git CLI](https://git-scm.com/downloads)
+   - [PHP](https://windows.php.net/download#php-8.0) (Version 8.0)
    - [Composer](https://getcomposer.org/download/)
 <br><br>
-2. Download the <a href="https://github.com/ari3skin/Smart-Resource-system/blob/master/setup.sh" download>Shell Script</a> file and run it
+2. Download and run the [Shell Script](https://github.com/ari3skin/Smart-Resource-system/blob/master/setup.sh)
 <br><br>
 
-## Dependencies
+## Required Libraries
 
-The following open-source libraries and resources were instrumental in the development of this project:
+Our project owes much to the following open-source resources that greatly facilitated its development:
 
-- [Composer](https://getcomposer.org/): A dependency tool used in management in PHP
-- [Laravel](https://laravel.com/): A web application framework with expressive, elegant syntax
-- [Laravel Socialite](https://laravel.com/docs/socialite): An official Laravel package which provides a streamlined
-  OAuth authentication with various providers, in this case, Google.
-- [Git CLI](https://git-scm.com/): A free and open source distributed version control system designed to handle
-  everything from small to very large projects with speed and efficiency.
+- [Composer](https://getcomposer.org/): A tool for managing PHP dependencies.
+- [Laravel](https://laravel.com/): A PHP web framework offering elegant, expressive syntax.
+- [Laravel Socialite](https://laravel.com/docs/socialite): An official Laravel package providing OAuth authentication with various providers, including Google.
+- [Git CLI](https://git-scm.com/): An open-source version control system that effectively handles small to large projects.
